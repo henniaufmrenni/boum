@@ -1,0 +1,37 @@
+import React from 'react';
+
+import NowPlayingBar from '@boum/components/Player/NowPlayingBar';
+import {
+  AlbumScreen,
+  AlbumsScreen,
+  ArtistScreen,
+  HomeScreen,
+  PlayerScreen,
+} from '@boum/screens';
+
+import {NavigationProp} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
+type HomeStackProps = {
+  navigation: NavigationProp<any>;
+  route: any;
+};
+
+const HomeStack = ({navigation, route}: HomeStackProps) => {
+  const HomeStack = createNativeStackNavigator();
+  return (
+    <>
+      <HomeStack.Navigator
+        screenOptions={{animation: 'none', headerShown: false}}>
+        <HomeStack.Screen name="HomeLanding" component={HomeScreen} />
+        <HomeStack.Screen name="Album" component={AlbumScreen} />
+        <HomeStack.Screen name="Player" component={PlayerScreen} />
+        <HomeStack.Screen name="Albums" component={AlbumsScreen} />
+        <HomeStack.Screen name="Artist" component={ArtistScreen} />
+      </HomeStack.Navigator>
+      <NowPlayingBar navigation={navigation} route={route} />
+    </>
+  );
+};
+
+export default HomeStack;

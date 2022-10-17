@@ -1,0 +1,41 @@
+name: Bug Report
+description: File a bug report
+title: '[Bug]: '
+labels: ['bug', 'triage']
+assignees:
+  - henniaufmrenni
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+      placeholder: Tell us what you see!
+      value: 'A bug happened!'
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: What version of our software are you running?
+    validations:
+      required: true
+  - type: textarea
+    id: device
+    attributes:
+      label: What device and Android version are you seeing the problem on?
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Understanding that boum is open-source software
+      description: By submitting this issue, you understand that boum is open-source software developed in my free-time and provided for free, as is without any liability. I'm happy to fix bugs and add features that align with the project's goals, but that does not result in the entitlement to demand this.
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

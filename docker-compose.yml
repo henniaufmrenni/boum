@@ -1,0 +1,13 @@
+---
+version: "3.5"
+services:
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+    volumes:
+      - ./devdata/config:/config
+      - ./devdata/cache:/cache
+      - /home/hendrik/Music:/media
+    restart: "unless-stopped"
+    ports:
+      - "8096:8096"

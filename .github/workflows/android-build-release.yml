@@ -1,0 +1,92 @@
+name: build-release
+
+on:
+  push:
+    tags:
+      - v**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup the node environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          cache: 'yarn'
+
+      - name: Get the boum version
+        run: |
+          echo "BOUM_VERSION=$(node -e "console.log(require('./package.json').version);")" >> $GITHUB_ENV
+
+      - name: 'Build Changelog'
+        id: build_changelog
+        uses: mikepenz/release-changelog-builder-action@v3.3.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create the release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: false
+          prerelease: false
+          release_name: ${{ github.ref }}
+          tag_name: ${{ github.ref }}
+          body: ${{steps.build_changelog.outputs.changelog}}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Retrieve keystore file
+        env:
+          BOUM_KEYSTORE_BASE64: ${{ secrets.BOUM_KEYSTORE_BASE64 }}
+        run: |
+          echo "$BOUM_KEYSTORE_BASE64" | base64 --decode > android/app/boum.jks
+
+      - name: Set the keystore Password
+        env:
+          BOUM_UPLOAD_STORE_FILE: boum.jks
+          BOUM_UPLOAD_KEY_ALIAS: boum-upload
+          BOUM_UPLOAD_STORE_PASSWORD: ${{ secrets.BOUM_KEYSTORE_KEY }}
+          BOUM_UPLOAD_KEY_PASSWORD: ${{ secrets.BOUM_KEYSTORE_KEY }}
+        run: |
+          echo BOUM_UPLOAD_STORE_FILE="$BOUM_UPLOAD_STORE_FILE" >> android/gradle.properties
+          echo BOUM_UPLOAD_STORE_PASSWORD="$BOUM_UPLOAD_STORE_PASSWORD" >> android/gradle.properties
+          echo BOUM_UPLOAD_KEY_ALIAS="$BOUM_UPLOAD_KEY_ALIAS" >> android/gradle.properties
+          echo BOUM_UPLOAD_KEY_PASSWORD="$BOUM_UPLOAD_KEY_PASSWORD" >> android/gradle.properties
+
+      - name: Install the dependencies
+        run: |
+          yarn
+
+      - name: Build release APK
+        run: |
+          yarn android-build-release
+          mkdir bin
+          mkdir bin/32
+          mkdir bin/64
+          mv android/app/build/outputs/apk/release/app-armeabi-v7a-release.apk bin/32/
+          mv android/app/build/outputs/apk/release/app-arm64-v8a-release.apk bin/64
+
+      - name: Upload armv7a artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: bin/32/app-armeabi-v7a-release.apk
+          asset_name: boum-${BOUM_VERSION}.apk
+          asset_content_type: application/octet-stream
+
+      - name: Upload armv8 artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: bin/32/app-armeabi-v7a-release.apk
+          asset_name: boum-${BOUM_VERSION}-arm64.apk
+          asset_content_type: application/octet-stream
