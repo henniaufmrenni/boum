@@ -87,6 +87,6 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: bin/32/app-armeabi-v7a-release.apk
+          asset_path: bin/64/app-arm64-v8a-release.apk
           asset_name: boum-${BOUM_VERSION}-arm64.apk
           asset_content_type: application/octet-stream
