@@ -1,0 +1,14 @@
+boum a sleek music app for Jellyfin media servers.
+
+Some of the features of boum include:
+<li>ability to download albums</li>
+<li>offline view, to only see your downloaded media</li>
+<li>cross navigation e.g. navigate from albums to the artist from the player to album / artist</li>
+<li>basic queue management</li>
+<li>sleeptimer</li>
+<li>ability to start a scan for new music on the Jellyfin server</li>
+<li>saving the queue to pick up where you left off (for all the audiobook listeners out there)</li>
+<li>and more..</li>
+
+About the name:
+boum was the "cool" french word in the 80s for a party.
