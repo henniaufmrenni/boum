@@ -46,6 +46,7 @@ const PlayerScreen = ({navigation}: PlayerScreenProps) => {
 
   const currentTrack = queue[track];
   const sleepTimer = useStore(state => state.sleepTimer);
+  const playbackSpeed = useStore(state => state.playbackSpeed);
 
   return (
     <View style={styles.container}>
@@ -293,13 +294,26 @@ const PlayerScreen = ({navigation}: PlayerScreenProps) => {
               </TouchableOpacity>
             )}
           </View>
-          {sleepTimer && sleepTimer !== 0 ? (
-            <Text style={styles.textSource}>
-              <Icon name={'moon'} size={20} color={colours.white} />
-              {/* eslint-disable-next-line no-bitwise */}
-              {~~((sleepTimer - Date.now()) / 60000)} min
-            </Text>
-          ) : null}
+          <Text style={styles.textSource}>
+            {sleepTimer && sleepTimer !== 0 ? (
+              <>
+                <Icon name={'moon'} size={18} color={colours.white} />
+                {'   '}
+                {/* eslint-disable-next-line no-bitwise */}
+                {~~((sleepTimer - Date.now()) / 60000)} min
+              </>
+            ) : null}
+            {sleepTimer && sleepTimer !== 0 && playbackSpeed !== 1 ? (
+              <>{'       '}</>
+            ) : null}
+            {playbackSpeed !== 1 ? (
+              <>
+                <Icon name={'speedometer'} size={18} color={colours.white} />
+                {'   '}
+                {playbackSpeed}
+              </>
+            ) : null}
+          </Text>
         </View>
       </LinearGradient>
     </View>

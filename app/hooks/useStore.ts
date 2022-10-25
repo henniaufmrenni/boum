@@ -23,6 +23,8 @@ type BaseStore = {
   setSleepTimer: (time: number) => void;
   playbackUpdate: number;
   setPlaybackUpdate: () => void;
+  playbackSpeed: number;
+  setPlaybackSpeed: (speed: number) => void;
 };
 
 const useStore = create<BaseStore>(set => ({
@@ -45,6 +47,8 @@ const useStore = create<BaseStore>(set => ({
   playbackUpdate: 0,
   setPlaybackUpdate: () =>
     set(state => ({playbackUpdate: ++state.playbackUpdate})),
+  playbackSpeed: 1,
+  setPlaybackSpeed: (speed: number) => set({playbackSpeed: speed}),
 }));
 
 type SortBy = 'SortName' | 'Random' | 'DateCreated';
