@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 import {Alert, Linking} from 'react-native';
 
 import ButtonBoum from '@boum/components/Settings/ButtonBoum';
@@ -9,17 +9,17 @@ type OpenURLButtonProps = {
 };
 
 const OpenURLButton: React.FC<OpenURLButtonProps> = ({url, title}) => {
-  const handlePress = useCallback(async () => {
-    const supported = await Linking.canOpenURL(url);
+  const handleClick = () => {
+    Linking.canOpenURL(url).then(supported => {
+      if (supported) {
+        Linking.openURL(url);
+      } else {
+        Alert.alert("Don't know how to open URI: " + url);
+      }
+    });
+  };
 
-    if (supported) {
-      await Linking.openURL(url);
-    } else {
-      Alert.alert(`Don't know how to open this URL: ${url}`);
-    }
-  }, [url]);
-
-  return <ButtonBoum title={title} onPress={handlePress} />;
+  return <ButtonBoum title={title} onPress={handleClick} />;
 };
 
 export {OpenURLButton};
