@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {
   ContextActionAddToQueue,
   ContextActionLike,
+  ContextActionPlaybackSpeed,
   ContextActionPlaylist,
   ContextActionPlayNext,
   ContextActionSleeptimer,
@@ -129,6 +130,7 @@ const SlideInContextMenu = ({
                 />
                 <ContextActionLike itemId={mediaItem.id} session={session} />
                 <ContextActionSleeptimer />
+                <ContextActionPlaybackSpeed />
               </>
             ) : (
               <>
