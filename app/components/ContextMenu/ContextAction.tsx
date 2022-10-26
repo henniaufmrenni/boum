@@ -23,17 +23,21 @@ const ContextAction = ({
     <TouchableOpacity onPress={() => action()}>
       <View>
         <View style={contextActionStyles.container}>
-          <Icon
-            name={ioniconIcon}
-            size={25}
-            color={colours.white}
-            style={contextActionStyles.icon}
-          />
           <Text style={contextActionStyles.title}>
-            {title} {actionStatusMessage}
+            <Icon
+              name={ioniconIcon}
+              size={25}
+              color={colours.white}
+              style={contextActionStyles.icon}
+            />
+            {!children ? (
+              <>
+                {'    '} {title} {actionStatusMessage}
+              </>
+            ) : null}
           </Text>
+          <View style={contextActionStyles.childrenContainer}>{children}</View>
         </View>
-        {children}
       </View>
     </TouchableOpacity>
   );
@@ -43,6 +47,7 @@ const contextActionStyles = StyleSheet.create({
     paddingHorizontal: sizes.marginListX,
     paddingVertical: sizes.marginListX / 2,
     alignItems: 'flex-start',
+    justifyContent: 'center',
     flex: 1,
     flexDirection: 'row',
   },
@@ -55,6 +60,9 @@ const contextActionStyles = StyleSheet.create({
     fontSize: 17,
     fontFamily: 'Inter-Medium',
     marginLeft: 15,
+  },
+  childrenContainer: {
+    flex: 1,
   },
 });
 
