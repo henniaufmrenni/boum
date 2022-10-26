@@ -9,6 +9,7 @@ import {useBitrateLimit, useStore} from '@boum/hooks';
 import {useGetAlbum} from '@boum/hooks/useGetAlbum';
 import {Session} from '@boum/types';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
+import {State, usePlaybackState} from 'react-native-track-player';
 
 type AlbumScreenProps = {
   navigation: NavigationProp<any>;
@@ -40,6 +41,9 @@ const AlbumScreen = ({navigation, route}: AlbumScreenProps) => {
 
   const currentTrack = queue[track];
 
+  const playerState = usePlaybackState();
+  const isPlaying = playerState === State.Playing;
+
   return (
     <>
       <View style={styles.container}>
@@ -62,11 +66,12 @@ const AlbumScreen = ({navigation, route}: AlbumScreenProps) => {
                 navigation={navigation}
                 bitrateLimit={bitrateLimit}
                 isDownloaded={isDownloaded}
-                isPlaying={
+                itemIsPlaying={
                   currentTrack && currentTrack.albumId === albumInfo.Id
                     ? true
                     : false
                 }
+                isPlaying={isPlaying}
               />
             }
             ListFooterComponent={
