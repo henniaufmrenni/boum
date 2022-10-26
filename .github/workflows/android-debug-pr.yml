@@ -1,0 +1,55 @@
+name: build-debug
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, edited]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup the node environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          cache: 'yarn'
+
+      - name: Install the dependencies
+        run: |
+          yarn
+      - name: Cache Gradle Wrapper
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+
+      - name: Cache Gradle Dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-caches-
+      - name: Build debug APK
+        run: |
+          yarn android-build-debug
+          mkdir bin
+          mkdir bin/32
+          mkdir bin/64
+          mv android/app/build/outputs/apk/debug/app-armeabi-v7a-debug.apk bin/32/
+          mv android/app/build/outputs/apk/debug/app-arm64-v8a-debug.apk bin/64
+
+      - name: 'Upload arm32 Artifact'
+        uses: actions/upload-artifact@v3
+        with:
+          path: bin/32/app-armeabi-v7a-debug.apk
+          retention-days: 10
+
+      - name: 'Upload arm64 Artifact'
+        uses: actions/upload-artifact@v3
+        with:
+          path: bin/64/app-arm64-v8a-debug.apk
+          retention-days: 10
