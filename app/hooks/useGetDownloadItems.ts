@@ -33,16 +33,21 @@ const getDownloadItems = async () => {
 };
 
 const useGetDownloadItems = () => {
-  const [parents, setParents] = useState(false);
+  const [downloadItems, setDownloadItems] = useState<boolean | Array<object>>(
+    false,
+  );
+  const [gotDownloadItems, setGotDownloadItems] = useState<boolean>(false);
 
   useEffect(() => {
     async function getItems() {
-      getDownloadItems().then(res => setParents(res));
+      getDownloadItems().then(res => {
+        setDownloadItems(res);
+      });
     }
-    getItems();
+    getItems().then(() => setGotDownloadItems(true));
   }, []);
 
-  return parents;
+  return {downloadItems, gotDownloadItems};
 };
 
 export {useGetDownloadItems};
