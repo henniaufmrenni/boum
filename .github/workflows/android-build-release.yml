@@ -93,10 +93,8 @@ jobs:
 
       - name: Build release AAB
         run: |
-          yarn android-build-release
-          mkdir bin
-          mkdir bin/32
-          mkdir bin/64
+          yarn android-bundle-release
+          mkdir bin/aab
           mv android/app/build/outputs/bundle/release/app-release.aab bin/aab/
       - name: Upload AAB artifact
         uses: actions/upload-release-asset@v1
@@ -105,5 +103,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: bin/aab/app-release.aab
-          asset_name: boum-${BOUM_VERSION}.apk
+          asset_name: boum-${BOUM_VERSION}.aab
           asset_content_type: application/octet-stream
