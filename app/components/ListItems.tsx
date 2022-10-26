@@ -13,7 +13,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {LoadingSpinner} from '@boum/components/Generic';
 import SingleItemHeader from '@boum/components/SingleItemHeader';
 import {colours, sizes} from '@boum/constants';
-import {postFavorite} from '@boum/hooks/useGetHome';
 import {
   addAlbumToQueue,
   playAlbum,
@@ -33,6 +32,7 @@ import {
 import {ArtistItems} from './ArtistComponents';
 import TrackPlayer from 'react-native-track-player';
 import {SlideInContextMenu} from '@boum/components/ContextMenu';
+import {jellyfinClient} from '@boum/lib/api';
 
 const width = Dimensions.get('window').width;
 
@@ -47,6 +47,7 @@ type ListHeaderProps = {
   bitrateLimit: number;
   isDownloaded: isDownloaded;
   isPlaying: boolean;
+  itemIsPlaying?: boolean;
   screenMode: ScreenMode;
 };
 
@@ -61,8 +62,10 @@ const ListHeader = ({
   bitrateLimit,
   isDownloaded,
   isPlaying,
+  itemIsPlaying,
   screenMode,
 }: ListHeaderProps): JSX.Element => {
+  const jellyfin = new jellyfinClient();
   return (
     <>
       {averageColorRgb && item ? (
@@ -168,19 +171,16 @@ const ListHeader = ({
                 </TouchableOpacity>
                 {'UserData' in item !== false && item.UserData.IsFavorite ? (
                   <TouchableOpacity
-                    title="Like Item"
                     onPress={async () =>
-                      await postFavorite(session, item.Id, 'POST')
+                      await jellyfin
+                        .postFavorite(session, item.Id, 'POST')
                         .then(res => {
                           mutate();
-                          console.log(
-                            'Success posting favourites: ',
-                            res.status,
-                          );
+                          console.log('Success posting favourites: ', res);
                         })
                         .catch(res => {
                           mutate();
-                          console.log('Error posting favourites: ', res.status);
+                          console.log('Error posting favourites: ', res);
                         })
                     }
                     style={styles.actionButton}>
@@ -190,16 +190,16 @@ const ListHeader = ({
                   </TouchableOpacity>
                 ) : (
                   <TouchableOpacity
-                    title="Context Menu"
                     onPress={async () =>
-                      await postFavorite(session, item.Id, 'POST')
+                      await jellyfin
+                        .postFavorite(session, item.Id, 'POST')
                         .then(res => {
                           mutate();
-                          console.log('Error posting favourites: ', res.status);
+                          console.log('Error posting favourites: ', res);
                         })
                         .catch(res => {
                           mutate();
-                          console.log('Error posting favourites: ', res.status);
+                          console.log('Error posting favourites: ', res);
                         })
                     }
                     style={styles.actionButton}>
@@ -228,7 +228,7 @@ const ListHeader = ({
                 </TouchableOpacity>
               </View>
               <View>
-                {isPlaying ? (
+                {isPlaying && itemIsPlaying ? (
                   <TouchableOpacity
                     title="Pause"
                     onPress={async () => await TrackPlayer.pause()}
@@ -236,6 +236,19 @@ const ListHeader = ({
                     <Text>
                       <Icon
                         name="pause-circle"
+                        size={80}
+                        color={colours.accent}
+                      />
+                    </Text>
+                  </TouchableOpacity>
+                ) : itemIsPlaying ? (
+                  <TouchableOpacity
+                    title="Play"
+                    onPress={async () => await TrackPlayer.play()}
+                    style={styles.playButton}>
+                    <Text>
+                      <Icon
+                        name="play-circle"
                         size={80}
                         color={colours.accent}
                       />

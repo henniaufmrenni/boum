@@ -14,6 +14,7 @@ import {
 import {jellyfinClient} from '@boum/lib/api';
 import {Session} from '@boum/types';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
+import {State, usePlaybackState} from 'react-native-track-player';
 
 type PlaylistScreenProps = {
   route: RouteProp<any>;
@@ -68,6 +69,9 @@ const PlaylistScreen = ({route, navigation}: PlaylistScreenProps) => {
     albumItemsMutate();
   };
 
+  const playerState = usePlaybackState();
+  const isPlaying = playerState === State.Playing;
+
   return (
     <>
       <View style={styles.container}>
@@ -75,16 +79,21 @@ const PlaylistScreen = ({route, navigation}: PlaylistScreenProps) => {
           <FlatList
             data={albumItems.Items}
             keyExtractor={listItem => listItem.Id}
-            ListHeaderComponent={ListHeader({
-              albumItems,
-              item,
-              session,
-              averageColorRgb,
-              mutate,
-              navigation,
-              bitrateLimit,
-              isDownloaded,
-            })}
+            ListHeaderComponent={
+              <ListHeader
+                albumItems={albumItems}
+                item={item}
+                session={session}
+                averageColorRgb={averageColorRgb}
+                mutate={mutate}
+                mediaType={'Album'}
+                screenMode={'ListView'}
+                navigation={navigation}
+                bitrateLimit={bitrateLimit}
+                isDownloaded={isDownloaded}
+                isPlaying={isPlaying}
+              />
+            }
             ListFooterComponent={
               <AlbumFooter
                 albumItems={albumItems}
