@@ -4,6 +4,18 @@
 
 boum is a modern and sleek music app for [Jellyfin](https://github.com/jellyfin/jellyfin) media servers.
 
+The name _la_ boum [bum], originates from the "cool" french word for party in the 80s. La boum is also the name of a [french classic](https://www.youtube.com/watch?v=D9KX35J1kWg).
+
+[![build-release](https://github.com/henniaufmrenni/boum/actions/workflows/android-build-release.yml/badge.svg)](https://github.com/henniaufmrenni/boum/actions/workflows/android-build-release.yml)
+[![latest release](https://badgen.net/github/release/henniaufmrenni/boum?icon=github)](https://github.com/henniaufmrenni/boum/releases/latest)
+[![open issues](https://img.shields.io/github/issues/henniaufmrenni/boum/bug?color=C6474F&label=open%20bug-issues)](https://github.com/henniaufmrenni/boum/issues?q=is%3Aissue+is%3Aopen+label%3Abug)
+[![open feature requests](https://img.shields.io/github/issues/henniaufmrenni/boum/enhancement?color=B3ECEE&label=open%20feature-requests)](https://github.com/henniaufmrenni/boum/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement)
+
+<p float="left">
+  <a href="https://play.google.com/store/apps/details?id=de.eindm.boum"><img src=".github/.assets/badge-google-play.png" width="250"/></a>
+  <a href="https://github.com/henniaufmrenni/boum/releases/latest"><img src=".github/.assets/badge-github.png" width="250"/></a>
+</p>
+
 ## Features
 
 boum is still under active development, but the currently implemented features include:
@@ -23,10 +35,6 @@ boum is still under active development, but the currently implemented features i
   <img src=".github/.assets/screenshot-search.jpg" alt="home" width="250"/>
 </p>
 
-<p float="left">
-  <a href="https://github.com/henniaufmrenni/boum/releases/latest"><img src=".github/.assets/badge-github.png" width="250"/></a>
-</p>
-
 ## Documentation
 
 The documentation for usage and development can be found [here](https://eindm.de/boum).
@@ -38,5 +46,3 @@ For issues and feature requests, please submit an [issue in the Gitub repository
 © Hendrik Stöldt & contributors
 
 This software is licensend under the GNU General Public License v3.0 only, of which a copy can be found in the [LICENSE](LICENSE) file in the root of this repository.
-
-⚠️ There is a version of boum in the Google Play Store which is not working, for reference check [#2](https://github.com/henniaufmrenni/boum/issues/2) ⚠️
