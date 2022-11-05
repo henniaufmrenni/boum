@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {
+  BookScreen,
   DownloadsScreen,
   LoginScreen,
   PlayerScreen,
@@ -26,6 +27,7 @@ const RootStack = () => {
         <RootStack.Screen name="Player" component={PlayerScreen} />
         <RootStack.Screen name="Queue" component={QueueScreen} />
         <RootStack.Screen name="Downloads" component={DownloadsScreen} />
+        <RootStack.Screen name="Book" component={BookScreen} />
       </RootStack.Navigator>
     </>
   );

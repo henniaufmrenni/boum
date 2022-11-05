@@ -17,3 +17,4 @@ export * from '@boum/hooks/useStoreEncryptedValue';
 export * from '@boum/hooks/useToggleRepeatMode';
 export * from '@boum/hooks/useTrackPlayer';
 export * from '@boum/hooks/useDownloadItem';
+export * from '@boum/hooks/useGetBooks';

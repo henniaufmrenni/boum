@@ -370,6 +370,52 @@ class jellyfinClient {
 
     return res.status;
   };
+
+  public getAllBooks = async (
+    session: Session,
+    index: number,
+    sortBy: SortBy,
+    sortOrder: SortOrder,
+  ) => {
+    const headers = this.authHeaders(session);
+    let allBooksData;
+    let allBooksLoading: boolean = true;
+    let allBooksError: boolean = false;
+
+    // We need to get a list of all libraries, so that we get the parentId of the
+    // book folder.
+    const queryViews = `${session.hostname}/Library/VirtualFolders`;
+    const resLibraries = await fetch(queryViews, {
+      method: 'GET',
+      headers: {
+        'X-Emby-Authorization': headers,
+      },
+    });
+
+    await resLibraries.json().then(async (libraries: Array<object>) => {
+      const bookLibrary = libraries.filter(
+        library => library.CollectionType === 'books',
+      )[0].ItemId;
+      const booksQuery = `${session.hostname}/Users/${session.userId}/Items?StartIndex=${index}&Limit=40&Fields=PrimaryImageAspectRatio,SortName,Path,SongCount,ChildCount,MediaSourceCount,PrimaryImageAspectRatio&ImageTypeLimit=1&EnableImageTypes=Primary&ParentId=${bookLibrary}&SortBy=IsFolder,${sortBy}&SortOrder=${sortOrder}`;
+
+      const resBooks = await fetch(booksQuery, {
+        method: 'GET',
+        headers: {
+          'X-Emby-Authorization': headers,
+        },
+      });
+      await resBooks.json().then(books => {
+        allBooksData = books;
+        allBooksLoading = false;
+      });
+    });
+
+    return {
+      allBooksData,
+      allBooksLoading,
+      allBooksError,
+    };
+  };
 }
 
 export {jellyfinClient};

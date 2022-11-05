@@ -5,7 +5,6 @@ import {LoadingSpinner} from '@boum/components/Generic';
 import DownloadItem from '@boum/components/Settings/DownloadItem';
 import {colours, sizes} from '@boum/constants';
 import {useGetDownloadItems} from '@boum/hooks';
-import SingleItemHeader from '@boum/components/SingleItemHeader';
 
 const width = Dimensions.get('window').width;
 

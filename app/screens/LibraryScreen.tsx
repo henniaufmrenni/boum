@@ -1,9 +1,8 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import NavigationText from '@boum/components/Library/NavigationText';
 import {colours, sizes} from '@boum/constants';
-
 import {NavigationProp} from '@react-navigation/native';
 
 type LibraryScreenProps = {
@@ -12,7 +11,7 @@ type LibraryScreenProps = {
 
 const LibraryScreen = ({navigation}: LibraryScreenProps) => {
   return (
-    <View style={styles.screen}>
+    <ScrollView style={styles.screen}>
       <Text style={styles.title}>Library</Text>
       <View style={styles.container}>
         <NavigationText
@@ -35,8 +34,13 @@ const LibraryScreen = ({navigation}: LibraryScreenProps) => {
           navigation={navigation}
           navigationDestination={'Playlists'}
         />
+        <NavigationText
+          text="Books"
+          navigation={navigation}
+          navigationDestination={'Audiobooks'}
+        />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

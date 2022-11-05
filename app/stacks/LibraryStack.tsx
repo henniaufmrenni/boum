@@ -6,15 +6,16 @@ import {
   AlbumsScreen,
   ArtistScreen,
   ArtistsScreen,
+  BooksScreen,
   GenreScreen,
   GenresScreen,
   LibraryScreen,
   PlaylistScreen,
   PlaylistsScreen,
-  QueueScreen,
 } from '@boum/screens';
 import {NavigationProp} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {FolderScreen} from '@boum/screens/FolderScreen';
 
 type LibraryStackProps = {
   navigation: NavigationProp<any>;
@@ -34,13 +35,16 @@ const LibraryStack = ({navigation, route}: LibraryStackProps) => {
           component={AlbumScreen}
           options={({route}) => ({title: route.params.name})}
         />
-        <LibraryStack.Screen name="A/>" component={AlbumsScreen} />
-        <LibraryStack.Screen name="Artists" component={ArtistsScreen} />
+        <LibraryStack.Screen name="Album/>" component={AlbumScreen} />
+        <LibraryStack.Screen name="Albums" component={AlbumsScreen} />
+        <LibraryStack.Screen name="Audiobooks" component={BooksScreen} />
         <LibraryStack.Screen name="Artist" component={ArtistScreen} />
-        <LibraryStack.Screen name="Genres" component={GenresScreen} />
+        <LibraryStack.Screen name="Artists" component={ArtistsScreen} />
+        <LibraryStack.Screen name="Folder" component={FolderScreen} />
         <LibraryStack.Screen name="Genre" component={GenreScreen} />
-        <LibraryStack.Screen name="Playlists" component={PlaylistsScreen} />
+        <LibraryStack.Screen name="Genres" component={GenresScreen} />
         <LibraryStack.Screen name="Playlist" component={PlaylistScreen} />
+        <LibraryStack.Screen name="Playlists" component={PlaylistsScreen} />
       </LibraryStack.Navigator>
       <NowPlayingBar navigation={navigation} route={route} />
     </>

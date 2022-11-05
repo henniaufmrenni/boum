@@ -63,10 +63,10 @@ const ArtistsScreen = ({navigation}: ArtistsScreenProps) => {
   // Pull up to refresh
   const [refreshing, setRefreshing] = useState(false);
   const mutate = async () => {
-    setAllArtists(false),
-      setLoadedMore(false),
-      resetStartIndex(),
-      allArtistsMutate();
+    setAllArtists(false);
+    setLoadedMore(false);
+    resetStartIndex();
+    allArtistsMutate();
   };
 
   // Search and filtering modal

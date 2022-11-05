@@ -1,4 +1,5 @@
 import {versionBoum} from '@boum/constants';
+import {Session} from '@boum/types';
 
 const useScanLibrary = async (session: Session) => {
   let result = '';

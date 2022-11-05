@@ -2,7 +2,7 @@ import {any} from 'prop-types';
 import {RepeatMode} from 'react-native-track-player';
 import create from 'zustand';
 
-import {DownloadStatus} from '../types';
+import {DownloadStatus, Session} from '@boum/types';
 
 type BaseStore = {
   session: Session | null;
@@ -69,6 +69,21 @@ type ItemsStore = {
 };
 
 const useAlbumsStore = create<ItemsStore>(set => ({
+  itemsPageIndex: 0,
+  increaseItemsPageIndex: () =>
+    set(state => ({itemsPageIndex: state.itemsPageIndex + 40})),
+  resetItemsPageIndex: () => set({itemsPageIndex: 0}),
+  allItems: false,
+  setAllItems: object => set({allItems: object}),
+  sortBy: 'SortName',
+  setSortBy: options => set({sortBy: options}),
+  sortOrder: 'Ascending',
+  setSortOrder: options => set({sortOrder: options}),
+  searchTerm: '',
+  setSearchTerm: query => set({searchTerm: query}),
+}));
+
+const useBooksStore = create<ItemsStore>(set => ({
   itemsPageIndex: 0,
   increaseItemsPageIndex: () =>
     set(state => ({itemsPageIndex: state.itemsPageIndex + 40})),
@@ -154,10 +169,11 @@ const useDownloadsStore = create<DownloadsStoreState>(set => ({
 }));
 
 export {
-  useStore,
-  useArtistsStore,
   useAlbumsStore,
-  useSearchStore,
+  useArtistsStore,
+  useBooksStore,
   useDownloadsStore,
   usePlaylistsStore,
+  useSearchStore,
+  useStore,
 };
