@@ -132,6 +132,12 @@ const SlideInContextMenu = ({
                 <ContextActionSleeptimer />
                 <ContextActionPlaybackSpeed />
               </>
+            ) : mediaType === 'Folder' ? (
+              <ContextMenuHeader
+                mediaItem={mediaItem}
+                mediaType={mediaType}
+                session={session}
+              />
             ) : (
               <>
                 <ContextMenuHeader

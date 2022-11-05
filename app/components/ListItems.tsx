@@ -85,15 +85,17 @@ const ListHeader = ({
                   screenMode={screenMode}
                   listItems={albumItems}
                 />
-                <FastImage
-                  source={{
-                    uri: `${session.hostname}/Items/${item.Id}/Images/Primary?fillHeight=400&fillWidth=400&quality=96`,
-                    headers: {
-                      Accept: 'image/avif,image/webp,*/*',
-                    },
-                  }}
-                  style={styles.image}
-                />
+                {mediaType !== 'Folder' ? (
+                  <FastImage
+                    source={{
+                      uri: `${session.hostname}/Items/${item.Id}/Images/Primary?fillHeight=400&fillWidth=400&quality=96`,
+                      headers: {
+                        Accept: 'image/avif,image/webp,*/*',
+                      },
+                    }}
+                    style={styles.image}
+                  />
+                ) : null}
               </>
             ) : null}
             <Text style={styles.albumTitle}>{item.Name}</Text>
@@ -116,162 +118,168 @@ const ListHeader = ({
                 {item.GenreItems.map(genre => genre.Name).join(', ')}
               </Text>
             ) : null}
-            <View style={styles.buttonContainer}>
-              <View style={styles.actionButtonsContainer}>
-                {isDownloaded === 'isDownloaded' ? (
+            {mediaType !== 'Folder' ? (
+              <View style={styles.buttonContainer}>
+                <View style={styles.actionButtonsContainer}>
+                  {isDownloaded === 'isDownloaded' ? (
+                    <TouchableOpacity
+                      title="Download"
+                      onPress={async () =>
+                        useDownloadItem(session, albumItems, item)
+                      }
+                      style={[
+                        styles.actionButton,
+                        {marginLeft: sizes.marginListX / 2},
+                      ]}>
+                      <Text>
+                        <Icon
+                          name="ios-arrow-down-circle-sharp"
+                          size={30}
+                          color={colours.accent}
+                        />
+                      </Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      title="Download"
+                      onPress={async () =>
+                        useDownloadItem(session, albumItems, item)
+                      }
+                      style={[
+                        styles.actionButton,
+                        {marginLeft: sizes.marginListX / 2},
+                      ]}>
+                      <Text>
+                        <Icon
+                          name="ios-arrow-down-circle-outline"
+                          size={30}
+                          color={colours.grey['500']}
+                        />
+                      </Text>
+                    </TouchableOpacity>
+                  )}
                   <TouchableOpacity
-                    title="Download"
+                    title="Add to qeue"
                     onPress={async () =>
-                      useDownloadItem(session, albumItems, item)
-                    }
-                    style={[
-                      styles.actionButton,
-                      {marginLeft: sizes.marginListX / 2},
-                    ]}>
-                    <Text>
-                      <Icon
-                        name="ios-arrow-down-circle-sharp"
-                        size={30}
-                        color={colours.accent}
-                      />
-                    </Text>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    title="Download"
-                    onPress={async () =>
-                      useDownloadItem(session, albumItems, item)
-                    }
-                    style={[
-                      styles.actionButton,
-                      {marginLeft: sizes.marginListX / 2},
-                    ]}>
-                    <Text>
-                      <Icon
-                        name="ios-arrow-down-circle-outline"
-                        size={30}
-                        color={colours.grey['500']}
-                      />
-                    </Text>
-                  </TouchableOpacity>
-                )}
-                <TouchableOpacity
-                  title="Add to qeue"
-                  onPress={async () =>
-                    await addAlbumToQueue(
-                      albumItems.Items,
-                      session,
-                      bitrateLimit,
-                    )
-                  }
-                  style={styles.actionButton}>
-                  <Text>
-                    <Icon name="ios-list" size={30} color={colours.accent} />
-                  </Text>
-                </TouchableOpacity>
-                {'UserData' in item !== false && item.UserData.IsFavorite ? (
-                  <TouchableOpacity
-                    onPress={async () =>
-                      await jellyfin
-                        .postFavorite(session, item.Id, 'POST')
-                        .then(res => {
-                          mutate();
-                          console.log('Success posting favourites: ', res);
-                        })
-                        .catch(res => {
-                          mutate();
-                          console.log('Error posting favourites: ', res);
-                        })
+                      await addAlbumToQueue(
+                        albumItems.Items,
+                        session,
+                        bitrateLimit,
+                      )
                     }
                     style={styles.actionButton}>
                     <Text>
-                      <Icon name="ios-heart" size={30} color={colours.accent} />
+                      <Icon name="ios-list" size={30} color={colours.accent} />
                     </Text>
                   </TouchableOpacity>
-                ) : (
+                  {'UserData' in item !== false && item.UserData.IsFavorite ? (
+                    <TouchableOpacity
+                      onPress={async () =>
+                        await jellyfin
+                          .postFavorite(session, item.Id, 'POST')
+                          .then(res => {
+                            mutate();
+                            console.log('Success posting favourites: ', res);
+                          })
+                          .catch(res => {
+                            mutate();
+                            console.log('Error posting favourites: ', res);
+                          })
+                      }
+                      style={styles.actionButton}>
+                      <Text>
+                        <Icon
+                          name="ios-heart"
+                          size={30}
+                          color={colours.accent}
+                        />
+                      </Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      onPress={async () =>
+                        await jellyfin
+                          .postFavorite(session, item.Id, 'POST')
+                          .then(res => {
+                            mutate();
+                            console.log('Error posting favourites: ', res);
+                          })
+                          .catch(res => {
+                            mutate();
+                            console.log('Error posting favourites: ', res);
+                          })
+                      }
+                      style={styles.actionButton}>
+                      <Text>
+                        <Icon
+                          name="ios-heart-outline"
+                          size={30}
+                          color={colours.accent}
+                        />
+                      </Text>
+                    </TouchableOpacity>
+                  )}
                   <TouchableOpacity
+                    title="Shuffle"
                     onPress={async () =>
-                      await jellyfin
-                        .postFavorite(session, item.Id, 'POST')
-                        .then(res => {
-                          mutate();
-                          console.log('Error posting favourites: ', res);
-                        })
-                        .catch(res => {
-                          mutate();
-                          console.log('Error posting favourites: ', res);
-                        })
+                      await playShuffleList(
+                        albumItems.Items,
+                        session,
+                        bitrateLimit,
+                      )
                     }
                     style={styles.actionButton}>
                     <Text>
-                      <Icon
-                        name="ios-heart-outline"
-                        size={30}
-                        color={colours.accent}
-                      />
+                      <Icon name="shuffle" size={25} color={colours.accent} />
                     </Text>
                   </TouchableOpacity>
-                )}
-                <TouchableOpacity
-                  title="Shuffle"
-                  onPress={async () =>
-                    await playShuffleList(
-                      albumItems.Items,
-                      session,
-                      bitrateLimit,
-                    )
-                  }
-                  style={styles.actionButton}>
-                  <Text>
-                    <Icon name="shuffle" size={25} color={colours.accent} />
-                  </Text>
-                </TouchableOpacity>
+                </View>
+                <View>
+                  {isPlaying && itemIsPlaying ? (
+                    <TouchableOpacity
+                      title="Pause"
+                      onPress={async () => await TrackPlayer.pause()}
+                      style={styles.playButton}>
+                      <Text>
+                        <Icon
+                          name="pause-circle"
+                          size={80}
+                          color={colours.accent}
+                        />
+                      </Text>
+                    </TouchableOpacity>
+                  ) : itemIsPlaying ? (
+                    <TouchableOpacity
+                      title="Play"
+                      onPress={async () => await TrackPlayer.play()}
+                      style={styles.playButton}>
+                      <Text>
+                        <Icon
+                          name="play-circle"
+                          size={80}
+                          color={colours.accent}
+                        />
+                      </Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      title="Play"
+                      onPress={async () =>
+                        await playAlbum(albumItems.Items, session, bitrateLimit)
+                      }
+                      style={styles.playButton}>
+                      <Text>
+                        <Icon
+                          name="play-circle"
+                          size={80}
+                          color={colours.accent}
+                        />
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
               </View>
-              <View>
-                {isPlaying && itemIsPlaying ? (
-                  <TouchableOpacity
-                    title="Pause"
-                    onPress={async () => await TrackPlayer.pause()}
-                    style={styles.playButton}>
-                    <Text>
-                      <Icon
-                        name="pause-circle"
-                        size={80}
-                        color={colours.accent}
-                      />
-                    </Text>
-                  </TouchableOpacity>
-                ) : itemIsPlaying ? (
-                  <TouchableOpacity
-                    title="Play"
-                    onPress={async () => await TrackPlayer.play()}
-                    style={styles.playButton}>
-                    <Text>
-                      <Icon
-                        name="play-circle"
-                        size={80}
-                        color={colours.accent}
-                      />
-                    </Text>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    title="Play"
-                    onPress={async () =>
-                      await playAlbum(albumItems.Items, session, bitrateLimit)
-                    }
-                    style={styles.playButton}>
-                    <Text>
-                      <Icon
-                        name="play-circle"
-                        size={80}
-                        color={colours.accent}
-                      />
-                    </Text>
-                  </TouchableOpacity>
-                )}
-              </View>
-            </View>
+            ) : null}
           </>
         </LinearGradient>
       ) : (

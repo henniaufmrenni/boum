@@ -8,12 +8,12 @@ const useSetBitrateLimit = async (
   maxBitrateMobile: number,
 ) => {
   maxBitrateMobile && maxBitrateWifi
-    ? ((session['maxBitrateMobile'] = maxBitrateMobile),
-      (session['maxBitrateWifi'] = maxBitrateWifi))
+    ? ((session.maxBitrateMobile = maxBitrateMobile),
+      (session.maxBitrateWifi = maxBitrateWifi))
     : maxBitrateMobile
-    ? (session['maxBitrateMobile'] = maxBitrateMobile)
+    ? (session.maxBitrateMobile = maxBitrateMobile)
     : maxBitrateWifi
-    ? (session['maxBitrateWifi'] = maxBitrateWifi)
+    ? (session.maxBitrateWifi = maxBitrateWifi)
     : null;
 
   await storeEncryptedValue('user_session', JSON.stringify(session))

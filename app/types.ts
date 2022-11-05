@@ -72,7 +72,7 @@ type Session = {
   deviceId: string;
 };
 
-type MediaType = 'Album' | 'Song' | 'Playlist';
+type MediaType = 'Album' | 'Song' | 'Playlist' | 'Folder';
 
 type ScreenMode = 'ListView' | 'PlayerView';
 

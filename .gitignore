@@ -24,6 +24,7 @@ DerivedData
 # Android/IntelliJ
 #
 build/
+android/app/src/main/assets/index.android.bundle
 .idea
 .gradle
 local.properties
@@ -66,7 +67,8 @@ buck-out/
 
 # Java Key Store
 android/app/boum-upload.jks
-aandroid/gradle.properties
+android/gradle.properties
+
 
 # Jellyfin dev server data
 devdata/
