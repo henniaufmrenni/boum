@@ -4,7 +4,7 @@ import FastImage from 'react-native-fast-image';
 
 import ButtonBoum from '@boum/components/Settings/ButtonBoum';
 import {boumLogo, colours} from '@boum/constants';
-import {useLogin} from '@boum/hooks';
+import {useLogin, useValidateLogin} from '@boum/hooks';
 
 const width = Dimensions.get('window').width;
 
@@ -12,6 +12,17 @@ const LoginScreen = ({}) => {
   const [hostname, onChangeHostname] = useState<string>('');
   const [username, onChangeUsername] = useState<string>('');
   const [password, onChangePassword] = useState<string>('');
+  const [loginStatus, setLoginStatus] = useState<string>('');
+  const [loginDisabled, setLoginDisabled] = useState<boolean>(true);
+  const [isValidUrl, setIsValidUrl] = useState<boolean>(false);
+  useValidateLogin(
+    hostname,
+    username,
+    password,
+    isValidUrl,
+    setIsValidUrl,
+    setLoginDisabled,
+  );
 
   return (
     <View style={styles.container}>
@@ -21,19 +32,26 @@ const LoginScreen = ({}) => {
         style={styles.input}
         onChangeText={onChangeHostname}
         value={hostname}
-        placeholder="http://192.168.0.1:8096"
+        autoCapitalize={'none'}
+        placeholder={'http://192.168.0.1:8096'}
         autoCorrect={false}
         keyboardType={'url'}
         placeholderTextColor={colours.grey[500]}
         accessibilityLabel={'hostname input'}
       />
+      {!isValidUrl && hostname.length >= 8 ? (
+        <Text style={styles.errorText}>
+          Hostname must contain http:// or https://
+        </Text>
+      ) : null}
       <Text style={styles.text}>Username</Text>
       <TextInput
         style={styles.input}
         onChangeText={onChangeUsername}
         value={username}
-        placeholder="Username"
+        placeholder={'Username'}
         autoCorrect={false}
+        autoCapitalize={'none'}
         keyboardType={'default'}
         placeholderTextColor={colours.grey[500]}
         accessibilityLabel={'username input'}
@@ -43,18 +61,24 @@ const LoginScreen = ({}) => {
         style={styles.input}
         onChangeText={onChangePassword}
         value={password}
-        placeholder="Password"
+        placeholder={'Password'}
+        autoCapitalize={'none'}
         autoCorrect={false}
         secureTextEntry={true}
         placeholderTextColor={colours.grey[500]}
         accessibilityLabel={'password input'}
       />
       <ButtonBoum
-        onPress={async () =>
-          useLogin(hostname, username, password).then(res => console.log(res))
-        }
+        onPress={async () => {
+          useLogin(hostname, username, password, setLoginStatus).then(res =>
+            console.log(res),
+          );
+          setLoginDisabled(true);
+        }}
         title={'Login'}
+        isDisabled={loginDisabled}
       />
+      <Text style={styles.text}>{loginStatus}</Text>
     </View>
   );
 };
@@ -77,6 +101,12 @@ const styles = StyleSheet.create({
     color: colours.white,
     fontSize: 24,
     fontFamily: 'Inter-SemiBold',
+    textAlign: 'center',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 16,
+    fontFamily: 'Inter-Medium',
     textAlign: 'center',
   },
   input: {

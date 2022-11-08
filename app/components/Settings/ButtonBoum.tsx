@@ -1,5 +1,11 @@
 import React from 'react';
-import {Dimensions, StyleSheet, Text, TouchableHighlight} from 'react-native';
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
+} from 'react-native';
 
 import {colours} from '@boum/constants';
 
@@ -8,14 +14,25 @@ const width = Dimensions.get('window').width;
 type Props = {
   onPress: () => void;
   title: string;
+  isDisabled?: boolean;
 };
 
-const ButtonBoum = ({onPress, title}: Props) => {
+const ButtonBoum = ({onPress, title, isDisabled}: Props) => {
   return (
     <>
-      <TouchableHighlight onPress={onPress} style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>{title}</Text>
-      </TouchableHighlight>
+      {isDisabled ? (
+        <View style={styles.buttonContainer}>
+          <Text style={[styles.buttonText, {color: colours.grey[400]}]}>
+            {title}
+          </Text>
+        </View>
+      ) : (
+        <TouchableHighlight onPress={onPress} style={styles.buttonContainer}>
+          <Text style={[styles.buttonText, {color: colours.white}]}>
+            {title}
+          </Text>
+        </TouchableHighlight>
+      )}
     </>
   );
 };
@@ -36,7 +53,6 @@ const styles = StyleSheet.create({
     backgroundColor: colours.black,
   },
   buttonText: {
-    color: colours.white,
     fontSize: 20,
     fontWeight: '600',
   },
