@@ -80,7 +80,7 @@ type SortBy = 'SortName' | 'Random' | 'DateCreated';
 
 type SortOrder = 'Ascending' | 'Descending';
 
-type Filter = 'IsFavorite' | '';
+type Filters = 'IsFavorite' | '';
 
 type DownloadStatus = 'started' | 'active' | 'success' | 'failure';
 
@@ -97,7 +97,7 @@ export type {
   Session,
   SortBy,
   SortOrder,
-  Filter,
+  Filters,
   DownloadStatus,
   isDownloaded,
   NavigationDestination,

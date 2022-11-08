@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {SortBy, SortOrder} from '@boum/types';
+import {Filters, SortBy, SortOrder} from '@boum/types';
 
 import {colours, sizes} from '@boum/constants';
 
@@ -25,6 +25,8 @@ type LibraryHeaderProps = {
   disableFiltering?: boolean;
   modalOpen: boolean;
   setModalOpen: (arg0: boolean) => void;
+  filters?: Filters;
+  setFilters?: (filter: Filters) => void;
 };
 
 class LibraryHeader extends React.PureComponent<LibraryHeaderProps> {
@@ -47,26 +49,63 @@ class LibraryHeader extends React.PureComponent<LibraryHeaderProps> {
         </View>
         {this.props.modalOpen ? (
           <>
-            <TextInput
-              style={styles.input}
-              onChangeText={this.props.setSearchTerm}
-              value={this.props.searchTerm}
-              placeholder="..."
-              placeholderTextColor={colours.grey[500]}
-            />
-            <View style={styles.buttonsContainer}>
-              {this.props.sortBy === 'SortName' ? (
-                <>
+            <View
+              style={[
+                styles.inputAndHeartContainer,
+                {
+                  width: this.props.setFilters !== undefined ? '85%' : '100%',
+                },
+              ]}>
+              <TextInput
+                style={styles.input}
+                onChangeText={this.props.setSearchTerm}
+                value={this.props.searchTerm}
+                placeholder="..."
+                placeholderTextColor={colours.grey[500]}
+              />
+              {this.props.filters === 'IsFavorite' &&
+              this.props.setFilters !== undefined ? (
+                <View style={styles.heartContainer}>
                   <TouchableOpacity
                     onPress={() => {
-                      this.props.setSortBy('DateCreated');
-                      this.props.setSortOrder('Descending');
+                      this.props.setFilters('');
                       this.props.mutate();
-                    }}
-                    style={styles.buttonContainer}>
-                    <Text style={styles.buttonText}>Alphabetical</Text>
+                    }}>
+                    <Text>
+                      <Icon name="ios-heart" size={25} color={colours.white} />
+                    </Text>
                   </TouchableOpacity>
-                </>
+                </View>
+              ) : this.props.filters === '' &&
+                this.props.setFilters !== undefined ? (
+                <View style={styles.heartContainer}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.props.setFilters('IsFavorite');
+                      this.props.mutate();
+                    }}>
+                    <Text>
+                      <Icon
+                        name="ios-heart-outline"
+                        size={25}
+                        color={colours.white}
+                      />
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ) : null}
+            </View>
+            <View style={styles.buttonsContainer}>
+              {this.props.sortBy === 'SortName' ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    this.props.setSortBy('DateCreated');
+                    this.props.setSortOrder('Descending');
+                    this.props.mutate();
+                  }}
+                  style={styles.buttonContainer}>
+                  <Text style={styles.buttonText}>Alphabetical</Text>
+                </TouchableOpacity>
               ) : this.props.sortBy === 'DateCreated' ? (
                 <>
                   <TouchableOpacity
@@ -159,8 +198,7 @@ const styles = StyleSheet.create({
     width: '40%',
     borderBackground: colours.grey['800'],
     borderColor: colours.grey['500'],
-    paddingLeft: sizes.marginListX / 2,
-    paddingRight: sizes.marginListX / 2,
+    paddingHorizontal: sizes.marginListX / 2,
     paddingTop: sizes.marginListY / 2,
     paddingBottom: sizes.marginListY / 2,
     borderRadius: 10,
@@ -170,14 +208,28 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: colours.black,
     color: colours.white,
-    width: '95%',
     alignSelf: 'center',
+    width: '100%',
     borderColor: colours.grey['500'],
     borderWidth: 1,
     padding: 12,
     height: 45,
     fontFamily: 'Inter-Regular',
     borderRadius: 10,
+  },
+  heartContainer: {
+    width: '15%',
+    marginLeft: '3%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: colours.grey[500],
+    borderRadius: 10,
+  },
+  inputAndHeartContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    paddingHorizontal: sizes.marginListX / 2,
   },
 });
 

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 
 import LibraryHeader from '@boum/components/Library/LibraryHeader';
@@ -39,13 +39,15 @@ const AlbumsScreen = ({navigation}: AlbumsScreenProps) => {
   const setSortOrder = useAlbumsStore(state => state.setSortOrder);
   const searchTerm = useAlbumsStore(state => state.searchTerm);
   const setSearchTerm = useAlbumsStore(state => state.setSearchTerm);
+  const filters = useAlbumsStore(state => state.filters);
+  const setFilters = useAlbumsStore(state => state.setFilters);
   const {allAlbumsData, allAlbumsError, allAlbumsLoading, allAlbumsMutate} =
     jellyfin.getAllAlbums(
       session,
       startIndex,
       sortBy,
       sortOrder,
-      '',
+      filters,
       searchTerm,
     );
 
@@ -78,6 +80,8 @@ const AlbumsScreen = ({navigation}: AlbumsScreenProps) => {
     mutate();
   };
 
+  useEffect(() => console.log(filters), [filters]);
+
   return (
     <>
       <View style={styles.container}>
@@ -99,6 +103,8 @@ const AlbumsScreen = ({navigation}: AlbumsScreenProps) => {
               setSearchTerm={updateSearchTerm}
               modalOpen={modalOpen}
               setModalOpen={setModalOpen}
+              filters={filters}
+              setFilters={setFilters}
             />
           }
           renderItem={({item}) => (
