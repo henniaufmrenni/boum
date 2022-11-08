@@ -6,10 +6,14 @@ boum is a modern and sleek music app for [Jellyfin](https://github.com/jellyfin/
 
 The name _la_ boum [bum], originates from the "cool" french word for party in the 80s. La boum is also the name of a [french classic](https://www.youtube.com/watch?v=D9KX35J1kWg).
 
+☞ Want boum on iOS? [Consider sponsoring](https://github.com/henniaufmrenni/boum/issues/35)
+
 [![build-release](https://github.com/henniaufmrenni/boum/actions/workflows/android-build-release.yml/badge.svg)](https://github.com/henniaufmrenni/boum/actions/workflows/android-build-release.yml)
 [![latest release](https://badgen.net/github/release/henniaufmrenni/boum?icon=github)](https://github.com/henniaufmrenni/boum/releases/latest)
 [![open issues](https://img.shields.io/github/issues/henniaufmrenni/boum/bug?color=C6474F&label=open%20bug-issues)](https://github.com/henniaufmrenni/boum/issues?q=is%3Aissue+is%3Aopen+label%3Abug)
 [![open feature requests](https://img.shields.io/github/issues/henniaufmrenni/boum/enhancement?color=B3ECEE&label=open%20feature-requests)](https://github.com/henniaufmrenni/boum/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement)
+[![Github Sponsors](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/henniaufmrenni)
+[![Github Sponsors](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=liberapay&color=yellow)](https://liberapay.com/henniaufmrenni)
 
 <p float="left">
   <a href="https://play.google.com/store/apps/details?id=de.eindm.boum"><img src=".github/.assets/badge-google-play.png" width="250"/></a>
