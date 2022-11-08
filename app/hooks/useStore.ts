@@ -2,7 +2,7 @@ import {any} from 'prop-types';
 import {RepeatMode} from 'react-native-track-player';
 import create from 'zustand';
 
-import {DownloadStatus, Session} from '@boum/types';
+import {DownloadStatus, Session, SortBy, SortOrder, Filters} from '@boum/types';
 
 type BaseStore = {
   session: Session | null;
@@ -51,9 +51,6 @@ const useStore = create<BaseStore>(set => ({
   setPlaybackSpeed: (speed: number) => set({playbackSpeed: speed}),
 }));
 
-type SortBy = 'SortName' | 'Random' | 'DateCreated';
-type SortOrder = 'Ascending' | 'Descending';
-
 type ItemsStore = {
   itemsPageIndex: number;
   increaseItemsPageIndex: () => void;
@@ -66,6 +63,8 @@ type ItemsStore = {
   setSortOrder: (options: SortOrder) => void;
   searchTerm: string;
   setSearchTerm: (query: string) => void;
+  filters: string;
+  setFilters: (query: Filters) => void;
 };
 
 const useAlbumsStore = create<ItemsStore>(set => ({
@@ -81,6 +80,8 @@ const useAlbumsStore = create<ItemsStore>(set => ({
   setSortOrder: options => set({sortOrder: options}),
   searchTerm: '',
   setSearchTerm: query => set({searchTerm: query}),
+  filters: '',
+  setFilters: filters => set({filters: filters}),
 }));
 
 const useBooksStore = create<ItemsStore>(set => ({
@@ -96,6 +97,8 @@ const useBooksStore = create<ItemsStore>(set => ({
   setSortOrder: options => set({sortOrder: options}),
   searchTerm: '',
   setSearchTerm: query => set({searchTerm: query}),
+  filters: '',
+  setFilters: filters => set({filters: filters}),
 }));
 
 const useArtistsStore = create<ItemsStore>(set => ({
@@ -111,6 +114,8 @@ const useArtistsStore = create<ItemsStore>(set => ({
   setSortOrder: options => set({sortOrder: options}),
   searchTerm: '',
   setSearchTerm: query => set({searchTerm: query}),
+  filters: '',
+  setFilters: filters => set({filters: filters}),
 }));
 
 const usePlaylistsStore = create<ItemsStore>(set => ({
@@ -126,6 +131,8 @@ const usePlaylistsStore = create<ItemsStore>(set => ({
   setSortOrder: options => set({sortOrder: options}),
   searchTerm: '',
   setSearchTerm: query => set({searchTerm: query}),
+  filters: '',
+  setFilters: filters => set({filters: filters}),
 }));
 
 type SearchStoreState = {
