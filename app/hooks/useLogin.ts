@@ -8,9 +8,18 @@ const useLogin = async (
   hostname: string,
   username: string,
   password: string,
+  setLoginStatus: (string: string) => void,
 ) => {
   const deviceId = uuid.v4();
-  const response = await getToken(hostname, username, password, deviceId);
+  const response = await getToken(
+    hostname,
+    username,
+    password,
+    deviceId,
+    setLoginStatus,
+  );
+
+  console.log(response);
   if (response.error == null) {
     return "Coudln't login.";
   } else {
@@ -40,6 +49,7 @@ const getToken = async (
   username: string,
   password: string,
   deviceId: string,
+  setLoginStatus: (string: string) => void,
 ) => {
   const clientHeaders = `MediaBrowser Client="Boum", Device="Firefox", DeviceId="${deviceId}", Version="0.0.1"`;
   return fetch(`${url}/Users/authenticatebyname`, {
@@ -56,6 +66,11 @@ const getToken = async (
     }),
   })
     .then(response => {
+      if (response.status === 401) {
+        setLoginStatus('Wrong username / password');
+        return;
+      }
+
       return response.json();
     })
     .then(json => {
@@ -63,6 +78,7 @@ const getToken = async (
     })
     .catch(error => {
       console.error(error);
+      setLoginStatus('Network request failed');
       return {res: error, error: true};
     });
 };
