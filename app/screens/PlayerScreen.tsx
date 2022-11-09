@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
   StyleSheet,
@@ -23,6 +23,8 @@ import {useStore, useToggleRepeatMode} from '@boum/hooks';
 import {getMinSec} from '@boum/lib/helper/helper';
 import {NavigationProp} from '@react-navigation/native';
 import {Slider} from '@sharcoux/slider';
+import {jellyfinClient} from '@boum/lib/api';
+import {SuccessMessage} from '@boum/types';
 
 const width = Dimensions.get('window').width;
 
@@ -31,7 +33,11 @@ type PlayerScreenProps = {
 };
 
 const PlayerScreen = ({navigation}: PlayerScreenProps) => {
-  const [overlayHidden, setOverlayHidden] = useState(true);
+  const jellyfin = new jellyfinClient();
+  const [overlayHidden, setOverlayHidden] = useState<boolean>(true);
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const [actionStatus, setActionStatus] =
+    useState<SuccessMessage>('not triggered');
 
   const {position, duration} = useProgress();
   const playerState = usePlaybackState();
@@ -47,6 +53,11 @@ const PlayerScreen = ({navigation}: PlayerScreenProps) => {
   const currentTrack = queue[track];
   const sleepTimer = useStore(state => state.sleepTimer);
   const playbackSpeed = useStore(state => state.playbackSpeed);
+
+  useEffect(() => {
+    setIsFavorite(currentTrack.isFavorite);
+    setActionStatus('not triggered');
+  }, [currentTrack]);
 
   return (
     <View style={styles.container}>
@@ -238,13 +249,55 @@ const PlayerScreen = ({navigation}: PlayerScreenProps) => {
             )}
           </>
           <View style={styles.playerMetaControlsContainer}>
-            <TouchableOpacity
-              onPress={async () => await TrackPlayer.skipToNext()}
-              style={styles.button}>
-              <Text>
-                <Icon name="heart-outline" size={30} color={colours.accent} />
-              </Text>
-            </TouchableOpacity>
+            <View>
+              {isFavorite ? (
+                <TouchableOpacity
+                  onPress={async () => {
+                    await jellyfin
+                      .postFavorite(session, currentTrack.id, 'DELETE')
+                      .then(status => {
+                        if (status === 200) {
+                          setIsFavorite(false);
+                          setActionStatus('success');
+                        } else {
+                          setActionStatus('fail');
+                        }
+                      });
+                  }}
+                  style={styles.button}>
+                  <Text>
+                    <Icon name="heart" size={30} color={colours.accent} />
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={async () => {
+                    await jellyfin
+                      .postFavorite(session, currentTrack.id, 'POST')
+                      .then(status => {
+                        if (status === 200) {
+                          setIsFavorite(true);
+                          setActionStatus('success');
+                        } else {
+                          setActionStatus('fail');
+                        }
+                      });
+                  }}
+                  style={styles.button}>
+                  <Text>
+                    <Icon
+                      name="heart-outline"
+                      size={30}
+                      color={colours.accent}
+                    />
+                  </Text>
+                </TouchableOpacity>
+              )}
+              {actionStatus === 'fail' ? (
+                <Icon name="close-circle" size={20} color={'red'} />
+              ) : null}
+            </View>
+
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('Queue', {});
