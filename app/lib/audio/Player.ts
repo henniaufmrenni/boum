@@ -102,6 +102,7 @@ const mapJellyfinTrackToPlayer = async (
           albumId: jellyfinInput[0].AlbumId,
           date: inputItem.PremiereDate,
           duration: (inputItem.RunTimeTicks / 1000).toFixed(0),
+          isFavorite: inputItem.UserData.IsFavorite,
           url: `file://${localFile[0].fileLocation}`,
           artwork: `file://${localFile[0].imageLocation}`,
           headers: {
@@ -120,6 +121,7 @@ const mapJellyfinTrackToPlayer = async (
           albumId: jellyfinInput[0].AlbumId,
           date: inputItem.PremiereDate,
           duration: (inputItem.RunTimeTicks / 1000).toFixed(0),
+          isFavorite: inputItem.UserData.IsFavorite,
           url: `${session.hostname}/Audio/${inputItem.Id}/stream.aac?UserId=${session.userId}&MaxStreamingBitrate=${bitrateLimit}&TranscodingContainer=ts&TranscodingProtocol=hls&AudioCodec=aac&StartTimeTicks=0&EnableRedirection=true&EnableRemoteMedia=false&static=true`,
           artwork: `${session.hostname}/Items/${inputItem.AlbumId}/Images/Primary?fillHeight=400&fillWidth=400&quality=96`,
           headers: {
@@ -138,6 +140,7 @@ const mapJellyfinTrackToPlayer = async (
           albumId: jellyfinInput[0].AlbumId,
           date: inputItem.PremiereDate,
           duration: (inputItem.RunTimeTicks / 1000).toFixed(0),
+          isFavorite: inputItem.UserData.IsFavorite,
           url: `${session.hostname}/Audio/${inputItem.Id}/universal?UserId=${session.userId}&MaxStreamingBitrate=140000000&Container=opus,webm|opus,mp3,aac,m4a|aac,m4b|aac,flac,webma,webm|webma,wav,ogg&TranscodingContainer=ts&TranscodingProtocol=hls&AudioCodec=aac&StartTimeTicks=0&EnableRedirection=true&EnableRemoteMedia=false&static=true`,
           artwork: `${session.hostname}/Items/${inputItem.AlbumId}/Images/Primary?fillHeight=400&fillWidth=400&quality=96`,
           headers: {
