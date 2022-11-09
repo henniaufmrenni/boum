@@ -1,43 +1,77 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import {ContextAction} from '@boum/components/ContextMenu';
-import {colours} from '@boum/constants';
-import {Session, SuccessMessage} from '@boum/types';
+import {MediaItem, Session, SuccessMessage} from '@boum/types';
 import {jellyfinClient} from '@boum/lib/api';
 
 type ContextActionLikeProps = {
-  itemId: string;
+  mediaItem: MediaItem;
   session: Session;
 };
 
-const ContextActionLike = ({session, itemId}: ContextActionLikeProps) => {
+const ContextActionLike = ({session, mediaItem}: ContextActionLikeProps) => {
   const jellyfin = new jellyfinClient();
   const [actionStatus, setActionStatus] =
     useState<SuccessMessage>('not triggered');
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsFavorite(mediaItem.UserData.IsFavorite);
+    setActionStatus('not triggered');
+  }, []);
+
   return (
-    <ContextAction
-      title="Like"
-      ioniconIcon="ios-heart"
-      action={async () => {
-        await jellyfin.postFavorite(session, itemId, 'POST').then(status => {
-          if (status === 200) {
-            setActionStatus('success');
-          } else {
-            setActionStatus('fail');
+    <>
+      {isFavorite ? (
+        <ContextAction
+          title="Like"
+          ioniconIcon="ios-heart"
+          action={async () => {
+            await jellyfin
+              .postFavorite(session, mediaItem.Id, 'DELETE')
+              .then(status => {
+                if (status === 200) {
+                  setActionStatus('success');
+                  setIsFavorite(false);
+                } else {
+                  setActionStatus('fail');
+                }
+              });
+          }}
+          actionStatusMessage={
+            <>
+              {actionStatus === 'fail' ? (
+                <Icon name="close-circle" size={25} color={'red'} />
+              ) : null}
+            </>
           }
-        });
-      }}
-      actionStatusMessage={
-        <>
-          {actionStatus === 'success' ? (
-            <Icon name="checkmark-circle" size={25} color={colours.green} />
-          ) : actionStatus === 'fail' ? (
-            <Icon name="close-circle" size={25} color={'red'} />
-          ) : null}
-        </>
-      }
-    />
+        />
+      ) : (
+        <ContextAction
+          title="Like"
+          ioniconIcon="ios-heart-outline"
+          action={async () => {
+            await jellyfin
+              .postFavorite(session, mediaItem.Id, 'POST')
+              .then(status => {
+                if (status === 200) {
+                  setIsFavorite(true);
+                } else {
+                  setActionStatus('fail');
+                }
+              });
+          }}
+          actionStatusMessage={
+            <>
+              {actionStatus === 'fail' ? (
+                <Icon name="close-circle" size={25} color={'red'} />
+              ) : null}
+            </>
+          }
+        />
+      )}
+    </>
   );
 };
 

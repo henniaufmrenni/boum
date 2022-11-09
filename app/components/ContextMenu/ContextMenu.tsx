@@ -145,7 +145,7 @@ const SlideInContextMenu = ({
                   mediaType={mediaType}
                   session={session}
                 />
-                <ContextActionLike itemId={mediaItem.Id} session={session} />
+                <ContextActionLike mediaItem={mediaItem} session={session} />
                 <ContextActionPlaylist item={mediaItem} session={session} />
                 <ContextActionAddToQueue
                   item={mediaItem}
