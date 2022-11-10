@@ -210,7 +210,7 @@ const getChildrenEntriesForParent = async (
   parentId: string,
 ) => {
   const query = `
-  SELECT id, name, status
+  SELECT id, name, status, file_location
   FROM ${singleItemsName}
   WHERE parent_id = ('${parentId}');`;
 
@@ -225,6 +225,7 @@ const getChildrenEntriesForParent = async (
             id: result.rows.item(index).id,
             name: result.rows.item(index).name.replace(/\''/g, "'"),
             status: result.rows.item(index).status,
+            fileLocation: result.rows.item(index).file_location,
           };
           entries.push(entryObject);
         }
@@ -306,7 +307,7 @@ const writeKeyValueData = async (
 
   await db
     .executeSql(query)
-    //.then(() => console.log('DB: Successfully saved key value data'))
+    .then(res => console.log('DB: Successfully saved key value data', res))
     .catch(err => console.warn('DB: Error saving key value data', err));
   return;
 };

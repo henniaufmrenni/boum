@@ -92,6 +92,13 @@ type SuccessMessage = 'success' | 'fail' | 'not triggered';
 
 type favoriteAction = 'POST' | 'DELETE';
 
+type SelectedStorageLocation =
+  | 'DocumentDirectory'
+  | 'DownloadDirectory'
+  | 'ExternalDirectory';
+
+type Result<T, E = Error> = {ok: true; value: T} | {ok: false; error: E};
+
 export type {
   MediaItem,
   Session,
@@ -107,4 +114,6 @@ export type {
   SuccessMessage,
   LibraryItemList,
   favoriteAction,
+  SelectedStorageLocation,
+  Result,
 };

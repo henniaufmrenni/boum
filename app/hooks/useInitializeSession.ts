@@ -15,20 +15,26 @@ const useIntializeSession = async () => {
         })
         .catch(error => {
           useStore.setState({gotLoginStatus: true});
-          //console.error('No user session', error);
+          console.error('No user session', error);
         });
+
       await retrieveEncryptedValue('offline_mode')
         .then(response => {
-          //console.log('Offline Mode: ', response);
           if (response === 'true') {
             useStore.setState({offlineMode: true});
-            //console.log('Read offline mode as true');
           }
-          useStore.setState({gotLoginStatus: true});
         })
         .catch(error => {
-          useStore.setState({gotLoginStatus: true});
-          //console.error('No Offline mode set', error);
+          console.error('No Offline mode set', error);
+        });
+
+      await retrieveEncryptedValue('selected_storage_location')
+        .then(async response => {
+          useStore.setState({selectedStorageLocation: response});
+        })
+        .catch(error => {
+          console.error('No storage location set', error);
+          useStore.setState({selectedStorageLocation: 'DocumentDirectory'});
         });
     }
     init();

@@ -38,11 +38,16 @@ const AlbumScreen = ({navigation, route}: AlbumScreenProps) => {
 
   const track = useStore(state => state.currentTrack);
   const queue = useStore(state => state.queue);
+  const selectedStorageLocation = useStore(
+    state => state.selectedStorageLocation,
+  );
 
   const currentTrack = queue[track];
 
   const playerState = usePlaybackState();
   const isPlaying = playerState === State.Playing;
+
+  console.log('Selected Storage', selectedStorageLocation);
 
   return (
     <>
@@ -72,6 +77,7 @@ const AlbumScreen = ({navigation, route}: AlbumScreenProps) => {
                     : false
                 }
                 isPlaying={isPlaying}
+                selectedStorageLocation={selectedStorageLocation}
               />
             }
             ListFooterComponent={

@@ -2,7 +2,14 @@ import {any} from 'prop-types';
 import {RepeatMode} from 'react-native-track-player';
 import create from 'zustand';
 
-import {DownloadStatus, Session, SortBy, SortOrder, Filters} from '@boum/types';
+import {
+  DownloadStatus,
+  Session,
+  SortBy,
+  SortOrder,
+  Filters,
+  SelectedStorageLocation,
+} from '@boum/types';
 
 type BaseStore = {
   session: Session | null;
@@ -15,6 +22,8 @@ type BaseStore = {
   networkStatus: ConnectionType | null;
   repeatMode: RepeatMode;
   db: any;
+  selectedStorageLocation: SelectedStorageLocation;
+  setSelectedStorageLocation: (value: SelectedStorageLocation) => void;
   offlineMode: boolean;
   playerIsSetup: boolean;
   toggleOfflineMode: () => void;
@@ -38,6 +47,9 @@ const useStore = create<BaseStore>(set => ({
   networkStatus: false,
   repeatMode: RepeatMode.Off,
   db: any,
+  selectedStorageLocation: 'DocumentDirectory',
+  setSelectedStorageLocation: (value: SelectedStorageLocation) =>
+    set(state => ({selectedStorageLocation: value})),
   offlineMode: false,
   playerIsSetup: false,
   toggleOfflineMode: () => set(state => ({offlineMode: !state.offlineMode})),

@@ -1,6 +1,7 @@
 export * from '@boum/hooks/useBitrateLimit';
 export * from '@boum/hooks/useCheckParentIsDownloaded';
 export * from '@boum/hooks/useDeleteAlbum';
+export * from '@boum/hooks/useDownloadItem';
 export * from '@boum/hooks/useGetArtist';
 export * from '@boum/hooks/useGetBooks';
 export * from '@boum/hooks/useGetDownloadItems';
@@ -18,5 +19,3 @@ export * from '@boum/hooks/useStoreEncryptedValue';
 export * from '@boum/hooks/useToggleRepeatMode';
 export * from '@boum/hooks/useTrackPlayer';
 export * from '@boum/hooks/useValidateLogin';
-export * from '@boum/hooks/useDownloadItem';
-export * from '@boum/hooks/useGetBooks';
