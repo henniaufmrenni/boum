@@ -200,9 +200,28 @@ class jellyfinClient {
   };
 
   public getAllGenres = (session: Session) => {
-    const query = `${session.hostname}/Genres?SortBy=SortName&SortOrder=Ascending&Recursive=true&Fields=PrimaryImageAspectRatio,ItemCounts&StartIndex=0&userId=${session.userId}`;
+    let query: string;
     const headers = this.authHeaders(session);
 
+    // We need to first get all libraries and filter the music libraries since we need to pass
+    // the library Id as ParentId to the /Genres query, otherwise all genres will be retrieved,
+    // including movie etc. genres.
+    const queryLibraries = `${session.hostname}/Library/VirtualFolders`;
+    const libraries = useSWR(
+      [queryLibraries, headers],
+      this.fetcher,
+      this.optionsSWR,
+    );
+
+    const musicLibrary = libraries.data?.filter(
+      library => library.CollectionType === 'music',
+    );
+
+    if (musicLibrary !== undefined) {
+      query = `${session.hostname}/Genres?SortBy=SortName&SortOrder=Ascending&Recursive=true&Fields=PrimaryImageAspectRatio,ItemCounts&StartIndex=0&userId=${session.userId}&ParentId=${musicLibrary[0].ItemId}`;
+    } else {
+      query = '';
+    }
     const {data, error, mutate} = useSWR(
       [query, headers],
       this.fetcher,
@@ -212,7 +231,6 @@ class jellyfinClient {
     return {
       allGenres: data,
       allGenresLoading: !error && !data,
-      allGenresError: error,
       allGenresMutate: mutate,
     };
   };
