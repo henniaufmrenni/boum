@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
   StyleSheet,
@@ -69,8 +69,11 @@ const ListHeader = ({
   selectedStorageLocation,
 }: ListHeaderProps): JSX.Element => {
   const jellyfin = new jellyfinClient();
-  console.log('Selected Storage Header', selectedStorageLocation);
 
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  useEffect(() => {
+    setIsFavorite(item.UserData.IsFavorite);
+  }, []);
   return (
     <>
       {averageColorRgb && item ? (
@@ -177,20 +180,17 @@ const ListHeader = ({
                       <Icon name="ios-list" size={30} color={colours.accent} />
                     </Text>
                   </TouchableOpacity>
-                  {'UserData' in item !== false && item.UserData.IsFavorite ? (
+                  {isFavorite ? (
                     <TouchableOpacity
-                      onPress={async () =>
+                      onPress={async () => {
                         await jellyfin
-                          .postFavorite(session, item.Id, 'POST')
-                          .then(res => {
-                            mutate();
-                            console.log('Success posting favourites: ', res);
-                          })
-                          .catch(res => {
-                            mutate();
-                            console.log('Error posting favourites: ', res);
-                          })
-                      }
+                          .postFavorite(session, item.Id, 'DELETE')
+                          .then(status => {
+                            if (status === 200) {
+                              setIsFavorite(false);
+                            }
+                          });
+                      }}
                       style={styles.actionButton}>
                       <Text>
                         <Icon
@@ -202,18 +202,15 @@ const ListHeader = ({
                     </TouchableOpacity>
                   ) : (
                     <TouchableOpacity
-                      onPress={async () =>
+                      onPress={async () => {
                         await jellyfin
                           .postFavorite(session, item.Id, 'POST')
-                          .then(res => {
-                            mutate();
-                            console.log('Error posting favourites: ', res);
-                          })
-                          .catch(res => {
-                            mutate();
-                            console.log('Error posting favourites: ', res);
-                          })
-                      }
+                          .then(status => {
+                            if (status === 200) {
+                              setIsFavorite(true);
+                            }
+                          });
+                      }}
                       style={styles.actionButton}>
                       <Text>
                         <Icon

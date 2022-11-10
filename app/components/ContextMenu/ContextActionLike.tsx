@@ -17,10 +17,15 @@ const ContextActionLike = ({session, mediaItem}: ContextActionLikeProps) => {
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsFavorite(mediaItem.UserData.IsFavorite);
+    // Needed since the Trackplayer item and the MediaItem from Jellyfin
+    // aren't identical.
+    if (mediaItem.isFavorite !== undefined) {
+      setIsFavorite(mediaItem.isFavorite);
+    } else {
+      setIsFavorite(mediaItem.UserData.IsFavorite);
+    }
     setActionStatus('not triggered');
   }, []);
-
   return (
     <>
       {isFavorite ? (
@@ -29,7 +34,11 @@ const ContextActionLike = ({session, mediaItem}: ContextActionLikeProps) => {
           ioniconIcon="ios-heart"
           action={async () => {
             await jellyfin
-              .postFavorite(session, mediaItem.Id, 'DELETE')
+              .postFavorite(
+                session,
+                mediaItem.Id ? mediaItem.Id : mediaItem.id,
+                'DELETE',
+              )
               .then(status => {
                 if (status === 200) {
                   setActionStatus('success');
@@ -53,7 +62,11 @@ const ContextActionLike = ({session, mediaItem}: ContextActionLikeProps) => {
           ioniconIcon="ios-heart-outline"
           action={async () => {
             await jellyfin
-              .postFavorite(session, mediaItem.Id, 'POST')
+              .postFavorite(
+                session,
+                mediaItem.Id ? mediaItem.Id : mediaItem.id,
+                'POST',
+              )
               .then(status => {
                 if (status === 200) {
                   setIsFavorite(true);
