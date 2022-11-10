@@ -46,9 +46,6 @@ const AlbumScreen = ({navigation, route}: AlbumScreenProps) => {
 
   const playerState = usePlaybackState();
   const isPlaying = playerState === State.Playing;
-
-  console.log('Selected Storage', selectedStorageLocation);
-
   return (
     <>
       <View style={styles.container}>
