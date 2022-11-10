@@ -7,6 +7,7 @@ import {
   ButtonBoum,
   LogoutButton,
   OfflineModeSwitch,
+  StorageLocationPicker,
   SwitchWithDescription,
 } from '@boum/components/Settings';
 import {colours, versionBoum} from '@boum/constants';
@@ -44,12 +45,14 @@ const SettingsScreen = ({navigation}: Props) => {
       <SwitchWithDescription
         title={'Downloads'}
         description="View your downloads and their status.">
-        <ButtonBoum
-          title={'Go to Downloads'}
-          onPress={() => navigation.navigate('Downloads')}
-        />
+        <>
+          <ButtonBoum
+            title={'Go to Downloads'}
+            onPress={() => navigation.navigate('Downloads')}
+          />
+          <StorageLocationPicker />
+        </>
       </SwitchWithDescription>
-
       <SwitchWithDescription
         title={'Offline Mode'}
         description="Turn on offline mode to only see the albums on your home screen which you've downloaded">
@@ -58,30 +61,33 @@ const SettingsScreen = ({navigation}: Props) => {
       <SwitchWithDescription
         title={'Session'}
         description={`You're currently logged in as ${session.username} on ${session.hostname}.`}>
-        <ButtonBoum
-          title={'Scan Music Libraries'}
-          onPress={async () => {
-            const res = await useScanLibrary(session);
-            setRefreshLibraryResult(res);
-          }}
-        />
-
-        {refreshLibraryResult !== '' ? (
-          <Text style={styles.text}>{refreshLibraryResult}</Text>
-        ) : null}
-        <LogoutButton />
+        <>
+          <ButtonBoum
+            title={'Scan Music Libraries'}
+            onPress={async () => {
+              const res = await useScanLibrary(session);
+              setRefreshLibraryResult(res);
+            }}
+          />
+          {refreshLibraryResult !== '' ? (
+            <Text style={styles.text}>{refreshLibraryResult}</Text>
+          ) : null}
+          <LogoutButton />
+        </>
       </SwitchWithDescription>
       <SwitchWithDescription
         title="License"
         description={`boum version ${versionBoum}\n © Hendrik Stöldt & contributors \nboum is open-source and licensed under GPL-3.0-only.`}>
-        <OpenURLButton
-          title="View on Github"
-          url="https://github.com/henniaufmrenni/boum"
-        />
-        <OpenURLButton
-          title="View the Documentation"
-          url="https://eindm.de/projects/boum"
-        />
+        <>
+          <OpenURLButton
+            title="View on Github"
+            url="https://github.com/henniaufmrenni/boum"
+          />
+          <OpenURLButton
+            title="View the Documentation"
+            url="https://eindm.de/projects/boum"
+          />
+        </>
       </SwitchWithDescription>
     </ScrollView>
   );

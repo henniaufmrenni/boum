@@ -2,55 +2,48 @@ import RNFS, {
   DownloadBeginCallbackResult,
   DownloadProgressCallbackResult,
 } from 'react-native-fs';
-
-import {versionBoum} from '@boum/constants';
 import {
   createParentItemEntries,
   createSingleItemEntries,
   getDBConnection,
   updateSingleItemStatus,
 } from '@boum/lib/db/service';
-import {MediaItem, Session} from '@boum/types';
+import {getDownloadDirPath, path} from '@boum/lib/storage';
+import {versionBoum} from '@boum/constants';
+import {MediaItem, SelectedStorageLocation, Session} from '@boum/types';
 
-import {path} from '@boum/lib/storage';
+const uploadBegin = (res: DownloadBeginCallbackResult) => {
+  const status = 'Download started with Status' + res.statusCode;
+  console.log(status);
+};
+
+const uploadProgress = (res: DownloadProgressCallbackResult, size: number) => {
+  console.log(`Download ${~~((res.bytesWritten / size) * 100)}% completed.`);
+};
 
 const useDownloadItem = async (
   session: Session,
   items: Array<MediaItem>,
   album: object,
+  selectedStorageLocation?: SelectedStorageLocation,
 ) => {
+  const db = await getDBConnection();
+
+  const downloadDirPath = getDownloadDirPath(selectedStorageLocation);
+  const albumDir =
+    downloadDirPath + '/' + album.Name.replace(/[/\\?%*:|"<>]/g, '-');
+  const imageLocation = path(album.Name, 'cover.jpg', selectedStorageLocation);
+
   const headers = {
     'X-Emby-Authorization': `MediaBrowser Client="Boum", DeviceId="${session.deviceId}", Version="${versionBoum}", Token=${session.accessToken}`,
   };
 
-  const uploadBegin = (res: DownloadBeginCallbackResult) => {
-    const status = 'Download started with Status' + res.statusCode;
-    console.log(status);
-  };
-
-  const uploadProgress = (
-    res: DownloadProgressCallbackResult,
-    size: number,
-  ) => {
-    console.log(`Download ${~~((res.bytesWritten / size) * 100)}% completed.`);
-  };
-
-  const db = await getDBConnection();
-
   createParentItemEntries(db, album);
 
-  RNFS.mkdir(
-    RNFS.DocumentDirectoryPath + '/' + album.Name.replace(/\//g, '-'),
-  ).catch(err => {
+  RNFS.mkdir(albumDir).catch(err => {
     console.warn('Storage: Error creating parent direcory ', err);
   });
 
-  const imageLocation =
-    RNFS.DocumentDirectoryPath +
-    '/' +
-    album.Name.replace(/\//g, '-') +
-    '/' +
-    'cover.jpg';
   RNFS.downloadFile({
     fromUrl: `${session.hostname}/Items/${album.Id}/Images/Primary?fillHeight=400&fillWidth=400&quality=96`,
     toFile: imageLocation,
@@ -58,12 +51,12 @@ const useDownloadItem = async (
     background: true,
     discretionary: true,
     cacheable: true,
-  });
+  }).promise.catch(e => console.warn(e));
 
   let queue = [];
 
   items.Items.map(item => {
-    const tempPath = path(item.Album, item.Name);
+    const tempPath = path(item.Album, item.Name, selectedStorageLocation);
     let permPath: string;
     let contentType: string;
     let size: number;
@@ -110,7 +103,6 @@ const useDownloadItem = async (
         updateSingleItemStatus(db, item.Id, 'failure');
       });
   });
-  console.log(queue);
 
   return queue;
 };

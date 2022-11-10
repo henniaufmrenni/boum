@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
   TouchableHighlight,
+  TouchableOpacity,
   View,
 } from 'react-native';
 
@@ -27,11 +28,11 @@ const ButtonBoum = ({onPress, title, isDisabled}: Props) => {
           </Text>
         </View>
       ) : (
-        <TouchableHighlight onPress={onPress} style={styles.buttonContainer}>
+        <TouchableOpacity onPress={onPress} style={styles.buttonContainer}>
           <Text style={[styles.buttonText, {color: colours.white}]}>
             {title}
           </Text>
-        </TouchableHighlight>
+        </TouchableOpacity>
       )}
     </>
   );

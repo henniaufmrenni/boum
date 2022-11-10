@@ -26,6 +26,7 @@ import {
   MediaItem,
   MediaType,
   ScreenMode,
+  SelectedStorageLocation,
   Session,
 } from '@boum/types';
 
@@ -49,6 +50,7 @@ type ListHeaderProps = {
   isPlaying: boolean;
   itemIsPlaying?: boolean;
   screenMode: ScreenMode;
+  selectedStorageLocation?: SelectedStorageLocation;
 };
 
 const ListHeader = ({
@@ -64,8 +66,11 @@ const ListHeader = ({
   isPlaying,
   itemIsPlaying,
   screenMode,
+  selectedStorageLocation,
 }: ListHeaderProps): JSX.Element => {
   const jellyfin = new jellyfinClient();
+  console.log('Selected Storage Header', selectedStorageLocation);
+
   return (
     <>
       {averageColorRgb && item ? (
@@ -122,11 +127,7 @@ const ListHeader = ({
               <View style={styles.buttonContainer}>
                 <View style={styles.actionButtonsContainer}>
                   {isDownloaded === 'isDownloaded' ? (
-                    <TouchableOpacity
-                      title="Download"
-                      onPress={async () =>
-                        useDownloadItem(session, albumItems, item)
-                      }
+                    <View
                       style={[
                         styles.actionButton,
                         {marginLeft: sizes.marginListX / 2},
@@ -138,12 +139,16 @@ const ListHeader = ({
                           color={colours.accent}
                         />
                       </Text>
-                    </TouchableOpacity>
+                    </View>
                   ) : (
                     <TouchableOpacity
-                      title="Download"
                       onPress={async () =>
-                        useDownloadItem(session, albumItems, item)
+                        useDownloadItem(
+                          session,
+                          albumItems,
+                          item,
+                          selectedStorageLocation,
+                        )
                       }
                       style={[
                         styles.actionButton,

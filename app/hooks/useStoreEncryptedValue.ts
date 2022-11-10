@@ -5,3 +5,4 @@ const useStoreEncryptedValue = async (key: string, value: string) => {
 };
 
 export default useStoreEncryptedValue;
+export {useStoreEncryptedValue};
