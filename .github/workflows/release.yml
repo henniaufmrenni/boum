@@ -1,0 +1,23 @@
+.github/release.yml
+
+changelog:
+  exclude:
+    labels:
+      - ignore-for-release
+      - meta
+    authors:
+      - dependabot
+  categories:
+    - title: Enhancements 💫
+      labels:
+        - enhancement
+    - title: Bug fixes 🐞
+      labels:
+        - bug
+    - title: Documentation 🌌
+      labels:
+        - documentation
+        - meta
+    - title: Other Changes
+      labels:
+        - "*"

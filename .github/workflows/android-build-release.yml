@@ -22,12 +22,6 @@ jobs:
         run: |
           echo "BOUM_VERSION=$(node -e "console.log(require('./package.json').version);")" >> $GITHUB_ENV
 
-      - name: 'Build Changelog'
-        id: build_changelog
-        uses: mikepenz/release-changelog-builder-action@v3.3.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Create the release
         uses: actions/create-release@v1
         id: create_release
