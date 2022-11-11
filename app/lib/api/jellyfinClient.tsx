@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 
 import {versionBoum} from '@boum/constants';
-import {favoriteAction, Filter, Session, SortBy, SortOrder} from '@boum/types';
+import {favoriteAction, Session, SortBy, SortOrder} from '@boum/types';
 
 class jellyfinClient {
   private fetcher = (url: string, headers: string) =>
