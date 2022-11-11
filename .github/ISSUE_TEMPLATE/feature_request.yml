@@ -9,6 +9,11 @@ body:
     attributes:
       value: |
         Describe the feature you want implemented and the enhancment it would bring.
+  - type: textarea
+    attributes:
+      label: Description
+    validations:
+      required: true
   - type: checkboxes
     id: terms
     attributes:
