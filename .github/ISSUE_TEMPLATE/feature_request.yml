@@ -1,0 +1,19 @@
+name: Feature Request
+description: Request a new Feature
+title: '[Feat]: '
+labels: ['enhancement']
+assignees:
+  - henniaufmrenni
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the feature you want implemented and the enhancment it would bring.
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Understanding that boum is open-source software
+      description: boum is open-source software developed in my free-time and provided for free, as is without any liability. I'm happy to fix bugs and add features that align with the project's goals, but that does not result in the entitlement to demand this.
+      options:
+        - label: I understand
+          required: true
