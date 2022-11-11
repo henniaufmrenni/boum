@@ -25,6 +25,7 @@ import {NavigationProp} from '@react-navigation/native';
 import {Slider} from '@sharcoux/slider';
 import {jellyfinClient} from '@boum/lib/api';
 import {SuccessMessage} from '@boum/types';
+import {Cast} from '@boum/components/Cast';
 
 const width = Dimensions.get('window').width;
 
@@ -345,6 +346,7 @@ const PlayerScreen = ({navigation}: PlayerScreenProps) => {
                 </Text>
               </TouchableOpacity>
             )}
+            <Cast />
           </View>
           <Text style={styles.textSource}>
             {sleepTimer && sleepTimer !== 0 ? (

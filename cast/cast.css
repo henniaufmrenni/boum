@@ -1,0 +1,21 @@
+.background {
+  background: center no-repeat
+    url(https://raw.githubusercontent.com/henniaufmrenni/boum/95e2edabcae2f4e847f752de14b09562e7c75838/cast/background.png);
+}
+
+.logo {
+  background-image: url(https://raw.githubusercontent.com/henniaufmrenni/boum/95e2edabcae2f4e847f752de14b09562e7c75838/cast/logo.png);
+}
+
+.progressBar {
+  background-color: rgb(253, 44, 87);
+}
+
+.splash {
+  background-image: url(https://raw.githubusercontent.com/henniaufmrenni/boum/95e2edabcae2f4e847f752de14b09562e7c75838/cast/splash.png);
+}
+
+.watermark {
+  background-image: url(https://raw.githubusercontent.com/henniaufmrenni/boum/95e2edabcae2f4e847f752de14b09562e7c75838/cast/watermark.png);
+  background-size: 57px 57px;
+}

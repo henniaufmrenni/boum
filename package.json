@@ -37,6 +37,7 @@
     "react-native-fast-image": "^8.6.1",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.8.0",
+    "react-native-google-cast": "^4.5.0",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-pdf": "^6.6.2",
     "react-native-popup-menu": "^0.16.1",
