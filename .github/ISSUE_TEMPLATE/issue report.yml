@@ -35,7 +35,7 @@ body:
     id: terms
     attributes:
       label: Understanding that boum is open-source software
-      description: By submitting this issue, you understand that boum is open-source software developed in my free-time and provided for free, as is without any liability. I'm happy to fix bugs and add features that align with the project's goals, but that does not result in the entitlement to demand this.
+      description: boum is open-source software developed in my free-time and provided for free, as is without any liability. I'm happy to fix bugs and add features that align with the project's goals, but that does not result in the entitlement to demand this.
       options:
-        - label: I agree to follow this project's Code of Conduct
+        - label: I understand
           required: true
