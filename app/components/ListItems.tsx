@@ -72,7 +72,11 @@ const ListHeader = ({
 
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   useEffect(() => {
-    setIsFavorite(item.UserData.IsFavorite);
+    // Needed because the /Albums/${artistId}/Similar?limit=6&Fields=Genres
+    // endpoint doesn't include the UserData object.
+    if (item.UserData !== undefined) {
+      setIsFavorite(item.UserData.IsFavorite);
+    }
   }, []);
   return (
     <>
