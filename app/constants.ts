@@ -1,4 +1,4 @@
-const versionBoum = '1.2.0';
+const versionBoum = '1.3.0';
 
 const colours = {
   accent: '#fd2c57',
