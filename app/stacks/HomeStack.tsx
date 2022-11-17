@@ -5,6 +5,7 @@ import {
   AlbumScreen,
   ArtistScreen,
   HomeScreen,
+  ListScreen,
   PlayerScreen,
 } from '@boum/screens';
 
@@ -26,6 +27,7 @@ const HomeStack = ({navigation, route}: HomeStackProps) => {
         <HomeStack.Screen name="Album" component={AlbumScreen} />
         <HomeStack.Screen name="Player" component={PlayerScreen} />
         <HomeStack.Screen name="Artist" component={ArtistScreen} />
+        <HomeStack.Screen name="List" component={ListScreen} />
       </HomeStack.Navigator>
       <NowPlayingBar navigation={navigation} route={route} />
     </>

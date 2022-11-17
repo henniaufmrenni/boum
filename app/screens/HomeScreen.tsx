@@ -1,5 +1,11 @@
 import React, {useCallback, useState} from 'react';
-import {RefreshControl, StyleSheet, Text, View} from 'react-native';
+import {
+  RefreshControl,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 
 import {LoadingSpinner} from '@boum/components/Generic';
@@ -65,22 +71,30 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         <View>
           {randomAlbums ? (
             <>
-              <>
-                <Text style={styles.text}>Random Albums</Text>
-                <ScrollView
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}>
-                  {randomAlbums.Items.map(album => (
-                    <AlbumCard
-                      key={album.Id}
-                      item={album}
-                      navigation={navigation}
-                      navigationDestination={'Album'}
-                      session={session}
-                    />
-                  ))}
-                </ScrollView>
-              </>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('List', {
+                    sortBy: 'Random',
+                    sortOrder: 'Ascending',
+                    filters: '',
+                    listTitle: 'Random',
+                  });
+                }}>
+                <Text style={styles.text}>Random Albums ▸</Text>
+              </TouchableOpacity>
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}>
+                {randomAlbums.Items.map(album => (
+                  <AlbumCard
+                    key={album.Id}
+                    item={album}
+                    navigation={navigation}
+                    navigationDestination={'Album'}
+                    session={session}
+                  />
+                ))}
+              </ScrollView>
             </>
           ) : randomAlbumsLoading ? (
             <View style={styles.loadingContainer}>
@@ -92,7 +106,17 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
           )}
           {latestAlbums ? (
             <>
-              <Text style={styles.text}>Latest Albums</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('List', {
+                    sortBy: 'DateCreated',
+                    sortOrder: 'Descending',
+                    filters: '',
+                    listTitle: 'Latest',
+                  });
+                }}>
+                <Text style={styles.text}>Latest Albums ▸</Text>
+              </TouchableOpacity>
               <ScrollView
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}>
@@ -115,7 +139,17 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
           ) : (
             <Text style={styles.text}>Error latest</Text>
           )}
-          <Text style={styles.text}>Favourites</Text>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('List', {
+                sortBy: 'SortName',
+                sortOrder: 'Ascending',
+                filters: 'IsFavorite',
+                listTitle: 'Favourites',
+              });
+            }}>
+            <Text style={styles.text}>Favourites ▸</Text>
+          </TouchableOpacity>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             {favoriteAlbums ? (
               <>
