@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Easing,
   StyleSheet,
   Text,
   TouchableHighlight,
@@ -18,6 +19,7 @@ import {colours} from '@boum/constants';
 import {useStore} from '@boum/hooks';
 import {NavigationProp} from '@react-navigation/native';
 import ProgressBar from '@boum/components/Player/ProgressBar';
+import TextTicker from '@boum/components/External/TextTicker';
 
 type NowPlayingBarProps = {
   navigation: NavigationProp<any>;
@@ -51,12 +53,16 @@ const NowPlayingBar: React.FC<NowPlayingBarProps> = ({navigation}) => {
                   style={styles.image}
                 />
                 <View style={styles.textContainer}>
-                  <Text
+                  <TextTicker
                     style={styles.track}
-                    numberOfLines={1}
-                    ellipsizeMode="tail">
+                    duration={18000}
+                    loop={true}
+                    bounce={true}
+                    repeatSpacer={100}
+                    easing={Easing.bezier(0.37, 0, 0.63, 1)}
+                    marqueeDelay={0}>
                     {queue[track].title}
-                  </Text>
+                  </TextTicker>
                   <Text
                     style={styles.artist}
                     numberOfLines={1}
@@ -107,8 +113,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   textContainer: {
-    width: '60%',
+    width: '70%',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   track: {
     color: colours.accent,
