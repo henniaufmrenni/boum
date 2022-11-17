@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
+  Easing,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -25,6 +26,7 @@ import {NavigationProp} from '@react-navigation/native';
 import {Slider} from '@sharcoux/slider';
 import {jellyfinClient} from '@boum/lib/api';
 import {SuccessMessage} from '@boum/types';
+import TextTicker from '@boum/components/External/TextTicker';
 
 const width = Dimensions.get('window').width;
 
@@ -96,12 +98,18 @@ const PlayerScreen = ({navigation}: PlayerScreenProps) => {
                   ellipsizeMode="tail">
                   {currentTrack.album}
                 </Text>
-                <Text
-                  style={styles.trackTitle}
-                  numberOfLines={1}
-                  ellipsizeMode="tail">
-                  {currentTrack.title}
-                </Text>
+                <View style={styles.trackTitleContainer}>
+                  <TextTicker
+                    style={styles.trackTitle}
+                    duration={18000}
+                    loop={true}
+                    bounce={true}
+                    repeatSpacer={100}
+                    easing={Easing.bezier(0.37, 0, 0.63, 1)}
+                    marqueeDelay={0}>
+                    {currentTrack.title}
+                  </TextTicker>
+                </View>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() =>
@@ -121,7 +129,6 @@ const PlayerScreen = ({navigation}: PlayerScreenProps) => {
             <>
               {track >= 1 ? (
                 <TouchableOpacity
-                  title="Previous"
                   onPress={async () =>
                     await TrackPlayer.skipToPrevious().catch(() =>
                       console.log('No previous track'),
@@ -148,7 +155,6 @@ const PlayerScreen = ({navigation}: PlayerScreenProps) => {
             </>
             {playerState === State.Playing ? (
               <TouchableOpacity
-                title="Pause"
                 onPress={async () => await TrackPlayer.pause()}
                 style={styles.playButton}>
                 <Text>
@@ -157,7 +163,7 @@ const PlayerScreen = ({navigation}: PlayerScreenProps) => {
               </TouchableOpacity>
             ) : playerState === State.Buffering ||
               playerState === State.Connecting ? (
-              <View title="Play" style={styles.playButton}>
+              <View style={styles.playButton}>
                 <Text>
                   <Icon
                     name="play-circle"
@@ -168,7 +174,6 @@ const PlayerScreen = ({navigation}: PlayerScreenProps) => {
               </View>
             ) : (
               <TouchableOpacity
-                title="Play"
                 onPress={async () => await TrackPlayer.play()}
                 style={styles.playButton}>
                 <Text>
@@ -178,7 +183,6 @@ const PlayerScreen = ({navigation}: PlayerScreenProps) => {
             )}
             {repeatMode === RepeatMode.Queue || queue.length !== track + 1 ? (
               <TouchableOpacity
-                title="Next"
                 onPress={async () =>
                   await TrackPlayer.skipToNext().catch(() =>
                     console.log('No next track'),
@@ -458,6 +462,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     marginBottom: 40,
+  },
+  trackTitleContainer: {
+    marginHorizontal: 10,
+    alignItems: 'center',
   },
 });
 
