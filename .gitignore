@@ -30,6 +30,7 @@ android/app/src/main/assets/index.android.bundle
 local.properties
 *.iml
 *.hprof
+.cxx/
 
 # VSCode
 #
