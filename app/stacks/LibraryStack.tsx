@@ -37,7 +37,7 @@ const LibraryStack = ({navigation, route}: LibraryStackProps) => {
         />
         <LibraryStack.Screen name="Album/>" component={AlbumScreen} />
         <LibraryStack.Screen name="Albums" component={AlbumsScreen} />
-        <LibraryStack.Screen name="Audiobooks" component={BooksScreen} />
+        <LibraryStack.Screen name="Books" component={BooksScreen} />
         <LibraryStack.Screen name="Artist" component={ArtistScreen} />
         <LibraryStack.Screen name="Artists" component={ArtistsScreen} />
         <LibraryStack.Screen name="Folder" component={FolderScreen} />
