@@ -8,6 +8,7 @@ import {DownloadStatus} from '@boum/types';
 const singleItemsName = 'single_items';
 const parentItemsName = 'parent_items';
 const keyValueTableName = 'key_value';
+const customListsTableName = 'custom_lists';
 type tableName = 'single_items' | 'parent_items' | 'key_value';
 
 SQLite.enablePromise(true);
@@ -63,6 +64,22 @@ const createTables = async (db: SQLiteDatabase) => {
     .executeSql(createKeyValueTable)
     .then(() => console.log('Successfully created key value table.'))
     .catch(err => console.log('Error creating key value table: ', err));
+
+  // prettier-ignore
+  const createCustomListsTable = `
+  CREATE TABLE IF NOT EXISTS ${customListsTableName}(
+    title TEXT NOT NULL UNIQUE,
+    sort_order TEXT NOT NULL,
+    sort_by TEXT NOT NULL,
+    filters TEXT NOT NULL,
+    search_query TEXT NOT NULL, 
+    genre_id TEXT NOT NULL
+ );`;
+
+  await db
+    .executeSql(createCustomListsTable)
+    .then(() => console.log('Successfully created custom lists table.'))
+    .catch(() => console.log('Error creating custom lists table.'));
 
   await db
     .executeSql(`SELECT * FROM sqlite_master where type='table'`)

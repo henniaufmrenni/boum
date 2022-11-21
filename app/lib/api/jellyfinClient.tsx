@@ -1,7 +1,14 @@
 import useSWR from 'swr';
 
 import {versionBoum} from '@boum/constants';
-import {favoriteAction, Session, SortBy, SortOrder} from '@boum/types';
+import {
+  favoriteAction,
+  Filters,
+  ItemTypes,
+  Session,
+  SortBy,
+  SortOrder,
+} from '@boum/types';
 
 class jellyfinClient {
   private fetcher = (url: string, headers: string) =>
@@ -81,10 +88,20 @@ class jellyfinClient {
     index: number,
     sortBy: SortBy,
     sortOrder: SortOrder,
-    filter: Filter,
+    filter: Filters,
     searchQuery: string,
+    genreId?: string,
+    itemTypes?: ItemTypes,
   ) => {
-    const query = `${session.hostname}/Users/${session.userId}/Items?searchTerm=${searchQuery}&SortBy=${sortBy}&SortOrder=${sortOrder}&IncludeItemTypes=MusicAlbum&Recursive=true&Fields=PrimaryImageAspectRatio,Genres,SortName,BasicSyncInfo&ImageTypeLimit=1&EnableImageTypes=Primary,Thumb&StartIndex=${index}&Limit=40&Filters=${filter}`;
+    const query = `${session.hostname}/Users/${
+      session.userId
+    }/Items?searchTerm=${searchQuery}&SortBy=${sortBy}&SortOrder=${sortOrder}&IncludeItemTypes=${
+      itemTypes ? itemTypes : 'MusicAlbum'
+    }&Recursive=true&Fields=PrimaryImageAspectRatio,Genres,SortName,BasicSyncInfo&ImageTypeLimit=1&EnableImageTypes=Primary,Thumb&StartIndex=${index}&Limit=40&Filters=${filter}${
+      genreId ? `&GenreIds=${genreId}` : ''
+    }`;
+
+    console.log(query);
     const headers = this.authHeaders(session);
     const {data, error, mutate} = useSWR(
       [query, headers],
@@ -97,31 +114,6 @@ class jellyfinClient {
       allAlbumsLoading: !error && !data,
       allAlbumsError: error,
       allAlbumsMutate: mutate,
-    };
-  };
-
-  public getGenreItems = (
-    session: Session,
-    index: number,
-    sortBy: SortBy,
-    sortOrder: SortOrder,
-    genreId: string,
-    searchQuery: string,
-  ) => {
-    const query = `${session.hostname}/Users/${session.userId}/Items?searchTerm=${searchQuery}&SortBy=${sortBy}&SortOrder=${sortOrder}&IncludeItemTypes=MusicAlbum&Recursive=true&Fields=PrimaryImageAspectRatio,SortName,BasicSyncInfo&ImageTypeLimit=1&EnableImageTypes=Primary,Thumb&StartIndex=${index}&Limit=40&GenreIds=${genreId}`;
-    const headers = this.authHeaders(session);
-
-    const {data, error, mutate} = useSWR(
-      [query, headers],
-      this.fetcher,
-      this.optionsSWR,
-    );
-
-    return {
-      genreAlbumsData: data,
-      genreAlbumsLoading: !error && !data,
-      genreAlbumsError: error,
-      genreAlbumsMutate: mutate,
     };
   };
 
@@ -231,6 +223,7 @@ class jellyfinClient {
     return {
       allGenres: data,
       allGenresLoading: !error && !data,
+      allGenresError: error,
       allGenresMutate: mutate,
     };
   };

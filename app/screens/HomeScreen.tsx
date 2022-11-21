@@ -1,5 +1,6 @@
 import React, {useCallback, useState} from 'react';
 import {
+  ActivityIndicator,
   RefreshControl,
   StyleSheet,
   Text,
@@ -9,11 +10,11 @@ import {
 import {ScrollView} from 'react-native-gesture-handler';
 
 import {LoadingSpinner} from '@boum/components/Generic';
-import {HeaderHome} from '@boum/components/Home';
+import {HeaderHome, CustomHomeLists} from '@boum/components/Home';
 import {AlbumCard} from '@boum/components/Library/AlbumCard';
 import OfflineListView from '@boum/components/OfflineListView';
 import {colours, sizes} from '@boum/constants';
-import {useStore} from '@boum/hooks';
+import {useGetCustomLists, useStore} from '@boum/hooks';
 import {useGetHome} from '@boum/hooks/useGetHome';
 import {Session} from '@boum/types';
 import {NavigationProp} from '@react-navigation/native';
@@ -23,7 +24,8 @@ type HomeScreenProps = {
 };
 
 const HomeScreen = ({navigation}: HomeScreenProps) => {
-  const [refreshing, setRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [triggerRefresh, setTriggerRefresh] = useState<number>(0);
   const rawSession = useStore(state => state.session);
   let session: Session = {
     userId: '',
@@ -50,13 +52,16 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     mutateGetHome,
   } = useGetHome(session);
 
-  const onRefresh = useCallback(() => {
+  const offlineMode = useStore(state => state.offlineMode);
+  const customLists = useStore(state => state.customLists);
+  useGetCustomLists(triggerRefresh);
+
+  const onRefresh = () => {
     setRefreshing(true);
     mutateGetHome();
+    setTriggerRefresh(triggerRefresh + 1);
     setRefreshing(false);
-  }, [mutateGetHome]);
-
-  const offlineMode = useStore(state => state.offlineMode);
+  };
 
   return (
     <ScrollView
@@ -69,6 +74,11 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         <OfflineListView navigation={navigation} session={session} />
       ) : (
         <View>
+          {customLists ? (
+            <CustomHomeLists data={customLists} navigation={navigation} />
+          ) : (
+            <LoadingSpinner />
+          )}
           {randomAlbums ? (
             <>
               <TouchableOpacity
