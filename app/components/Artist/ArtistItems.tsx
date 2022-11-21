@@ -1,38 +1,11 @@
 import React from 'react';
-import {Dimensions, StyleSheet, Text, View} from 'react-native';
+import {Dimensions, StyleSheet, View} from 'react-native';
 
 import {ArtistItemsFooter, ArtistItemsHeader} from '@boum/components/Artist';
 import AlbumCard from '@boum/components/Lists/AlbumCard';
-import {colours, sizes} from '@boum/constants';
 import {NavigationDestination, Session} from '@boum/types';
 
 const width = Dimensions.get('window').width;
-
-class ArtistListHeader extends React.PureComponent {
-  render() {
-    return (
-      <View style={artistListHeaderStyle.container}>
-        <Text style={artistListHeaderStyle.text}>{this.props.text}</Text>
-      </View>
-    );
-  }
-}
-
-const artistListHeaderStyle = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: width * 0.5,
-    maxWidth: width * 0.5,
-    paddingBottom: width * 0.05,
-    paddingLeft: width * 0.05,
-    paddingRight: width * 0.05,
-  },
-  text: {
-    fontSize: 22,
-    fontWeight: sizes.fontWeightPrimary,
-    color: colours.white,
-  },
-});
 
 const ArtistItems = ({
   screenItem,
