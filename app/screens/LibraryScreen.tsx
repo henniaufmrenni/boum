@@ -22,6 +22,17 @@ const LibraryScreen = ({navigation}: LibraryScreenProps) => {
       <Text style={styles.title}>Library</Text>
       <View style={styles.container}>
         <TouchableOpacity
+          onPress={() => navigation.navigate('Tracks')}
+          style={styles.textContainer}>
+          <Ionicon
+            name={'ios-musical-notes'}
+            size={25}
+            color={'white'}
+            style={styles.icon}
+          />
+          <Text style={styles.text}>Songs</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
           onPress={() => navigation.navigate('Albums')}
           style={styles.textContainer}>
           <Ionicon
