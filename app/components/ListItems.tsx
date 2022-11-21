@@ -98,15 +98,17 @@ const ListHeader = ({
                   listItems={albumItems}
                 />
                 {mediaType !== 'Folder' ? (
-                  <FastImage
-                    source={{
-                      uri: `${session.hostname}/Items/${item.Id}/Images/Primary?fillHeight=400&fillWidth=400&quality=96`,
-                      headers: {
-                        Accept: 'image/avif,image/webp,*/*',
-                      },
-                    }}
-                    style={styles.image}
-                  />
+                  <View style={styles.imageContainer}>
+                    <FastImage
+                      source={{
+                        uri: `${session.hostname}/Items/${item.Id}/Images/Primary?fillHeight=400&fillWidth=400&quality=96`,
+                        headers: {
+                          Accept: 'image/avif,image/webp,*/*',
+                        },
+                      }}
+                      style={styles.image}
+                    />
+                  </View>
                 ) : null}
               </>
             ) : null}
@@ -329,6 +331,21 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     textAlign: 'center',
   },
+  imageContainer: {
+    width: width * 0.7,
+    height: width * 0.7,
+    alignSelf: 'center',
+    backgroundColor: '#2a2a2a',
+    borderRadius: 10,
+    shadowColor: '#2a2a2a',
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.39,
+    shadowRadius: 8.3,
+    elevation: 13,
+  },
   image: {
     width: width * 0.7,
     height: width * 0.7,
@@ -415,7 +432,7 @@ const listFooterStyle = StyleSheet.create({
 
 type ListRenderItemProps = {
   albumItems: Array<MediaItem>;
-  index: number;
+  index: number | false;
   session: Session;
   bitrateLimit: number;
 };
@@ -442,7 +459,10 @@ class ListRenderItem extends React.PureComponent<ListRenderItemProps> {
                   ? [listItemStyles.songTitle, {color: colours.accent}]
                   : [listItemStyles.songTitle, {color: colours.white}]
               }>
-              {this.props.index + 1}. {this.props.item.Name}
+              {this.props.index !== false ? (
+                <>{this.props.index + 1}. </>
+              ) : null}
+              {this.props.item.Name}
             </Text>
             <View style={listItemStyles.songArtistsContainer}>
               <Text
