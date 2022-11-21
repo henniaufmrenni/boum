@@ -3,22 +3,30 @@ import TrackPlayer from 'react-native-track-player';
 import {versionBoum} from '@boum/constants';
 import {getDBConnection, readFileLocationItem} from '@boum/lib/db/service';
 import {shuffleArray} from '@boum/lib/helper/helper';
-import {MediaItem, Session} from '@boum/types';
+import {MediaItem, Session, TrackBoum} from '@boum/types';
 
 // TODO: convert this to a class
-
-const playAlbum = async (jellyfinInput, session, bitrateLimit) => {
-  let trackObject;
+const playAlbum = async (
+  jellyfinInput: Array<MediaItem>,
+  session: Session,
+  bitrateLimit: number,
+) => {
+  console.log('Jellyfin Input', jellyfinInput);
   await mapJellyfinTrackToPlayer(jellyfinInput, session, bitrateLimit)
-    .then(object => (trackObject = object))
+    .then(async object => {
+      await TrackPlayer.reset();
+      console.log(object);
+      await TrackPlayer.add(object).catch(err => console.log(err));
+      await TrackPlayer.play();
+    })
     .catch(() => console.warn('Error playing album'));
-
-  await TrackPlayer.reset();
-  await TrackPlayer.add(trackObject).catch(err => console.log(err));
-  await TrackPlayer.play();
 };
 
-const playShuffleList = async (jellyfinInput, session, bitrateLimit) => {
+const playShuffleList = async (
+  jellyfinInput: Array<MediaItem>,
+  session: Session,
+  bitrateLimit: number,
+) => {
   const trackObject = await mapJellyfinTrackToPlayer(
     jellyfinInput,
     session,
@@ -45,7 +53,12 @@ const addAlbumToQueue = async (
   await TrackPlayer.play();
 };
 
-const playAudio = async (jellyfinInput, listNumber, session, bitrateLimit) => {
+const playAudio = async (
+  jellyfinInput: Array<MediaItem>,
+  listNumber: number,
+  session: Session,
+  bitrateLimit: number,
+) => {
   const trackObject = await mapJellyfinTrackToPlayer(
     jellyfinInput,
     session,
@@ -57,7 +70,11 @@ const playAudio = async (jellyfinInput, listNumber, session, bitrateLimit) => {
   await TrackPlayer.play();
 };
 
-const playTrack = async (jellyfinInput, session, bitrateLimit) => {
+const playTrack = async (
+  jellyfinInput: MediaItem,
+  session: Session,
+  bitrateLimit: number,
+) => {
   const trackObject = await mapJellyfinTrackToPlayer(
     [jellyfinInput],
     session,
@@ -84,16 +101,19 @@ const mapJellyfinTrackToPlayer = async (
   jellyfinInput: Array<MediaItem>,
   session: Session,
   bitrateLimit: number,
-) => {
+): Promise<Array<TrackBoum>> => {
   const db = await getDBConnection();
 
-  const tracks = new Promise(function (resolve, reject) {
-    let tracks = [];
+  const tracks: Promise<Array<TrackBoum>> = new Promise(function (
+    resolve,
+    reject,
+  ) {
+    let tracks: Array<TrackBoum> = [];
     jellyfinInput.forEach(async (inputItem, index) => {
       const localFile = await readFileLocationItem(db, inputItem.Id);
       if (localFile[0] !== undefined && localFile[0].status === 'success') {
         //console.log('Player: Playing local audio ', inputItem.Name);
-        const track = {
+        const track: TrackBoum = {
           title: inputItem.Name,
           id: inputItem.Id,
           artist: inputItem.AlbumArtist,
@@ -112,7 +132,7 @@ const mapJellyfinTrackToPlayer = async (
         tracks.push(track);
       } else if (bitrateLimit !== 140000000) {
         //console.log('Player: Transcoding audio ', inputItem.Name);
-        const track = {
+        const track: TrackBoum = {
           title: inputItem.Name,
           id: inputItem.Id,
           artist: inputItem.AlbumArtist,
@@ -131,7 +151,7 @@ const mapJellyfinTrackToPlayer = async (
         tracks.push(track);
       } else {
         //console.log('Player: Not transcoding audio ', inputItem.Name);
-        const track = {
+        const track: TrackBoum = {
           title: inputItem.Name,
           id: inputItem.Id,
           artist: inputItem.AlbumArtist,

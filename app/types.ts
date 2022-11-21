@@ -1,3 +1,5 @@
+import {Track} from 'react-native-track-player';
+
 type UserData = {
   PlaybackPositionTicks: number;
   PlayCount: number;
@@ -11,7 +13,7 @@ type NameId = {
   Id: string;
 };
 
-type MediaItem = {
+interface MediaItem {
   Album: string;
   AlbumId: string;
   Name: string;
@@ -36,7 +38,7 @@ type MediaItem = {
   BackdropImageTags: Array<any>;
   ImageBlurHashes: Object;
   LocationType: string;
-};
+}
 
 type LibraryItemList = {
   Items: Array<MediaItem>;
@@ -48,7 +50,7 @@ type Headers = {
   [key: string]: string;
 };
 
-type PlayerItem = {
+interface PlayerItem {
   album: string;
   albumId: string;
   artist: string;
@@ -60,7 +62,7 @@ type PlayerItem = {
   id: string;
   title: string;
   url: string;
-};
+}
 
 type Session = {
   hostname: string;
@@ -76,7 +78,7 @@ type MediaType = 'Album' | 'Song' | 'Playlist' | 'Folder';
 
 type ScreenMode = 'ListView' | 'PlayerView';
 
-type SortBy = 'SortName' | 'Random' | 'DateCreated';
+type SortBy = 'SortName' | 'Random' | 'DateCreated' | 'PlayCount';
 
 type SortOrder = 'Ascending' | 'Descending';
 
@@ -92,6 +94,8 @@ type SuccessMessage = 'success' | 'fail' | 'not triggered';
 
 type favoriteAction = 'POST' | 'DELETE';
 
+type ItemTypes = 'Audio' | 'MusicAlbum';
+
 type SelectedStorageLocation =
   | 'DocumentDirectory'
   | 'DownloadDirectory'
@@ -99,21 +103,44 @@ type SelectedStorageLocation =
 
 type Result<T, E = Error> = {ok: true; value: T} | {ok: false; error: E};
 
+/*
+ * Customizable shortcut for the homescreen
+ */
+interface CustomHomeListItem {
+  title: string;
+  sortBy: SortBy;
+  sortOrder: SortOrder;
+  filters: Filters;
+  genreId: string;
+  searchQuery: string;
+}
+
+interface TrackBoum extends Track {
+  id: string;
+  artistId: string;
+  albumId: string;
+  isFavorite: boolean;
+  headers: Headers;
+}
+
 export type {
+  CustomHomeListItem,
+  DownloadStatus,
+  favoriteAction,
+  Filters,
+  isDownloaded,
+  ItemTypes,
+  LibraryItemList,
   MediaItem,
+  MediaType,
+  NavigationDestination,
+  PlayerItem,
+  Result,
+  ScreenMode,
+  SelectedStorageLocation,
   Session,
   SortBy,
   SortOrder,
-  Filters,
-  DownloadStatus,
-  isDownloaded,
-  NavigationDestination,
-  MediaType,
-  ScreenMode,
-  PlayerItem,
   SuccessMessage,
-  LibraryItemList,
-  favoriteAction,
-  SelectedStorageLocation,
-  Result,
+  TrackBoum,
 };

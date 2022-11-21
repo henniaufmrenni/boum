@@ -15,7 +15,8 @@ type ListScreenProps = {
 };
 
 const ListScreen = ({navigation, route}: ListScreenProps) => {
-  const {sortBy, sortOrder, filters, listTitle} = route.params;
+  const {sortBy, sortOrder, filters, listTitle, genreId, searchQuery} =
+    route.params;
 
   const jellyfin = new jellyfinClient();
   // FIXME: Find a solution for this hack, which is necessary, since zustand can't store JSON.
@@ -33,7 +34,15 @@ const ListScreen = ({navigation, route}: ListScreenProps) => {
   const [allAlbums, setAllAlbums] = useState<false | Array<Object>>(false);
 
   const {allAlbumsData, allAlbumsError, allAlbumsLoading, allAlbumsMutate} =
-    jellyfin.getAllAlbums(session, startIndex, sortBy, sortOrder, filters, '');
+    jellyfin.getAllAlbums(
+      session,
+      startIndex,
+      sortBy,
+      sortOrder,
+      filters,
+      searchQuery ? searchQuery : '',
+      genreId,
+    );
 
   if (!allAlbumsLoading && !loadedMore && !allAlbumsError) {
     const newAlbumItems = addNewItemsToOldObject(

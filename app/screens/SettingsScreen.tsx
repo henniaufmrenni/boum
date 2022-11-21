@@ -55,8 +55,16 @@ const SettingsScreen = ({navigation}: Props) => {
       </SwitchWithDescription>
       <SwitchWithDescription
         title={'Offline Mode'}
-        description="Turn on offline mode to only see the albums on your home screen which you've downloaded">
+        description="Turn on offline mode to only see the albums on your home screen which you've downloaded.">
         <OfflineModeSwitch />
+      </SwitchWithDescription>
+      <SwitchWithDescription
+        title={'Custom Lists'}
+        description="Manage your existing and create new custom lists for your homescreen.">
+        <ButtonBoum
+          title={'Manage Your Lists'}
+          onPress={() => navigation.navigate('ListManager')}
+        />
       </SwitchWithDescription>
       <SwitchWithDescription
         title={'Session'}
@@ -86,6 +94,10 @@ const SettingsScreen = ({navigation}: Props) => {
           <OpenURLButton
             title="View the Documentation"
             url="https://eindm.de/projects/boum"
+          />
+          <OpenURLButton
+            title="Sponsor"
+            url="https://github.com/sponsors/henniaufmrenni"
           />
         </>
       </SwitchWithDescription>

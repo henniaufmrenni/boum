@@ -9,7 +9,10 @@ import {
   SortOrder,
   Filters,
   SelectedStorageLocation,
+  CustomHomeListItem,
 } from '@boum/types';
+import {State} from 'react-native-gesture-handler';
+import {useGetCustomLists} from './useGetCustomLists';
 
 type BaseStore = {
   session: Session | null;
@@ -34,6 +37,10 @@ type BaseStore = {
   setPlaybackUpdate: () => void;
   playbackSpeed: number;
   setPlaybackSpeed: (speed: number) => void;
+  refreshHomeScreen: number;
+  setRefreshHomeScreen: () => void;
+  customLists: false | Array<CustomHomeListItem>;
+  setCustomLists: (input: Array<CustomHomeListItem> | false) => void;
 };
 
 const useStore = create<BaseStore>(set => ({
@@ -61,6 +68,12 @@ const useStore = create<BaseStore>(set => ({
     set(state => ({playbackUpdate: ++state.playbackUpdate})),
   playbackSpeed: 1,
   setPlaybackSpeed: (speed: number) => set({playbackSpeed: speed}),
+  customLists: false,
+  setCustomLists: (input: Array<CustomHomeListItem> | false) =>
+    set({customLists: input}),
+  refreshHomeScreen: 0,
+  setRefreshHomeScreen: () =>
+    set(state => ({refreshHomeScreen: ++state.refreshHomeScreen})),
 }));
 
 type ItemsStore = {
@@ -75,7 +88,7 @@ type ItemsStore = {
   setSortOrder: (options: SortOrder) => void;
   searchTerm: string;
   setSearchTerm: (query: string) => void;
-  filters: string;
+  filters: Filters;
   setFilters: (query: Filters) => void;
 };
 
@@ -147,6 +160,23 @@ const usePlaylistsStore = create<ItemsStore>(set => ({
   setFilters: filters => set({filters: filters}),
 }));
 
+const useTracksStore = create<ItemsStore>(set => ({
+  itemsPageIndex: 0,
+  increaseItemsPageIndex: () =>
+    set(state => ({itemsPageIndex: state.itemsPageIndex + 40})),
+  resetItemsPageIndex: () => set({itemsPageIndex: 0}),
+  allItems: false,
+  setAllItems: object => set({allItems: object}),
+  sortBy: 'SortName',
+  setSortBy: options => set({sortBy: options}),
+  sortOrder: 'Ascending',
+  setSortOrder: options => set({sortOrder: options}),
+  searchTerm: '',
+  setSearchTerm: query => set({searchTerm: query}),
+  filters: '',
+  setFilters: filters => set({filters: filters}),
+}));
+
 type SearchStoreState = {
   searchInput: string;
   setSearchInput: (string: string) => void;
@@ -195,4 +225,5 @@ export {
   usePlaylistsStore,
   useSearchStore,
   useStore,
+  useTracksStore,
 };

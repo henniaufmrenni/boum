@@ -3,6 +3,7 @@ import React from 'react';
 import {
   BookScreen,
   DownloadsScreen,
+  ListManagerScreen,
   LoginScreen,
   PlayerScreen,
   QueueScreen,
@@ -28,6 +29,7 @@ const RootStack = () => {
         <RootStack.Screen name="Queue" component={QueueScreen} />
         <RootStack.Screen name="Downloads" component={DownloadsScreen} />
         <RootStack.Screen name="Book" component={BookScreen} />
+        <RootStack.Screen name="ListManager" component={ListManagerScreen} />
       </RootStack.Navigator>
     </>
   );
