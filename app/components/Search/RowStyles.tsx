@@ -15,8 +15,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     width: '100%',
-    borderBottomWidth: 1,
-    borderBottomColor: colours.grey['600'],
     marginLeft: sizes.marginListX / 2,
     paddingRight: sizes.marginListX / 2,
     paddingBottom: sizes.marginListY / 2,
