@@ -22,7 +22,7 @@ type HeaderHomeProps = {
 const CustomHomeLists: React.FC<HeaderHomeProps> = ({navigation, data}) => {
   return (
     <View>
-      <Text style={styles.title}>Your Custom Lists</Text>
+      <Text style={styles.title}>Your Lists</Text>
       <View style={styles.container}>
         {data.map(item => (
           <TouchableOpacity

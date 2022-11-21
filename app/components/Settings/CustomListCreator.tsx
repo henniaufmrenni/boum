@@ -64,7 +64,7 @@ const CustomListCreator: React.FC<CustomListCreatorProps> = ({session}) => {
           </Picker>
 
           <Text style={styles.text} style={styles.text}>
-            Select sort by
+            Sort by
           </Text>
           <Picker
             selectedValue={sortBy}
@@ -88,7 +88,7 @@ const CustomListCreator: React.FC<CustomListCreatorProps> = ({session}) => {
           </Picker>
 
           <Text style={styles.text} style={styles.text}>
-            Select sort order
+            Sort order
           </Text>
           <Picker
             selectedValue={sortOrder}
@@ -107,7 +107,7 @@ const CustomListCreator: React.FC<CustomListCreatorProps> = ({session}) => {
           </Picker>
 
           <Text style={styles.text} style={styles.text}>
-            Select favorites
+            Filter favorites
           </Text>
           <Picker
             selectedValue={filters}
@@ -122,7 +122,7 @@ const CustomListCreator: React.FC<CustomListCreatorProps> = ({session}) => {
           </Picker>
 
           <Text style={styles.text} style={styles.text}>
-            Set search query
+            Search query
           </Text>
           <TextInput
             style={styles.input}
@@ -137,7 +137,7 @@ const CustomListCreator: React.FC<CustomListCreatorProps> = ({session}) => {
           />
 
           <Text style={styles.text} style={styles.text}>
-            Set list name*
+            List name*
           </Text>
           <TextInput
             style={styles.input}
