@@ -47,25 +47,22 @@ const GenreScreen = ({navigation, route}: GenreScreenProps) => {
   const [sortBy, setSortBy] = useState<SortBy>('SortName');
   const [sortOrder, setSortOrder] = useState<SortOrder>('Ascending');
   const [searchTerm, setSearchTerm] = useState('');
-  const {
-    genreAlbumsData,
-    genreAlbumsError,
-    genreAlbumsLoading,
-    genreAlbumsMutate,
-  } = jellyfin.getGenreItems(
-    session,
-    startIndex,
-    sortBy,
-    sortOrder,
-    itemId,
-    searchTerm,
-  );
+  const {allAlbumsData, allAlbumsError, allAlbumsLoading, allAlbumsMutate} =
+    jellyfin.getAllAlbums(
+      session,
+      startIndex,
+      sortBy,
+      sortOrder,
+      '',
+      searchTerm,
+      itemId,
+    );
 
-  if (!genreAlbumsLoading && !loadedMore && !genreAlbumsError) {
+  if (!allAlbumsLoading && !loadedMore && !allAlbumsError) {
     const newAlbumItems = addNewItemsToOldObject(
       startIndex,
       allItems,
-      genreAlbumsData,
+      allAlbumsData,
     );
     setAllItems(newAlbumItems);
     setLoadedMore(true);
@@ -75,7 +72,7 @@ const GenreScreen = ({navigation, route}: GenreScreenProps) => {
     setRefreshing(true);
     resetPageIndex();
     setAllItems(false);
-    genreAlbumsMutate();
+    allAlbumsMutate();
     setLoadedMore(false);
     setRefreshing(false);
   };

@@ -17,7 +17,15 @@ const AlbumsScreen = ({navigation}: AlbumsScreenProps) => {
   const jellyfin = new jellyfinClient();
   // FIXME: Find a solution for this hack, which is necessary, since zustand can't store JSON.
   const rawSession = useStore(state => state.session);
-  let session = {userId: '', accessToken: '', username: '', hostname: ''};
+  let session = {
+    userId: '',
+    accessToken: '',
+    username: '',
+    hostname: '',
+    maxBitrateMobile: 140000000,
+    maxBitrateWifi: 140000000,
+    deviceId: '',
+  };
   rawSession !== null ? (session = JSON.parse(rawSession)) : null;
 
   // Infinite Loading

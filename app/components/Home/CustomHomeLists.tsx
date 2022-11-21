@@ -22,7 +22,7 @@ type HeaderHomeProps = {
 const CustomHomeLists: React.FC<HeaderHomeProps> = ({navigation, data}) => {
   return (
     <View>
-      <Text style={styles.title}>Your Custom Lists</Text>
+      <Text style={styles.title}>Your Lists</Text>
       <View style={styles.container}>
         {data.map(item => (
           <TouchableOpacity
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     marginHorizontal: width * 0.025,
     marginVertical: width * 0.02,
     backgroundColor: '#2a2a2a',
-    borderRadius: 10,
+    borderRadius: 5,
     shadowColor: '#2a2a2a',
     shadowOffset: {
       width: 0,

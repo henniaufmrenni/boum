@@ -113,9 +113,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   textContainer: {
-    width: '70%',
     justifyContent: 'center',
     alignItems: 'center',
+    flexGrow: 1,
+    maxWidth: '75%',
   },
   track: {
     color: colours.accent,
@@ -135,11 +136,12 @@ const styles = StyleSheet.create({
     width: 45,
     borderRadius: 5,
     margin: 5,
+    marginRight: 10,
   },
   button: {
     justifyContent: 'center',
     alignContent: 'center',
-    width: 50,
+    marginHorizontal: 10,
   },
   slider: {
     width: '100%',
