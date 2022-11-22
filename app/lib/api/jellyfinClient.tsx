@@ -1,14 +1,22 @@
 import useSWR from 'swr';
 
-import {versionBoum} from '@boum/constants';
+import {MICROSECONDS_IN_SECONDS, versionBoum} from '@boum/constants';
 import {
-  favoriteAction,
+  FavoriteAction,
   Filters,
   ItemTypes,
+  PlaybackInfo,
+  PlayMethod,
+  ProgressUpdateBody,
   Session,
   SortBy,
   SortOrder,
+  ProgressUpdateType,
+  VideoMediaItem,
 } from '@boum/types';
+
+import {requestPlaybackInfoBody} from '@boum/lib/api';
+import {OnProgressData} from 'react-native-video';
 
 class jellyfinClient {
   private fetcher = (url: string, headers: string) =>
@@ -21,7 +29,7 @@ class jellyfinClient {
     }).then(res => res.json());
 
   private authHeaders = (session: Session) => {
-    return `MediaBrowser Client="Boum", DeviceId="${session.deviceId}", Version="${versionBoum}", Token=${session.accessToken}`;
+    return `MediaBrowser Client="boum", Device="boum", DeviceId="${session.deviceId}", Version="${versionBoum}", Token=${session.accessToken}`;
   };
 
   private optionsSWR = {
@@ -101,7 +109,6 @@ class jellyfinClient {
       genreId ? `&GenreIds=${genreId}` : ''
     }`;
 
-    console.log(query);
     const headers = this.authHeaders(session);
     const {data, error, mutate} = useSWR(
       [query, headers],
@@ -134,6 +141,24 @@ class jellyfinClient {
 
     return {
       data: data,
+    };
+  };
+
+  // Needs to be a simple fetch and not SWR since it's otherwise an invalid hooks call
+  public getSingleItemSwr = (session: Session, id: string) => {
+    const query = `${session.hostname}/Users/${session.userId}/Items/${id}?Fields=PrimaryImageAspectRatio,Genres,SortName,BasicSyncInfo`;
+    const headers = this.authHeaders(session);
+
+    const {data, error, mutate} = useSWR(
+      [query, headers],
+      this.fetcher,
+      this.optionsSWR,
+    );
+
+    return {
+      data,
+      error,
+      mutate,
     };
   };
 
@@ -288,7 +313,7 @@ class jellyfinClient {
     };
   };
 
-  public getSimilarAlbums = (session: Session, artistId: string) => {
+  public getSimilarItems = (session: Session, artistId: string) => {
     const query = `${session.hostname}/Albums/${artistId}/Similar?limit=6&Fields=Genres,`;
     const headers = this.authHeaders(session);
 
@@ -309,7 +334,7 @@ class jellyfinClient {
   public postFavorite = async (
     session: Session,
     id: string,
-    action: favoriteAction,
+    action: FavoriteAction,
   ) => {
     const query = `${session.hostname}/Users/${session.userId}/FavoriteItems/${id}`;
 
@@ -342,7 +367,7 @@ class jellyfinClient {
     index: number,
     sortBy: SortBy,
     sortOrder: SortOrder,
-    filter: Filter,
+    filter: Filters,
     searchQuery: string,
   ) => {
     const query = `${session.hostname}/Users/${session.userId}/Items?searchTerm=${searchQuery}&SortBy=${sortBy}&SortOrder=${sortOrder}&IncludeItemTypes=Playlist&Recursive=true&Fields=PrimaryImageAspectRatio,Genres,SortName,BasicSyncInfo&ImageTypeLimit=1&EnableImageTypes=Primary,Thumb&StartIndex=${index}&Limit=40`;
@@ -366,7 +391,7 @@ class jellyfinClient {
     session: Session,
     songId: string,
     playlistId: string,
-    action: favoriteAction,
+    action: FavoriteAction,
   ) => {
     const query = `${session.hostname}/Playlists/${playlistId}/Items?Ids=${songId}&userId=${session.userId}`;
 
@@ -426,6 +451,94 @@ class jellyfinClient {
       allBooksLoading,
       allBooksError,
     };
+  };
+
+  public getPlaybackInfo = async (
+    session: Session,
+    item: VideoMediaItem,
+    hevcSupported: boolean,
+    maxStreamingBitrate?: number,
+    startTimeTicks?: number,
+  ): Promise<false | PlaybackInfo> => {
+    const headers = this.authHeaders(session);
+    const query = `${session.hostname}/Items/${item.Id}/PlaybackInfo?UserId=${
+      session.userId
+    }&StartTimeTicks=${
+      startTimeTicks ? ~~startTimeTicks : 0
+    }&IsPlayback=true&AutoOpenLiveStream=true&MaxStreamingBitrate=${
+      maxStreamingBitrate ? maxStreamingBitrate : 120000000
+    }`;
+
+    const res = await fetch(query, {
+      method: 'POST',
+      headers: {
+        'X-Emby-Authorization': headers,
+        'Content-Type': 'application/json',
+      },
+      body: requestPlaybackInfoBody(hevcSupported),
+    });
+
+    if (res.ok) {
+      return res.json();
+    } else {
+      return false;
+    }
+  };
+
+  public postProgressUpdate = async (
+    session: Session,
+    onProgressData: OnProgressData,
+    paused: boolean,
+    playSessionId: string,
+    playMethod: PlayMethod,
+    maxStreamingBitrate: number,
+    mediaSourceId: string,
+    progressUpdateType: ProgressUpdateType,
+  ) => {
+    const headers = this.authHeaders(session);
+    const query = `${session.hostname}/Sessions/Playing${
+      progressUpdateType === 'Update'
+        ? '/Progress'
+        : progressUpdateType === 'Stop'
+        ? '/Stopped'
+        : ''
+    }`;
+
+    const requestBody: ProgressUpdateBody = {
+      VolumeLevel: 100,
+      IsMuted: false,
+      IsPaused: paused,
+      RepeatMode: 'RepeatNone',
+      ShuffleMode: 'Sorted',
+      MaxStreamingBitrate: maxStreamingBitrate,
+      PositionTicks: onProgressData.currentTime * MICROSECONDS_IN_SECONDS,
+      PlaybackRate: 1,
+      SubtitleStreamIndex: 1,
+      AudioStreamIndex: 1,
+      BufferedRanges: [
+        {
+          start: onProgressData.currentTime * MICROSECONDS_IN_SECONDS,
+          end: (onProgressData.currentTime + 10) * MICROSECONDS_IN_SECONDS,
+        },
+      ],
+      NowPlayingQueue: [{Id: mediaSourceId, PlaylistItemId: 'playlistItem0'}],
+      PlayMethod: playMethod,
+      PlaySessionId: playSessionId,
+      PlaylistItemId: 'playlistItem0',
+      MediaSourceId: mediaSourceId,
+      CanSeek: true,
+      ItemId: mediaSourceId,
+      EventName: progressUpdateType === 'Update' ? 'timeupdate' : '',
+    };
+
+    await fetch(query, {
+      method: 'POST',
+      headers: {
+        'X-Emby-Authorization': headers,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    });
   };
 }
 

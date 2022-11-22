@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {Filters, Session, SortBy, SortOrder, SuccessMessage} from '@boum/types';
 import {Picker} from '@react-native-picker/picker';
 import {jellyfinClient} from '@boum/lib/api';
-import ButtonBoum from './ButtonBoum';
+import ButtonBoum from '@boum/components/Settings/ButtonBoum';
 import {LoadingSpinner} from '@boum/components/Generic';
 import {saveCustomList} from '@boum/lib/db/customLists';
 import {useStore} from '@boum/hooks';

@@ -31,6 +31,7 @@ const useLogin = async (
       username: res.SessionInfo.UserName,
       maxBitrateWifi: 140000000,
       maxBitrateMobile: 140000000,
+      maxBitrateVideo: 100000000,
       deviceId: deviceId,
     };
 

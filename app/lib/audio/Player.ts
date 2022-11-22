@@ -125,9 +125,6 @@ const mapJellyfinTrackToPlayer = async (
           isFavorite: inputItem.UserData.IsFavorite,
           url: `file://${localFile[0].fileLocation}`,
           artwork: `file://${localFile[0].imageLocation}`,
-          headers: {
-            'X-Emby-Authorization': `MediaBrowser Client="Boum", DeviceId="${session.deviceId}", Version="${versionBoum}", Token=${session.accessToken}`,
-          },
         };
         tracks.push(track);
       } else if (bitrateLimit !== 140000000) {
@@ -142,11 +139,13 @@ const mapJellyfinTrackToPlayer = async (
           date: inputItem.PremiereDate,
           duration: (inputItem.RunTimeTicks / 1000).toFixed(0),
           isFavorite: inputItem.UserData.IsFavorite,
-          url: `${session.hostname}/Audio/${inputItem.Id}/stream.aac?UserId=${session.userId}&MaxStreamingBitrate=${bitrateLimit}&TranscodingContainer=ts&TranscodingProtocol=hls&AudioCodec=aac&StartTimeTicks=0&EnableRedirection=true&EnableRemoteMedia=false&static=true`,
+          url:
+            `${session.hostname}/Audio/${inputItem.Id}/stream.aac?UserId=${session.userId}&MaxStreamingBitrate=${bitrateLimit}&TranscodingContainer=ts&TranscodingProtocol=hls&AudioCodec=aac&StartTimeTicks=0&EnableRedirection=true&EnableRemoteMedia=false&static=true` +
+            '&deviceId=' +
+            session.deviceId +
+            '&api_key=' +
+            session.accessToken,
           artwork: `${session.hostname}/Items/${inputItem.AlbumId}/Images/Primary?fillHeight=400&fillWidth=400&quality=96`,
-          headers: {
-            'X-Emby-Authorization': `MediaBrowser Client="Boum", DeviceId="${session.deviceId}", Version="${versionBoum}", Token=${session.accessToken}`,
-          },
         };
         tracks.push(track);
       } else {
@@ -161,11 +160,13 @@ const mapJellyfinTrackToPlayer = async (
           date: inputItem.PremiereDate,
           duration: (inputItem.RunTimeTicks / 1000).toFixed(0),
           isFavorite: inputItem.UserData.IsFavorite,
-          url: `${session.hostname}/Audio/${inputItem.Id}/universal?UserId=${session.userId}&MaxStreamingBitrate=140000000&Container=opus,webm|opus,mp3,aac,m4a|aac,m4b|aac,flac,webma,webm|webma,wav,ogg&TranscodingContainer=ts&TranscodingProtocol=hls&AudioCodec=aac&StartTimeTicks=0&EnableRedirection=true&EnableRemoteMedia=false&static=true`,
+          url:
+            `${session.hostname}/Audio/${inputItem.Id}/universal?UserId=${session.userId}&MaxStreamingBitrate=140000000&Container=opus,webm|opus,mp3,aac,m4a|aac,m4b|aac,flac,webma,webm|webma,wav,ogg&TranscodingContainer=ts&TranscodingProtocol=hls&AudioCodec=aac&StartTimeTicks=0&EnableRedirection=true&EnableRemoteMedia=false&static=true` +
+            '&deviceId=' +
+            session.deviceId +
+            '&api_key=' +
+            session.accessToken,
           artwork: `${session.hostname}/Items/${inputItem.AlbumId}/Images/Primary?fillHeight=400&fillWidth=400&quality=96`,
-          headers: {
-            'X-Emby-Authorization': `MediaBrowser Client="Boum", DeviceId="${session.deviceId}", Version="${versionBoum}", Token=${session.accessToken}`,
-          },
         };
         tracks.push(track);
       }

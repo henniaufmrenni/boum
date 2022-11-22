@@ -38,6 +38,7 @@ const App = () => {
     hostname: '',
     maxBitrateMobile: 140000000,
     maxBitrateWifi: 140000000,
+    maxBitrateVideo: 140000000,
     deviceId: '',
     offlineMode: false,
   };

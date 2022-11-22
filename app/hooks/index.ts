@@ -6,6 +6,7 @@ export * from '@boum/hooks/useGetArtist';
 export * from '@boum/hooks/useGetBooks';
 export * from '@boum/hooks/useGetCustomLists';
 export * from '@boum/hooks/useGetDownloadItems';
+export * from '@boum/hooks/useGetPlaybackInfo';
 export * from '@boum/hooks/useInitializeDb';
 export * from '@boum/hooks/useInitializeSession';
 export * from '@boum/hooks/useLogin';
