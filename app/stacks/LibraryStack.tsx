@@ -10,6 +10,8 @@ import {
   GenreScreen,
   GenresScreen,
   LibraryScreen,
+  MovieScreen,
+  MoviesScreen,
   PlaylistScreen,
   PlaylistsScreen,
   TracksScreen,
@@ -43,6 +45,8 @@ const LibraryStack = ({navigation, route}: LibraryStackProps) => {
         <LibraryStack.Screen name="Folder" component={FolderScreen} />
         <LibraryStack.Screen name="Genre" component={GenreScreen} />
         <LibraryStack.Screen name="Genres" component={GenresScreen} />
+        <LibraryStack.Screen name="Movie" component={MovieScreen} />
+        <LibraryStack.Screen name="Movies" component={MoviesScreen} />
         <LibraryStack.Screen name="Playlist" component={PlaylistScreen} />
         <LibraryStack.Screen name="Playlists" component={PlaylistsScreen} />
         <LibraryStack.Screen name="Tracks" component={TracksScreen} />

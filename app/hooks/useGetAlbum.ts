@@ -15,7 +15,7 @@ const useGetAlbum = (
   const [averageColorRgb, setAverageColorRgb] = useState('');
 
   const {albumItems} = jellyfin.getAlbumItems(session, routeItemId);
-  const {similarAlbums} = jellyfin.getSimilarAlbums(session, routeItemId);
+  const {similarAlbums} = jellyfin.getSimilarItems(session, routeItemId);
 
   const isDownloaded = useCheckParentIsDownloaded(routeItemId);
 
