@@ -21,7 +21,7 @@ import PlayerAlbumImage from '@boum/components/Player/PlayerImage';
 import SingleItemHeader from '@boum/components/SingleItemHeader';
 import {colours} from '@boum/constants';
 import {useStore, useToggleRepeatMode} from '@boum/hooks';
-import {getMinSec} from '@boum/lib/helper/helper';
+import {getMinSec} from '@boum/lib/helper';
 import {NavigationProp} from '@react-navigation/native';
 import {Slider} from '@sharcoux/slider';
 import {jellyfinClient} from '@boum/lib/api';

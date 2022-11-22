@@ -55,14 +55,47 @@ const shuffleArray = (array: Array<any>) => {
   return array;
 };
 
+const getTimeInHourMinutes = (milliseconds: number): string => {
+  const timeNow = Date.now();
+  var date = new Date(timeNow + milliseconds);
+
+  var hours = date.getHours();
+  // Minutes part from the timestamp
+  var minutes = '0' + date.getMinutes();
+  // Seconds part from the timestamp
+
+  // Will display time in 10:30:23 format
+  var formattedTime = hours + ':' + minutes.substr(-2);
+  return formattedTime;
+};
+
+const getTimeInHourMinutesSeconds = (milliseconds: number): string => {
+  const timeNow = Date.now();
+  var date = new Date(timeNow + milliseconds);
+
+  var hours = date.getHours();
+  // Minutes part from the timestamp
+  var minutes = '0' + date.getMinutes();
+  // Seconds part from the timestamp
+  var seconds = '0' + date.getSeconds();
+
+  // Will display time in 10:30:23 format
+  var formattedTime =
+    hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+
+  return formattedTime;
+};
+
 const capitalizeFirstLetter = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
 export {
-  getMinSec,
+  capitalizeFirstLetter,
   getHourMinutes,
   getHourMinutesSeconds,
+  getMinSec,
+  getTimeInHourMinutes,
+  getTimeInHourMinutesSeconds,
   shuffleArray,
-  capitalizeFirstLetter,
 };

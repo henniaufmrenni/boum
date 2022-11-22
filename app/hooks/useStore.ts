@@ -11,8 +11,6 @@ import {
   SelectedStorageLocation,
   CustomHomeListItem,
 } from '@boum/types';
-import {State} from 'react-native-gesture-handler';
-import {useGetCustomLists} from './useGetCustomLists';
 
 type BaseStore = {
   session: Session | null;
@@ -177,6 +175,23 @@ const useTracksStore = create<ItemsStore>(set => ({
   setFilters: filters => set({filters: filters}),
 }));
 
+const useMoviesStore = create<ItemsStore>(set => ({
+  itemsPageIndex: 0,
+  increaseItemsPageIndex: () =>
+    set(state => ({itemsPageIndex: state.itemsPageIndex + 40})),
+  resetItemsPageIndex: () => set({itemsPageIndex: 0}),
+  allItems: false,
+  setAllItems: object => set({allItems: object}),
+  sortBy: 'SortName',
+  setSortBy: options => set({sortBy: options}),
+  sortOrder: 'Ascending',
+  setSortOrder: options => set({sortOrder: options}),
+  searchTerm: '',
+  setSearchTerm: query => set({searchTerm: query}),
+  filters: '',
+  setFilters: filters => set({filters: filters}),
+}));
+
 type SearchStoreState = {
   searchInput: string;
   setSearchInput: (string: string) => void;
@@ -226,4 +241,5 @@ export {
   useSearchStore,
   useStore,
   useTracksStore,
+  useMoviesStore,
 };

@@ -87,6 +87,17 @@ const LibraryScreen = ({navigation}: LibraryScreenProps) => {
           />
           <Text style={styles.text}>Books</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Movies')}
+          style={styles.textContainer}>
+          <Ionicon
+            name={'film-outline'}
+            size={25}
+            color={'white'}
+            style={styles.icon}
+          />
+          <Text style={styles.text}>Movies</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );

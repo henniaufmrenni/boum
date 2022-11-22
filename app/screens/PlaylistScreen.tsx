@@ -43,7 +43,7 @@ const PlaylistScreen = ({route, navigation}: PlaylistScreenProps) => {
     session,
     itemId,
   );
-  const {similarAlbums} = jellyfin.getSimilarAlbums(session, itemId);
+  const {similarAlbums} = jellyfin.getSimilarItems(session, itemId);
   useEffect(() => {
     async function setBackGround() {
       const averageColor = Blurhash.getAverageColor(

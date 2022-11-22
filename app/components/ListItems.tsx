@@ -34,6 +34,7 @@ import {ArtistItems} from './ArtistComponents';
 import TrackPlayer from 'react-native-track-player';
 import {SlideInContextMenu} from '@boum/components/ContextMenu';
 import {jellyfinClient} from '@boum/lib/api';
+import Animated, {FadeIn} from 'react-native-reanimated';
 
 const width = Dimensions.get('window').width;
 
@@ -98,17 +99,19 @@ const ListHeader = ({
                   listItems={albumItems}
                 />
                 {mediaType !== 'Folder' ? (
-                  <View style={styles.imageContainer}>
-                    <FastImage
-                      source={{
-                        uri: `${session.hostname}/Items/${item.Id}/Images/Primary?fillHeight=400&fillWidth=400&quality=96`,
-                        headers: {
-                          Accept: 'image/avif,image/webp,*/*',
-                        },
-                      }}
-                      style={styles.image}
-                    />
-                  </View>
+                  <Animated.View entering={FadeIn}>
+                    <View style={styles.imageContainer}>
+                      <FastImage
+                        source={{
+                          uri: `${session.hostname}/Items/${item.Id}/Images/Primary?fillHeight=400&fillWidth=400&quality=96`,
+                          headers: {
+                            Accept: 'image/avif,image/webp,*/*',
+                          },
+                        }}
+                        style={styles.image}
+                      />
+                    </View>
+                  </Animated.View>
                 ) : null}
               </>
             ) : null}
