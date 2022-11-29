@@ -34,7 +34,6 @@ const useGetPlaybackInfo = (
               setPlaybackInfo(playbackInfoRes);
               let subtitles: Array<TextTracks> = [];
 
-              console.log(playbackInfoRes);
               // Check if the media is being transcoded and set the
               // stream URI accordingly.
               if (playbackInfoRes !== false) {

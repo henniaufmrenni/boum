@@ -25,6 +25,8 @@ import {VideoItemCard} from '@boum/components/Video';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Animated, {FadeInDown} from 'react-native-reanimated';
 import TrackPlayer from 'react-native-track-player';
+import {useBitrateLimit, useStore} from '@boum/hooks';
+import {VideoDownloadsPicker} from './VideoDownloadsPicker';
 
 const width = Dimensions.get('window').width;
 
@@ -95,6 +97,10 @@ const VideoHeader = ({
             style={styles.descriptionContainer}
             entering={FadeInDown}>
             <Text style={styles.title}>{item.Name}</Text>
+            <Text>
+              <Icon name="ios-download" size={22} color={colours.white} />
+            </Text>
+            <VideoDownloadsPicker item={item} />
             <Text style={styles.detailText}>
               {item.CriticRating ? (
                 <>

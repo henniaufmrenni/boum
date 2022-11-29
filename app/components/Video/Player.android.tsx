@@ -18,7 +18,7 @@ import {Picker} from '@react-native-picker/picker';
 
 import Video, {VideoDecoderProperties} from 'react-native-video';
 import {PlaybackInfo, Session, TextTracks} from '@boum/types';
-import {VideoBitratePicker} from './VideoBitratePicker';
+
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import Animated, {

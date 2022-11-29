@@ -2,6 +2,7 @@ export * from '@boum/hooks/useBitrateLimit';
 export * from '@boum/hooks/useCheckParentIsDownloaded';
 export * from '@boum/hooks/useDeleteAlbum';
 export * from '@boum/hooks/useDownloadItem';
+export * from '@boum/hooks/useDownloadMovie';
 export * from '@boum/hooks/useGetArtist';
 export * from '@boum/hooks/useGetBooks';
 export * from '@boum/hooks/useGetCustomLists';

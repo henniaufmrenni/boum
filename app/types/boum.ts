@@ -44,6 +44,13 @@ type NavigationDestination = 'Artist' | 'Album';
 
 type SuccessMessage = 'success' | 'fail' | 'not triggered';
 
+type TableName =
+  | 'single_items'
+  | 'parent_items'
+  | 'key_value'
+  | 'custom_lists'
+  | 'movies_items';
+
 export type {
   Headers,
   SelectedStorageLocation,

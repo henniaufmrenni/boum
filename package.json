@@ -26,6 +26,7 @@
     "@react-navigation/native": "^6.0.13",
     "@react-navigation/native-stack": "^6.9.1",
     "@sharcoux/slider": "^6.0.3",
+    "ffmpeg-kit-react-native": "^5.1.0",
     "hermes-engine": "^0.11.0",
     "react": "^17.0.2",
     "react-native": "^0.68.3",

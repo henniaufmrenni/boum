@@ -9,7 +9,13 @@ const singleItemsName = 'single_items';
 const parentItemsName = 'parent_items';
 const keyValueTableName = 'key_value';
 const customListsTableName = 'custom_lists';
-type tableName = 'single_items' | 'parent_items' | 'key_value';
+const moviesTableName = 'movies_items';
+type tableName =
+  | 'single_items'
+  | 'parent_items'
+  | 'key_value'
+  | 'custom_lists'
+  | 'movies_items';
 
 SQLite.enablePromise(true);
 
@@ -78,6 +84,23 @@ const createTables = async (db: SQLiteDatabase) => {
 
   await db
     .executeSql(createCustomListsTable)
+    .then(() => console.log('Successfully created custom lists table.'))
+    .catch(() => console.log('Error creating custom lists table.'));
+
+  // prettier-ignore
+  const createMoviesTable = `
+  CREATE TABLE IF NOT EXISTS ${moviesTableName}(
+    id TEXT NOT NULL UNIQUE,
+    metadata TEXT NOT NULL,
+    playback_info TEXT NOT NULL,
+    file_location TEXT NOT NULL,
+    image_location TEXT NOT NULL,
+    subtitles TEXT NOT NULL
+    status TEXT NOT NULL
+ );`;
+
+  await db
+    .executeSql(createMoviesTable)
     .then(() => console.log('Successfully created custom lists table.'))
     .catch(() => console.log('Error creating custom lists table.'));
 

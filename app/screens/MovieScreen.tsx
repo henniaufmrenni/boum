@@ -43,6 +43,7 @@ const MovieScreen = ({navigation, route}: MovieScreenProps) => {
   useEffect(() => {
     function setBackGround() {
       if (data) {
+        console.log(data);
         if (data.ImageBlurHashes.Primary !== undefined) {
           const averageColor = Blurhash.getAverageColor(
             data.ImageBlurHashes.Primary[
@@ -57,7 +58,6 @@ const MovieScreen = ({navigation, route}: MovieScreenProps) => {
     }
     setBackGround();
   }, [data]);
-
   return (
     <>
       <ScrollView style={styles.container}>

@@ -22,17 +22,15 @@ const getDownloadDirPath = (
 
 const path = (
   parentName: string,
-  itemName: string,
+  itemName?: string,
   selectedStorageLocation?: SelectedStorageLocation,
 ) => {
   let downloadDirPath = getDownloadDirPath(selectedStorageLocation);
   let path: string;
   path =
-    downloadDirPath +
-    '/' +
-    parentName.replace(/[/\\?%*:|"<>]/g, '-') +
-    '/' +
-    itemName.replace(/[/\\?%*:|"<>]/g, '-');
+    downloadDirPath + '/' + parentName.replace(/[/\\?%*:|"<>]/g, '-') + itemName
+      ? '/' + itemName.replace(/[/\\?%*:|"<>]/g, '-')
+      : null;
   return path;
 };
 
