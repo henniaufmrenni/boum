@@ -28,7 +28,7 @@ class AlbumCard extends React.PureComponent<AlbumCardProps> {
       <View style={listRowStyles.container}>
         <TouchableOpacity
           onPress={() =>
-            this.props.navigation.navigate(this.props.navigationDestination, {
+            this.props.navigation.push(this.props.navigationDestination, {
               itemId: this.props.item.Id,
               name: this.props.item.Name,
               item: this.props.item,

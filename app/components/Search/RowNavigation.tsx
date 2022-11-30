@@ -23,7 +23,7 @@ const RowNavigation = ({
                 <TouchableHighlight
                   key={item.Id}
                   onPress={() =>
-                    navigation.navigate(navigationDestination, {
+                    navigation.push(navigationDestination, {
                       itemId: item.Id,
                       name: item.Name,
                       item: item,

@@ -30,7 +30,7 @@ import {
   Session,
 } from '@boum/types';
 
-import {ArtistItems} from './ArtistComponents';
+import {ArtistItems} from '@boum/components/ArtistComponents';
 import TrackPlayer from 'react-native-track-player';
 import {SlideInContextMenu} from '@boum/components/ContextMenu';
 import {jellyfinClient} from '@boum/lib/api';
@@ -119,7 +119,7 @@ const ListHeader = ({
             {item.AlbumArtists ? (
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate('Artist', {
+                  navigation.push('Artist', {
                     itemId: item.AlbumArtists[0].Id,
                     itemName: item.AlbumArtists[0].Name,
                     item: undefined,
