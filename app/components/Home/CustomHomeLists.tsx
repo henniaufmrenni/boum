@@ -27,7 +27,7 @@ const CustomHomeLists: React.FC<HeaderHomeProps> = ({navigation, data}) => {
         {data.map(item => (
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate('List', {
+              navigation.push('List', {
                 listTitle: item.title,
                 sortBy: item.sortBy,
                 sortOrder: item.sortOrder,
@@ -45,7 +45,7 @@ const CustomHomeLists: React.FC<HeaderHomeProps> = ({navigation, data}) => {
           </TouchableOpacity>
         ))}
         {data.length === 0 ? (
-          <TouchableOpacity onPress={() => navigation.navigate('ListManager')}>
+          <TouchableOpacity onPress={() => navigation.push('ListManager')}>
             <View style={styles.itemContainer}>
               <Text style={styles.text}>
                 <Icon name={'add'} size={20} />

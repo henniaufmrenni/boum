@@ -18,7 +18,7 @@ class ArtistItemsRenderItem extends React.PureComponent {
       <View style={artistListItemStyle.container}>
         <TouchableOpacity
           onPress={() =>
-            this.props.navigation.navigate('Album', {
+            this.props.navigation.push('Album', {
               itemId: this.props.item.Id,
               name: this.props.item.Name,
               item: this.props.item,
