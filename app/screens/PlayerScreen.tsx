@@ -86,7 +86,7 @@ const PlayerScreen = ({navigation}: PlayerScreenProps) => {
             <>
               <TouchableOpacity
                 onPress={() =>
-                  navigation.push('Album', {
+                  navigation.navigate('Album', {
                     itemId: currentTrack.albumId,
                     itemName: currentTrack.albumId,
                     item: undefined,
@@ -113,7 +113,7 @@ const PlayerScreen = ({navigation}: PlayerScreenProps) => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() =>
-                  navigation.push('Artist', {
+                  navigation.navigate('Artist', {
                     itemId: currentTrack.artistId,
                     itemName: currentTrack.artist,
                     item: undefined,
