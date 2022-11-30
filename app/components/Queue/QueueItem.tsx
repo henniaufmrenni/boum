@@ -11,7 +11,7 @@ import {
   ScaleDecorator,
 } from 'react-native-draggable-flatlist';
 import FastImage from 'react-native-fast-image';
-import TrackPlayer from 'react-native-track-player';
+import TrackPlayer, {State} from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import {colours} from '@boum/constants';
@@ -19,10 +19,19 @@ import {useStore} from '@boum/hooks';
 
 const width = Dimensions.get('window').width;
 
-const QueueItem = ({item, getIndex, drag, isActive}: RenderItemParams<any>) => {
+interface QueueItemProps extends RenderItemParams<any> {
+  playerState: State;
+}
+
+const QueueItem = ({
+  item,
+  getIndex,
+  drag,
+  isActive,
+  playerState,
+}: QueueItemProps) => {
   const track = useStore(state => state.currentTrack);
   const index = getIndex();
-
   return (
     <ScaleDecorator>
       <View style={styles.rowItem}>
@@ -33,6 +42,7 @@ const QueueItem = ({item, getIndex, drag, isActive}: RenderItemParams<any>) => {
               console.warn('Error skipping params.to song in queue: ', err),
             );
           }}
+          onLongPress={drag}
           disabled={isActive}
           style={[
             styles.textContainer,
@@ -69,12 +79,22 @@ const QueueItem = ({item, getIndex, drag, isActive}: RenderItemParams<any>) => {
           </Text>
         </TouchableOpacity>
         {index !== track ? (
-          <TouchableOpacity onLongPress={drag} disabled={isActive}>
-            <Icon
-              name={'reorder-three-outline'}
-              color={colours.white}
-              size={30}
-            />
+          <TouchableOpacity
+            onPress={async () => {
+              await TrackPlayer.remove(index)
+                // This weird hack is necessary, because RNTP doesn't support events for queue updates.
+                //
+                .then(() => {
+                  if (playerState === State.Playing) {
+                    TrackPlayer.pause().then(() => TrackPlayer.play());
+                  } else {
+                    TrackPlayer.play().then(() => TrackPlayer.pause());
+                  }
+                })
+                .catch(() => console.log('Error removing track'));
+            }}
+            disabled={isActive}>
+            <Icon name={'close'} color={colours.white} size={20} />
           </TouchableOpacity>
         ) : null}
       </View>

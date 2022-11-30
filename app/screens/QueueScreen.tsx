@@ -4,7 +4,7 @@ import {
   NestableDraggableFlatList,
   NestableScrollContainer,
 } from 'react-native-draggable-flatlist';
-import TrackPlayer from 'react-native-track-player';
+import TrackPlayer, {usePlaybackState} from 'react-native-track-player';
 
 import {QueueItem} from '@boum/components/Queue';
 import SingleItemHeader from '@boum/components/SingleItemHeader';
@@ -21,13 +21,16 @@ const QueueScreen = ({navigation}: QueueScreenProps) => {
   const setPlaybackUpdate = useStore(state => state.setPlaybackUpdate);
 
   const keyExtractor = (item: object, index: number) => item.id + index;
+  const playerState = usePlaybackState();
 
   return (
     <NestableScrollContainer style={styles.container}>
       <SingleItemHeader navigation={navigation} />
       <NestableDraggableFlatList
         data={queue}
-        renderItem={QueueItem}
+        renderItem={({item, getIndex, drag, isActive}) =>
+          QueueItem({item, getIndex, drag, isActive, playerState})
+        }
         keyExtractor={keyExtractor}
         onDragEnd={async params => {
           const track = queue[params.from];
