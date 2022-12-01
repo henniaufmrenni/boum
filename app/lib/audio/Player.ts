@@ -127,7 +127,7 @@ const mapJellyfinTrackToPlayer = async (
           duration: (inputItem.RunTimeTicks / 1000).toFixed(0),
           isFavorite: inputItem.UserData.IsFavorite,
           url:
-            `${session.hostname}/Audio/${inputItem.Id}/stream.aac?UserId=${session.userId}&MaxStreamingBitrate=${bitrateLimit}&audioBitRate=${bitrateLimit}&TranscodingContainer=ts&TranscodingProtocol=hls&StartTimeTicks=0&EnableRedirection=true&EnableRemoteMedia=false&static=false` +
+            `${session.hostname}/Audio/${inputItem.Id}/stream?UserId=${session.userId}&MaxStreamingBitrate=${bitrateLimit}&TranscodingContainer=ts&TranscodingProtocol=hls&AudioCodec=mp3&static=false` +
             '&deviceId=' +
             session.deviceId +
             '&api_key=' +

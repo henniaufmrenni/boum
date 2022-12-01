@@ -246,7 +246,7 @@ const PlayerScreen = ({navigation}: PlayerScreenProps) => {
           <>
             {currentTrack.url.slice(0, 7) === 'file://' ? (
               <Text style={styles.textSource}>Local Playback</Text>
-            ) : currentTrack.url.includes('stream.aac') ? (
+            ) : currentTrack.url.includes('/stream?') ? (
               <Text style={styles.textSource}>Streaming Transcoded</Text>
             ) : (
               <Text style={styles.textSource}>Streaming Direct</Text>
