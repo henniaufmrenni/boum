@@ -8,6 +8,8 @@ type Session = {
   maxBitrateMobile: number;
   maxBitrateWifi: number;
   maxBitrateVideo: number;
+  maxBitrateDownloadAudio: number;
+  deviceName: string;
   deviceId: string;
 };
 

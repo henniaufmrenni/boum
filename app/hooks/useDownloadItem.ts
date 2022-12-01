@@ -61,7 +61,10 @@ const useDownloadItem = async (
     let contentType: string;
     let size: number;
     RNFS.downloadFile({
-      fromUrl: `${session.hostname}/Items/${item.Id}/File`,
+      fromUrl:
+        session.maxBitrateDownloadAudio !== 140000000
+          ? `${session.hostname}/Audio/${item.Id}/stream.aac?UserId=${session.userId}&MaxStreamingBitrate=${session.maxBitrateDownloadAudio}&audioBitRate=${session.maxBitrateDownloadAudio}&TranscodingContainer=ts&TranscodingProtocol=hls&EnableRedirection=true&EnableRemoteMedia=false&static=false`
+          : `${session.hostname}/Items/${item.Id}/File`,
       toFile: tempPath,
       headers: headers,
       background: true,
