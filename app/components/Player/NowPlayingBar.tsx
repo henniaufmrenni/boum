@@ -141,7 +141,8 @@ const styles = StyleSheet.create({
   button: {
     justifyContent: 'center',
     alignContent: 'center',
-    marginHorizontal: 10,
+    marginRight: 15,
+    marginLeft: 5,
   },
   slider: {
     width: '100%',
