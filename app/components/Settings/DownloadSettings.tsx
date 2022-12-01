@@ -1,29 +1,65 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import {ButtonBoum} from '@boum/components/Settings';
 import {colours} from '@boum/constants';
-import {useStore, useStoreEncryptedValue} from '@boum/hooks';
-import {SelectedStorageLocation} from '@boum/types';
+import {
+  useSetBitrateLimit,
+  useStore,
+  useStoreEncryptedValue,
+} from '@boum/hooks';
+import {SelectedStorageLocation, Session} from '@boum/types';
 import {Picker} from '@react-native-picker/picker';
 
-const StorageLocationPicker = () => {
+type DownloadSettingsProps = {
+  session: Session;
+};
+
+const DownloadSettings = ({session}: DownloadSettingsProps) => {
   const [storageLocation, setStorageLocation] =
     useState<SelectedStorageLocation>('DocumentDirectory');
   const [successSavingLimit, setSuccessSavingLimit] = useState<boolean>(false);
   const selectedStorageLocation = useStore(
     state => state.selectedStorageLocation,
   );
-
   const setSelectedStorageLocation = useStore(
     state => state.setSelectedStorageLocation,
   );
 
+  const [downloadQuality, setDownloadQuality] = useState<number>(140000000);
+
+  useEffect(() => {
+    setDownloadQuality(session.maxBitrateDownloadAudio);
+    setStorageLocation(selectedStorageLocation);
+  }, []);
+
   // TODO: Check whether device has an SD Card
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Select storage location:</Text>
+      <View style={styles.pickerContainer}>
+        <Text style={styles.text}>Select a quality for audio downloads:</Text>
+        <Picker
+          selectedValue={downloadQuality}
+          onValueChange={itemValue => setDownloadQuality(itemValue)}
+          enabled={true}
+          prompt={'Select audio download quality:'}
+          itemStyle={styles.picker}>
+          <Picker.Item
+            label="Direct download"
+            value={140000000}
+            style={styles.item}
+          />
+          <Picker.Item label="64 kbps" value={64000} style={styles.item} />
+          <Picker.Item label="96 kbps" value={96000} style={styles.item} />
+          <Picker.Item label="128 kbps" value={128000} style={styles.item} />
+          <Picker.Item label="160 kbps" value={160000} style={styles.item} />
+          <Picker.Item label="192 kbps" value={192000} style={styles.item} />
+          <Picker.Item label="256 kbps" value={256000} style={styles.item} />
+          <Picker.Item label="320 kbps" value={320000} style={styles.item} />
+        </Picker>
+      </View>
+      <Text style={styles.text}>Select a storage location:</Text>
       <Picker
         selectedValue={storageLocation}
         onValueChange={itemValue => {
@@ -53,22 +89,12 @@ const StorageLocationPicker = () => {
       {successSavingLimit ? (
         <>
           <Text style={styles.text}>
-            <Icon name="checkmark-circle" size={30} color={colours.green} />
-            Success saving storage location
+            <Icon name="checkmark-circle" size={25} color={colours.green} />
+            Success saving download settings
           </Text>
         </>
       ) : null}
       <Text style={styles.text}>
-        Currently selected storage location:
-        {selectedStorageLocation === 'DocumentDirectory'
-          ? ' App Directory'
-          : selectedStorageLocation === 'DownloadDirectory'
-          ? ' Downloads'
-          : selectedStorageLocation === 'ExternalDirectory'
-          ? ' SD Card'
-          : null}
-        {'\n'}
-        {'\n'}
         If you change the storage location, your previous downloads will remain
         (playable) at their current location.
       </Text>
@@ -81,11 +107,23 @@ const StorageLocationPicker = () => {
         </Text>
       ) : null}
       <ButtonBoum
-        title={'Save location changes'}
+        title={'Save download settings'}
         onPress={() => {
-          useStoreEncryptedValue('selected_storage_location', storageLocation);
           setSelectedStorageLocation(storageLocation);
-          setSuccessSavingLimit(true);
+          useStoreEncryptedValue(
+            'selected_storage_location',
+            storageLocation,
+          ).then(() => {
+            useSetBitrateLimit(
+              session,
+              session.maxBitrateWifi,
+              session.maxBitrateMobile,
+              session.maxBitrateVideo,
+              downloadQuality,
+            ).then(() => {
+              setSuccessSavingLimit(true);
+            });
+          });
         }}
       />
     </View>
@@ -95,13 +133,18 @@ const StorageLocationPicker = () => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colours.black,
-    paddingTop: 20,
+    paddingTop: 5,
+    paddingHorizontal: 12,
   },
   text: {
     color: colours.white,
     fontSize: 16,
-    textAlign: 'center',
+    paddingVertical: 4,
+    textAlign: 'left',
     fontFamily: 'Inter-Regular',
+  },
+  pickerContainer: {
+    paddingVertical: 10,
   },
   picker: {
     color: colours.white,
@@ -113,4 +156,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export {StorageLocationPicker};
+export {DownloadSettings};

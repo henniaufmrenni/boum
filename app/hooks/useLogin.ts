@@ -1,5 +1,6 @@
 import uuid from 'react-native-uuid';
 
+import {versionBoum} from '@boum/constants';
 import {useStore} from '@boum/hooks';
 import {storeEncryptedValue} from '@boum/lib/encryptedStorage/encryptedStorage';
 import {Session} from '@boum/types';
@@ -19,7 +20,6 @@ const useLogin = async (
     setLoginStatus,
   );
 
-  console.log(response);
   if (response.error == null) {
     return "Coudln't login.";
   } else {
@@ -32,6 +32,7 @@ const useLogin = async (
       maxBitrateWifi: 140000000,
       maxBitrateMobile: 140000000,
       maxBitrateVideo: 100000000,
+      maxBitrateDownloadAudio: 140000000,
       deviceId: deviceId,
     };
 
@@ -52,7 +53,7 @@ const getToken = async (
   deviceId: string,
   setLoginStatus: (string: string) => void,
 ) => {
-  const clientHeaders = `MediaBrowser Client="Boum", Device="Firefox", DeviceId="${deviceId}", Version="0.0.1"`;
+  const clientHeaders = `MediaBrowser Client="boum", Device="boum", DeviceId="${deviceId}", Version="${versionBoum}"`;
   return fetch(`${url}/Users/authenticatebyname`, {
     method: 'POST',
     cache: 'no-cache',
@@ -71,7 +72,6 @@ const getToken = async (
         setLoginStatus('Wrong username / password');
         return;
       }
-
       return response.json();
     })
     .then(json => {

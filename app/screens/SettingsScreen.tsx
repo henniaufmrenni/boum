@@ -7,7 +7,7 @@ import {
   ButtonBoum,
   LogoutButton,
   OfflineModeSwitch,
-  StorageLocationPicker,
+  DownloadSettings,
   SwitchWithDescription,
 } from '@boum/components/Settings';
 import {colours, versionBoum} from '@boum/constants';
@@ -46,11 +46,11 @@ const SettingsScreen = ({navigation}: Props) => {
         title={'Downloads'}
         description="View your downloads and their status.">
         <>
+          <DownloadSettings session={session} />
           <ButtonBoum
             title={'Go to Downloads'}
             onPress={() => navigation.navigate('Downloads')}
           />
-          <StorageLocationPicker />
         </>
       </SwitchWithDescription>
       <SwitchWithDescription
