@@ -1,6 +1,5 @@
 import TrackPlayer from 'react-native-track-player';
 
-import {versionBoum} from '@boum/constants';
 import {getDBConnection, readFileLocationItem} from '@boum/lib/db/service';
 import {shuffleArray} from '@boum/lib/helper/helper';
 import {MediaItem, Session, TrackBoum} from '@boum/types';
@@ -85,18 +84,6 @@ const playTrack = async (
   await TrackPlayer.play();
 };
 
-// FIXME: Fetch Album data for each item.Id
-const playArtist = async (jellyfinInput, session) => {
-  // const albums = jellyfinInput.forEach(getAlbum(item.Id))
-  //
-  //console.log('Input: ', jellyfinInput);
-  //const trackObject = jellyfinInput.map(item => mapJellyfinTrackToPlayer(item));
-  //console.log(trackObject);
-  //await TrackPlayer.reset();
-  //await TrackPlayer.add(trackObject);
-  //await TrackPlayer.play();
-};
-
 const mapJellyfinTrackToPlayer = async (
   jellyfinInput: Array<MediaItem>,
   session: Session,
@@ -140,7 +127,7 @@ const mapJellyfinTrackToPlayer = async (
           duration: (inputItem.RunTimeTicks / 1000).toFixed(0),
           isFavorite: inputItem.UserData.IsFavorite,
           url:
-            `${session.hostname}/Audio/${inputItem.Id}/stream.aac?UserId=${session.userId}&MaxStreamingBitrate=${bitrateLimit}&TranscodingContainer=ts&TranscodingProtocol=hls&AudioCodec=aac&StartTimeTicks=0&EnableRedirection=true&EnableRemoteMedia=false&static=true` +
+            `${session.hostname}/Audio/${inputItem.Id}/stream.aac?UserId=${session.userId}&MaxStreamingBitrate=${bitrateLimit}&audioBitRate=${bitrateLimit}&TranscodingContainer=ts&TranscodingProtocol=hls&StartTimeTicks=0&EnableRedirection=true&EnableRemoteMedia=false&static=false` +
             '&deviceId=' +
             session.deviceId +
             '&api_key=' +
@@ -179,11 +166,4 @@ const mapJellyfinTrackToPlayer = async (
   return tracks;
 };
 
-export {
-  playAudio,
-  playAlbum,
-  addAlbumToQueue,
-  playArtist,
-  playTrack,
-  playShuffleList,
-};
+export {playAudio, playAlbum, addAlbumToQueue, playTrack, playShuffleList};
