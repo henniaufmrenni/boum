@@ -9,7 +9,7 @@ const SetupService = async (): Promise<boolean> => {
     await TrackPlayer.getCurrentTrack();
     isSetup = true;
   } catch {
-    await TrackPlayer.setupPlayer();
+    await TrackPlayer.setupPlayer({maxBuffer: 1000000});
     await TrackPlayer.updateOptions({
       android: {
         appKilledPlaybackBehavior:

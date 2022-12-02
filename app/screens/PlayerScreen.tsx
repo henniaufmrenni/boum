@@ -216,13 +216,14 @@ const PlayerScreen = ({navigation}: PlayerScreenProps) => {
                   value={position / duration}
                   minimumTrackTintColor={colours.accent}
                   thumbTintColor={colours.accent}
+                  enabled={true}
                   maximumTrackTintColor={'#222'}
                   trackHeight={3}
-                  onSlidingComplete={async (value: number) =>
-                    await TrackPlayer.seekTo(duration * value).catch(err =>
+                  onSlidingComplete={async (value: number) => {
+                    await TrackPlayer.seekTo(~~(value * duration)).catch(err =>
                       console.warn(err),
-                    )
-                  }
+                    );
+                  }}
                 />
               </View>
               <Text style={styles.textSlider}>{getMinSec(duration)}</Text>
@@ -234,6 +235,7 @@ const PlayerScreen = ({navigation}: PlayerScreenProps) => {
                 <Slider
                   style={styles.slider}
                   value={0.01}
+                  enabled={false}
                   minimumTrackTintColor={colours.accent}
                   maximumTrackTintColor={'#222'}
                   trackHeight={3}
@@ -246,7 +248,7 @@ const PlayerScreen = ({navigation}: PlayerScreenProps) => {
           <>
             {currentTrack.url.slice(0, 7) === 'file://' ? (
               <Text style={styles.textSource}>Local Playback</Text>
-            ) : currentTrack.url.includes('/stream?') ? (
+            ) : currentTrack.url.includes('&static=false') ? (
               <Text style={styles.textSource}>Streaming Transcoded</Text>
             ) : (
               <Text style={styles.textSource}>Streaming Direct</Text>

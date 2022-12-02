@@ -1,4 +1,4 @@
-import TrackPlayer from 'react-native-track-player';
+import TrackPlayer, {TrackType} from 'react-native-track-player';
 
 import {getDBConnection, readFileLocationItem} from '@boum/lib/db/service';
 import {shuffleArray} from '@boum/lib/helper/helper';
@@ -114,29 +114,7 @@ const mapJellyfinTrackToPlayer = async (
           artwork: `file://${localFile[0].imageLocation}`,
         };
         tracks.push(track);
-      } else if (bitrateLimit !== 140000000) {
-        //console.log('Player: Transcoding audio ', inputItem.Name);
-        const track: TrackBoum = {
-          title: inputItem.Name,
-          id: inputItem.Id,
-          artist: inputItem.AlbumArtist,
-          artistId: jellyfinInput[0].AlbumArtists[0].Id,
-          album: inputItem.Album,
-          albumId: jellyfinInput[0].AlbumId,
-          date: inputItem.PremiereDate,
-          duration: (inputItem.RunTimeTicks / 1000).toFixed(0),
-          isFavorite: inputItem.UserData.IsFavorite,
-          url:
-            `${session.hostname}/Audio/${inputItem.Id}/stream?UserId=${session.userId}&MaxStreamingBitrate=${bitrateLimit}&TranscodingContainer=ts&TranscodingProtocol=hls&AudioCodec=mp3&static=false` +
-            '&deviceId=' +
-            session.deviceId +
-            '&api_key=' +
-            session.accessToken,
-          artwork: `${session.hostname}/Items/${inputItem.AlbumId}/Images/Primary?fillHeight=400&fillWidth=400&quality=96`,
-        };
-        tracks.push(track);
       } else {
-        //console.log('Player: Not transcoding audio ', inputItem.Name);
         const track: TrackBoum = {
           title: inputItem.Name,
           id: inputItem.Id,
@@ -146,9 +124,12 @@ const mapJellyfinTrackToPlayer = async (
           albumId: jellyfinInput[0].AlbumId,
           date: inputItem.PremiereDate,
           duration: (inputItem.RunTimeTicks / 1000).toFixed(0),
+          type: bitrateLimit === 140000000 ? TrackType.Default : TrackType.HLS,
           isFavorite: inputItem.UserData.IsFavorite,
           url:
-            `${session.hostname}/Audio/${inputItem.Id}/universal?UserId=${session.userId}&MaxStreamingBitrate=140000000&Container=opus,webm|opus,mp3,aac,m4a|aac,m4b|aac,flac,webma,webm|webma,wav,ogg&TranscodingContainer=ts&TranscodingProtocol=hls&AudioCodec=aac&StartTimeTicks=0&EnableRedirection=true&EnableRemoteMedia=false&static=true` +
+            `${session.hostname}/Audio/${inputItem.Id}/universal?UserId=${session.userId}&MaxStreamingBitrate=${bitrateLimit}&Container=opus,webm|opus,mp3,aac,m4a|aac,m4b|aac,flac,webma,webm|webma,wav,ogg&TranscodingContainer=ts&TranscodingProtocol=hls&AudioCodec=mp3` +
+            '&static=' +
+            (bitrateLimit === 140000000 ? true : false) +
             '&deviceId=' +
             session.deviceId +
             '&api_key=' +
