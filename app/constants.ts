@@ -1,4 +1,4 @@
-const versionBoum = '1.3.0';
+const versionBoum = '1.4.0';
 
 const MICROSECONDS_IN_SECONDS = 1000000;
 
