@@ -1,22 +1,21 @@
 import React, {useEffect, useState} from 'react';
-
+import {BackHandler} from 'react-native';
 import {NavigationProp} from 'react-navigation';
 import {RouteProp} from '@react-navigation/native';
-import {VideoPlayer} from '@boum/components/Video';
 
+import {VideoPlayer} from '@boum/components/Video';
 import {LoadingSpinner} from '@boum/components/Generic';
-import {useGetPlaybackInfo} from '@boum/hooks';
-import {jellyfinClient} from '@boum/lib/api';
-import {BackHandler} from 'react-native';
+import {useGetPlaybackInfo, useStore} from '@boum/hooks';
+import {MediaItem, Session} from '@boum/types';
 
 type VideoScreenProps = {
   navigation: NavigationProp<any>;
-  route: RouteProp<any>;
+  route: RouteProp<{params: {item: MediaItem; session: Session}}>;
 };
 
 const VideoScreen = ({navigation, route}: VideoScreenProps) => {
   const {item, session} = route.params;
-  const jellyfin = new jellyfinClient();
+  const jellyfin = useStore.getState().jellyfinClient;
 
   const [bitrate, setBitrate] = useState<number>(session.maxBitrateVideo);
   const [videoProgress, setVideoProgress] = useState<number>(0);

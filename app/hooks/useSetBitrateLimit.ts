@@ -1,6 +1,6 @@
 import {useStore} from '@boum/hooks';
 import {storeEncryptedValue} from '@boum/lib/encryptedStorage/encryptedStorage';
-import {Session} from '@boum/types';
+import {Session, SelectedStorageLocation} from '@boum/types';
 
 const useSetBitrateLimit = async (
   session: Session,
@@ -8,14 +8,16 @@ const useSetBitrateLimit = async (
   maxBitrateMobile: number,
   maxBitrateVideo: number,
   maxBitrateDownloadAudio: number,
+  selectedStorageLocation: SelectedStorageLocation,
 ) => {
   session.maxBitrateMobile = maxBitrateMobile;
   session.maxBitrateWifi = maxBitrateWifi;
   session.maxBitrateVideo = maxBitrateVideo;
   session.maxBitrateDownloadAudio = maxBitrateDownloadAudio;
+  session.selectedStorageLocation = selectedStorageLocation;
 
   await storeEncryptedValue('user_session', JSON.stringify(session))
-    .then(() => useStore.setState({session: JSON.stringify(session)}))
+    .then(() => useStore.setState({session: session}))
     .catch(err => new Error(err));
 };
 

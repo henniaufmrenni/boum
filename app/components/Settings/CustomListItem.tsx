@@ -26,7 +26,6 @@ const CustomListItem = ({list}: CustomListItemProps) => {
       <TouchableOpacity
         onPress={async () =>
           await deleteCustomList(list.title).then(res => {
-            console.log(res);
             setSuccessMessage(res);
             triggerRefreshHomeScreen();
           })

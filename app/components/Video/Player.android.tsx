@@ -29,9 +29,7 @@ import Animated, {
   FadeOutDown,
 } from 'react-native-reanimated';
 import {colours} from '@boum/constants';
-import {jellyfinClient} from '@boum/lib/api/jellyfinClient';
-
-const width = Dimensions.get('window').width;
+import {useStore} from '@boum/hooks';
 
 interface VideoPlayerProps {
   session: Session;
@@ -76,7 +74,7 @@ class VideoPlayer extends Component<VideoPlayerProps> {
     secondsPassedSinceProgressUpdate: 0,
   };
 
-  jellyfin = new jellyfinClient();
+  jellyfin = useStore.getState().jellyfinClient;
 
   ws = new WebSocket(
     `${this.props.session.hostname

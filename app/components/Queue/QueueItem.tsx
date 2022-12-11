@@ -32,16 +32,33 @@ const QueueItem = ({
 }: QueueItemProps) => {
   const track = useStore(state => state.currentTrack);
   const index = getIndex();
+
+  const removeItem = async () => {
+    await TrackPlayer.remove(index)
+      // This weird hack is necessary, because RNTP doesn't support events for queue updates.
+      //
+      .then(() => {
+        if (playerState === State.Playing) {
+          TrackPlayer.pause().then(() => TrackPlayer.play());
+        } else {
+          TrackPlayer.play().then(() => TrackPlayer.pause());
+        }
+      })
+      .catch(() => console.log('Error removing track'));
+  };
+
+  const skipToTrack = async () => {
+    await TrackPlayer.skip(index).catch(err =>
+      console.warn('Error skipping params.to song in queue: ', err),
+    );
+  };
+
   return (
     <ScaleDecorator>
       <View style={styles.rowItem}>
         <TouchableOpacity
           activeOpacity={0.5}
-          onPress={async () => {
-            await TrackPlayer.skip(index).catch(err =>
-              console.warn('Error skipping params.to song in queue: ', err),
-            );
-          }}
+          onPress={skipToTrack}
           onLongPress={drag}
           disabled={isActive}
           style={[
@@ -79,21 +96,7 @@ const QueueItem = ({
           </Text>
         </TouchableOpacity>
         {index !== track ? (
-          <TouchableOpacity
-            onPress={async () => {
-              await TrackPlayer.remove(index)
-                // This weird hack is necessary, because RNTP doesn't support events for queue updates.
-                //
-                .then(() => {
-                  if (playerState === State.Playing) {
-                    TrackPlayer.pause().then(() => TrackPlayer.play());
-                  } else {
-                    TrackPlayer.play().then(() => TrackPlayer.pause());
-                  }
-                })
-                .catch(() => console.log('Error removing track'));
-            }}
-            disabled={isActive}>
+          <TouchableOpacity onPress={removeItem} disabled={isActive}>
             <Icon name={'close'} color={colours.white} size={20} />
           </TouchableOpacity>
         ) : null}

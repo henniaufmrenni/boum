@@ -4,14 +4,14 @@ import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 
 import SingleItemHeader from '@boum/components/SingleItemHeader';
-import {colours, sizes} from '@boum/constants';
-import {Session} from '@boum/types';
+import {colours} from '@boum/constants';
+import {MediaItem, Session} from '@boum/types';
 
 const width = Dimensions.get('window').width;
 
 type ArtistHeaderProps = {
-  artistItems: Array<object>;
-  item: object;
+  artistItems: Array<MediaItem>;
+  item: MediaItem;
   session: Session;
   averageColorRgb: string;
   navigation: any;
@@ -55,7 +55,7 @@ class ArtistHeaderContent extends React.PureComponent<ArtistHeaderProps> {
   render() {
     return (
       <>
-        {this.props.item.Id != null && this.props.BackdropImageTags !== [] ? (
+        {this.props.item.Id != null ? (
           <FastImage
             source={{
               uri: `${this.props.session.hostname}/Items/${this.props.item.Id}/Images/Primary?fillHeight=400&fillWidth=400&quality=96`,
@@ -63,7 +63,6 @@ class ArtistHeaderContent extends React.PureComponent<ArtistHeaderProps> {
                 Accept: 'image/webp,*/*',
               },
             }}
-            fallback={require('@boum/res/images/placeholder.png')}
             style={styles.image}
           />
         ) : null}
@@ -88,25 +87,6 @@ const styles = StyleSheet.create({
     width: width * 0.7,
     height: width * 0.7,
     alignSelf: 'center',
-  },
-  item: {
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    alginSelf: 'center',
-  },
-  listTitle: {
-    fontSize: 20,
-    fontWeight: '400',
-    color: 'black',
-    margin: 6,
-    marginLeft: sizes.marginListX,
-    marginRight: sizes.marginListX,
-  },
-  buttonContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
 

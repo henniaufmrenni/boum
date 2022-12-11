@@ -17,7 +17,6 @@ import {
 import {LoginScreen} from '@boum/screens';
 import RootStack from '@boum/stacks/RootStack';
 import {NavigationContainer} from '@react-navigation/native';
-import {Session} from '@boum/types';
 
 if (Platform.OS === 'android') {
   UIManager.setLayoutAnimationEnabledExperimental &&
@@ -33,25 +32,14 @@ const App = () => {
 
   const playerIsSetup = useStore(state => state.playerIsSetup);
   const gotLoginStatus = useStore(state => state.gotLoginStatus);
-  const rawSession = useStore(state => state.session);
-  let session: Session = {
-    userId: '',
-    accessToken: '',
-    username: '',
-    hostname: '',
-    maxBitrateMobile: 140000000,
-    maxBitrateWifi: 140000000,
-    maxBitrateVideo: 140000000,
-    deviceId: '',
-  };
-  rawSession ? (session = JSON.parse(rawSession)) : null;
+  const session = useStore(state => state.session);
 
   return (
     <GestureHandlerRootView style={styles.root}>
       <StatusBar translucent backgroundColor="transparent" />
       <SafeAreaProvider style={{backgroundColor: colours.black}}>
         <MenuProvider backHandler={true}>
-          {session.userId && playerIsSetup ? (
+          {session?.userId && playerIsSetup ? (
             <NavigationContainer>
               <RootStack />
             </NavigationContainer>

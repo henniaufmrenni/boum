@@ -26,7 +26,6 @@ import {
   RemoteMediaClient,
   useStreamPosition,
 } from 'react-native-google-cast';
-import {Session} from '@boum/types';
 
 type NowPlayingBarProps = {
   navigation: NavigationProp<any>;
@@ -34,8 +33,8 @@ type NowPlayingBarProps = {
 
 const NowPlayingBar: React.FC<NowPlayingBarProps> = ({navigation}) => {
   // Trackplayer
-  const track = useStore.getState().currentTrack;
-  const queue = useStore.getState().queue;
+  const track = useStore(state => state.currentTrack);
+  const queue = useStore(state => state.queue);
   const {position, duration} = useProgress();
   const playerState = usePlaybackState();
   const isPlaying = playerState === State.Playing;
@@ -46,20 +45,7 @@ const NowPlayingBar: React.FC<NowPlayingBarProps> = ({navigation}) => {
   const mediaStatus = useStore(state => state.castMediaStatus);
   const castDevice = useStore(state => state.castDevice);
 
-  const rawSession = useStore(state => state.session);
-  let session: Session = {
-    hostname: '',
-    accessToken: '',
-    userId: '',
-    username: '',
-    maxBitrateMobile: 140000000,
-    maxBitrateWifi: 140000000,
-    maxBitrateVideo: 140000000,
-    maxBitrateDownloadAudio: 140000000,
-    deviceName: '',
-    deviceId: '',
-  };
-  rawSession !== null ? (session = JSON.parse(rawSession)) : null;
+  const session = useStore(state => state.session);
 
   return (
     <>
@@ -138,7 +124,7 @@ const NowPlayingBarContent = ({
       if (isPlaying) {
         await TrackPlayer.pause();
       } else {
-        await TrackPlayer.pause();
+        await TrackPlayer.play();
       }
     }
   };

@@ -1,8 +1,9 @@
-import {jellyfinClient} from '@boum/lib/api';
-import {MediaItem, PlaybackInfo, Session, TextTracks} from '@boum/types';
 import {useEffect, useState} from 'react';
 import {VideoDecoderProperties} from 'react-native-video';
+
+import {useStore} from '@boum/hooks';
 import {MICROSECONDS_IN_SECONDS} from '@boum/constants';
+import {MediaItem, PlaybackInfo, Session, TextTracks} from '@boum/types';
 
 const useGetPlaybackInfo = (
   item: MediaItem,
@@ -10,7 +11,7 @@ const useGetPlaybackInfo = (
   maxBitrateVideo: number,
   startTime: number,
 ) => {
-  const jellyfin = new jellyfinClient();
+  const jellyfin = useStore.getState().jellyfinClient;
 
   const [playbackInfo, setPlaybackInfo] = useState<false | PlaybackInfo>(false);
   const [sourceList, setSourceList] = useState<false | Array<object>>(false);

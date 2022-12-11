@@ -7,28 +7,16 @@ import {colours} from '@boum/constants';
 import {useArtistsStore, useStore} from '@boum/hooks';
 import addNewItemsToOldObject from '@boum/lib/helper/addNewItemsToOldObject';
 import {NavigationProp} from '@react-navigation/native';
-import {jellyfinClient} from '@boum/lib/api';
-import {Session} from '@boum/types';
 
 type ArtistsScreenProps = {
   navigation: NavigationProp<any>;
 };
 
 const ArtistsScreen = ({navigation}: ArtistsScreenProps) => {
-  const jellyfin = new jellyfinClient();
+  const jellyfin = useStore.getState().jellyfinClient;
 
   // TODO: Find a solution for this hack, which is necessary, since Zustand can't store JSON.
-  const rawSession = useStore(state => state.session);
-  let session: Session = {
-    userId: '',
-    accessToken: '',
-    username: '',
-    hostname: '',
-    maxBitrateMobile: 140000000,
-    maxBitrateWifi: 140000000,
-    deviceId: '',
-  };
-  rawSession !== null ? (session = JSON.parse(rawSession)) : null;
+  const session = useStore(state => state.session);
 
   // Infinite Loading
   const startIndex = useArtistsStore(state => state.itemsPageIndex);

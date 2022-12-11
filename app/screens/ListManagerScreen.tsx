@@ -13,22 +13,11 @@ type Props = {
 };
 
 const ListManagerScreen = ({navigation}: Props) => {
-  const rawSession = useStore(state => state.session);
-  let session = {
-    userId: '',
-    accessToken: '',
-    username: '',
-    hostname: '',
-    maxBitrateMobile: 140000000,
-    maxBitrateWifi: 140000000,
-    deviceId: '',
-  };
-  rawSession !== null ? (session = JSON.parse(rawSession)) : null;
-
+  const session = useStore(state => state.session);
   const refreshHomeScreen = useStore(state => state.refreshHomeScreen);
   const customLists = useStore(state => state.customLists);
-  useGetCustomLists(refreshHomeScreen);
 
+  useGetCustomLists(refreshHomeScreen);
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.header}>Custom Lists</Text>

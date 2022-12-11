@@ -14,19 +14,9 @@ type GenresScreenProps = {
 };
 
 const GenresScreen = ({navigation}: GenresScreenProps) => {
-  const jellyfin = new jellyfinClient();
+  const jellyfin = useStore.getState().jellyfinClient;
+  const session = useStore(state => state.session);
 
-  const rawSession = useStore(state => state.session);
-  let session = {
-    userId: '',
-    accessToken: '',
-    username: '',
-    hostname: '',
-    maxBitrateMobile: 140000000,
-    maxBitrateWifi: 140000000,
-    deviceId: '',
-  };
-  rawSession !== null ? (session = JSON.parse(rawSession)) : null;
   const {allGenres, allGenresError, allGenresLoading} =
     jellyfin.getAllGenres(session);
 

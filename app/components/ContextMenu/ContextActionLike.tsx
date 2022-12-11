@@ -3,7 +3,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import {ContextAction} from '@boum/components/ContextMenu';
 import {MediaItem, Session, SuccessMessage} from '@boum/types';
-import {jellyfinClient} from '@boum/lib/api';
+import {useStore} from '@boum/hooks';
 
 type ContextActionLikeProps = {
   mediaItem: MediaItem;
@@ -11,7 +11,7 @@ type ContextActionLikeProps = {
 };
 
 const ContextActionLike = ({session, mediaItem}: ContextActionLikeProps) => {
-  const jellyfin = new jellyfinClient();
+  const jellyfin = useStore.getState().jellyfinClient;
   const [actionStatus, setActionStatus] =
     useState<SuccessMessage>('not triggered');
   const [isFavorite, setIsFavorite] = useState<boolean>(false);

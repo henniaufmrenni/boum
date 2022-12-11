@@ -7,26 +7,15 @@ import {colours} from '@boum/constants';
 import {useAlbumsStore, useStore} from '@boum/hooks';
 import addNewItemsToOldObject from '@boum/lib/helper/addNewItemsToOldObject';
 import {NavigationProp} from '@react-navigation/native';
-import {jellyfinClient} from '@boum/lib/api';
 
 type AlbumsScreenProps = {
   navigation: NavigationProp<any>;
 };
 
 const AlbumsScreen = ({navigation}: AlbumsScreenProps) => {
-  const jellyfin = new jellyfinClient();
+  const jellyfin = useStore.getState().jellyfinClient;
   // FIXME: Find a solution for this hack, which is necessary, since zustand can't store JSON.
-  const rawSession = useStore(state => state.session);
-  let session = {
-    userId: '',
-    accessToken: '',
-    username: '',
-    hostname: '',
-    maxBitrateMobile: 140000000,
-    maxBitrateWifi: 140000000,
-    deviceId: '',
-  };
-  rawSession !== null ? (session = JSON.parse(rawSession)) : null;
+  const session = useStore(state => state.session);
 
   // Infinite Loading
   const startIndex = useAlbumsStore(state => state.itemsPageIndex);
@@ -79,16 +68,14 @@ const AlbumsScreen = ({navigation}: AlbumsScreenProps) => {
   };
 
   // Pullup to refresh
-  const [refreshing, setRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
   // Search and filtering modal
-  const [modalOpen, setModalOpen] = useState(true);
+  const [modalOpen, setModalOpen] = useState<boolean>(true);
   const updateSearchTerm = (searchTerm: string) => {
     setSearchTerm(searchTerm);
     mutate();
   };
-
-  useEffect(() => console.log(filters), [filters]);
 
   return (
     <>

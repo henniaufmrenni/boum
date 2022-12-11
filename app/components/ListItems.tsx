@@ -34,7 +34,7 @@ import {
 import {ArtistItems} from '@boum/components/ArtistComponents';
 import TrackPlayer from 'react-native-track-player';
 import {SlideInContextMenu} from '@boum/components/ContextMenu';
-import {jellyfinClient} from '@boum/lib/api';
+
 import Animated, {FadeIn} from 'react-native-reanimated';
 import {RemoteMediaClient} from 'react-native-google-cast';
 import {CastService} from '@boum/lib/cast';
@@ -75,7 +75,7 @@ const ListHeader = ({
   screenMode,
   selectedStorageLocation,
 }: ListHeaderProps): JSX.Element => {
-  const jellyfin = new jellyfinClient();
+  const jellyfin = useStore.getState().jellyfinClient;
 
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   useEffect(() => {

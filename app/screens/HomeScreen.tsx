@@ -16,7 +16,6 @@ import OfflineListView from '@boum/components/OfflineListView';
 import {colours, sizes} from '@boum/constants';
 import {useGetCustomLists, useStore} from '@boum/hooks';
 import {useGetHome} from '@boum/hooks/useGetHome';
-import {Session} from '@boum/types';
 import {NavigationProp} from '@react-navigation/native';
 
 type HomeScreenProps = {
@@ -26,17 +25,7 @@ type HomeScreenProps = {
 const HomeScreen = ({navigation}: HomeScreenProps) => {
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [triggerRefresh, setTriggerRefresh] = useState<number>(0);
-  const rawSession = useStore(state => state.session);
-  let session: Session = {
-    userId: '',
-    accessToken: '',
-    username: '',
-    hostname: '',
-    maxBitrateMobile: 140000000,
-    maxBitrateWifi: 140000000,
-    deviceId: '',
-  };
-  rawSession !== null ? (session = JSON.parse(rawSession)) : null;
+  const session = useStore(state => state.session);
 
   const {
     latestAlbums,
@@ -70,7 +59,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }>
       <HeaderHome session={session} navigation={navigation} />
-      {offlineMode ? (
+      {session.offlineMode ? (
         <OfflineListView navigation={navigation} session={session} />
       ) : (
         <View>

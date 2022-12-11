@@ -1,11 +1,11 @@
-import {jellyfinClient} from '@boum/lib/api';
-import addNewItemsToOldObject from '@boum/lib/helper/addNewItemsToOldObject';
 import {useEffect, useState} from 'react';
-import {useBooksStore} from '@boum/hooks';
+
+import {useBooksStore, useStore} from '@boum/hooks';
+import addNewItemsToOldObject from '@boum/lib/helper/addNewItemsToOldObject';
 import {Session} from '@boum/types';
 
 const useGetBooks = (session: Session) => {
-  const jellyfin = new jellyfinClient();
+  const jellyfin = useStore.getState().jellyfinClient;
   // Infinite Loading
   const startIndex = useBooksStore(state => state.itemsPageIndex);
 

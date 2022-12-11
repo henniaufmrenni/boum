@@ -6,6 +6,7 @@ import {ContextAction} from '@boum/components/ContextMenu/ContextAction';
 import {colours, sizes} from '@boum/constants';
 import {MediaItem, Session, SuccessMessage} from '@boum/types';
 import {jellyfinClient} from '@boum/lib/api';
+import {useStore} from '@boum/hooks';
 
 type PlaylistContextMenuProps = {
   item: MediaItem;
@@ -23,21 +24,22 @@ const PlaylistContextMenu = ({
   const [actionStatus, setActionStatus] =
     useState<SuccessMessage>('not triggered');
 
+  async function addOrRemoveSong() {
+    const status = await apiClient.addOrRemoveSongPlaylist(
+      session,
+      item.Id,
+      playlist.Id,
+      'POST',
+    );
+    if (status === 204) {
+      setActionStatus('success');
+    } else {
+      setActionStatus('fail');
+    }
+  }
+
   return (
-    <TouchableOpacity
-      onPress={async () => {
-        const status = await apiClient.addOrRemoveSongPlaylist(
-          session,
-          item.Id,
-          playlist.Id,
-          'POST',
-        );
-        if (status === 204) {
-          setActionStatus('success');
-        } else {
-          setActionStatus('failure');
-        }
-      }}>
+    <TouchableOpacity onPress={addOrRemoveSong}>
       <View>
         <Text style={playlistViewStyles.optionText}>
           {playlist.Name}
@@ -61,7 +63,7 @@ const PlaylistsViewContextMenu = ({
   item,
   session,
 }: ContextActionPlaylistsViewProps) => {
-  const jellyfin = new jellyfinClient();
+  const jellyfin = useStore(state => state.jellyfinClient);
   const {allPlaylistsData, allPlaylistsError, allPlaylistsLoading} =
     jellyfin.getAllPlaylists(session, 0, 'SortName', 'Ascending', '', '');
 

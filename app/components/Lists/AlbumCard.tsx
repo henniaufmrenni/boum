@@ -23,17 +23,18 @@ type AlbumCardProps = {
 };
 
 class AlbumCard extends React.PureComponent<AlbumCardProps> {
+  navigateToAlbum() {
+    this.props.navigation.push(this.props.navigationDestination, {
+      itemId: this.props.item.Id,
+      name: this.props.item.Name,
+      item: this.props.item,
+    });
+  }
+
   render() {
     return (
       <View style={listRowStyles.container}>
-        <TouchableOpacity
-          onPress={() =>
-            this.props.navigation.push(this.props.navigationDestination, {
-              itemId: this.props.item.Id,
-              name: this.props.item.Name,
-              item: this.props.item,
-            })
-          }>
+        <TouchableOpacity onPress={this.navigateToAlbum}>
           <View style={listRowStyles.imageContainer}>
             {this.props.item.Id != null ? (
               <FastImage

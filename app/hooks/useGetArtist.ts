@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {Blurhash} from 'react-native-blurhash';
 
-import {jellyfinClient} from '@boum/lib/api';
+import {useStore} from '@boum/hooks';
 import {Session} from '@boum/types';
 
 const useGetArtist = (
@@ -9,7 +9,7 @@ const useGetArtist = (
   routeItemId: string,
   session: Session,
 ) => {
-  const jellyfin = new jellyfinClient();
+  const jellyfin = useStore.getState().jellyfinClient;
 
   const [artistInfo, setArtistInfo] = useState(false);
   const [averageColorRgb, setAverageColorRgb] = useState('');

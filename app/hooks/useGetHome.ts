@@ -1,8 +1,8 @@
-import {jellyfinClient} from '@boum/lib/api';
+import {useStore} from '@boum/hooks';
 import {Session} from '@boum/types';
 
 const useGetHome = (session: Session) => {
-  const jellyfin = new jellyfinClient();
+  const jellyfin = useStore.getState().jellyfinClient;
 
   const {latestAlbums, latestAlbumsLoading, latestAlbumsMutate} =
     jellyfin.getLatestAlbums(session);

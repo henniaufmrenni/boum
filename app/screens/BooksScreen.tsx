@@ -13,17 +13,7 @@ type BooksScreenProps = {
 };
 
 const BooksScreen = ({navigation}: BooksScreenProps) => {
-  const rawSession = useStore(state => state.session);
-  let session: Session = {
-    userId: '',
-    accessToken: '',
-    username: '',
-    hostname: '',
-    maxBitrateMobile: 140000000,
-    maxBitrateWifi: 140000000,
-    deviceId: '',
-  };
-  rawSession !== null ? (session = JSON.parse(rawSession)) : null;
+  const session = useStore(state => state.session);
 
   const {allAudiobooks, setLoadedMore} = useGetBooks(session);
 

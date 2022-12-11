@@ -6,29 +6,19 @@ import {LoadingSpinner} from '@boum/components/Generic';
 import {colours} from '@boum/constants';
 import {useStore} from '@boum/hooks';
 import {useGetAlbum} from '@boum/hooks/useGetAlbum';
-import {Session} from '@boum/types';
+import {MediaItem} from '@boum/types';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import LibraryListItem from '@boum/components/Library/LibraryListItem';
 
 type FolderScreenProps = {
   navigation: NavigationProp<any>;
-  route: RouteProp<any>;
+  route: RouteProp<{params: {item: MediaItem; itemId: string}}>;
 };
 
 const FolderScreen = ({navigation, route}: FolderScreenProps) => {
   const {itemId, item} = route.params;
 
-  const rawSession = useStore(state => state.session);
-  let session: Session = {
-    userId: '',
-    accessToken: '',
-    username: '',
-    hostname: '',
-    maxBitrateMobile: 140000000,
-    maxBitrateWifi: 140000000,
-    deviceId: '',
-  };
-  rawSession !== null ? (session = JSON.parse(rawSession)) : null;
+  const session = useStore(state => state.session);
 
   const {albumItems, albumInfo, isDownloaded, averageColorRgb} = useGetAlbum(
     item,

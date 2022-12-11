@@ -84,6 +84,7 @@ const BitratePicker = ({session}: Props) => {
             mobileLimit,
             session.maxBitrateVideo,
             session.maxBitrateDownloadAudio,
+            session.selectedStorageLocation,
           ).then(() => {
             setSuccessSavingLimit(true);
           });

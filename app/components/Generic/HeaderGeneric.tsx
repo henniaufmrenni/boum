@@ -18,7 +18,7 @@ const HeaderGeneric: React.FC<HeaderGenericProps> = ({Text, Symbol}) => {
   return (
     <>
       <View style={styles.container}>
-        <TouchableHighlight title="Go Back" onPress={() => navigation.goBack()}>
+        <TouchableHighlight title="Go Back" onPress={navigation.goBack}>
           <Text>
             <Icon name={Symbol} size={25} color={colours.black} />
           </Text>

@@ -5,7 +5,11 @@ import {colours, sizes} from '@boum/constants';
 
 const width = Dimensions.get('window').width;
 
-class ArtistItemsHeader extends React.PureComponent {
+type ArtistItemsHeaderProps = {
+  text: string;
+};
+
+class ArtistItemsHeader extends React.PureComponent<ArtistItemsHeaderProps> {
   render() {
     return (
       <View style={artistItemsHeaderStyle.container}>

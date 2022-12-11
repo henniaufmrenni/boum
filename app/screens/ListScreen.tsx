@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 
 import LibraryHeader from '@boum/components/Library/LibraryHeader';
@@ -7,23 +7,28 @@ import {colours} from '@boum/constants';
 import {useStore} from '@boum/hooks';
 import addNewItemsToOldObject from '@boum/lib/helper/addNewItemsToOldObject';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {jellyfinClient} from '@boum/lib/api';
+import {Filters, LibraryItemList, SortBy, SortOrder} from '@boum/types';
 
 type ListScreenProps = {
   navigation: NavigationProp<any>;
-  route: RouteProp<any>;
+  route: RouteProp<{
+    params: {
+      sortBy: SortBy;
+      sortOrder: SortOrder;
+      filters: Filters;
+      listTitle: string;
+      genreId: string;
+      searchQuery: string;
+    };
+  }>;
 };
 
 const ListScreen = ({navigation, route}: ListScreenProps) => {
   const {sortBy, sortOrder, filters, listTitle, genreId, searchQuery} =
     route.params;
 
-  const jellyfin = new jellyfinClient();
-  // FIXME: Find a solution for this hack, which is necessary, since zustand can't store JSON.
-  const rawSession = useStore(state => state.session);
-  let session = {userId: '', accessToken: '', username: '', hostname: ''};
-  rawSession !== null ? (session = JSON.parse(rawSession)) : null;
-
+  const jellyfin = useStore.getState().jellyfinClient;
+  const session = useStore(state => state.session);
   // Infinite Loading
   const [startIndex, setStartIndex] = useState<number>(0);
 
@@ -31,7 +36,7 @@ const ListScreen = ({navigation, route}: ListScreenProps) => {
   const resetAlbumsPageIndex = () => setStartIndex(0);
 
   const [loadedMore, setLoadedMore] = useState(false);
-  const [allAlbums, setAllAlbums] = useState<false | Array<Object>>(false);
+  const [allAlbums, setAllAlbums] = useState<false | LibraryItemList>(false);
 
   const {allAlbumsData, allAlbumsError, allAlbumsLoading, allAlbumsMutate} =
     jellyfin.getAllAlbums(

@@ -4,60 +4,47 @@ import {Dimensions, StyleSheet, Text, TextInput} from 'react-native';
 import {ButtonBoum} from '@boum/components/Settings';
 import {useStore} from '@boum/hooks';
 import {storeEncryptedValue} from '@boum/lib/encryptedStorage/encryptedStorage';
-import {Session} from '@boum/types';
 import {colours} from '@boum/constants';
 
 const width = Dimensions.get('window').width;
 
-type CastSettingsProps = {
-  session: Session;
-};
+const CastSettings: React.FC = () => {
+  const session = useStore(state => state.session);
+  const [chromecastAdress, setChromecastAdress] = useState<string | null>('');
+  const [succesSaving, setSuccessSaving] = useState<number>(0);
 
-const CastSettings: React.FC<CastSettingsProps> = ({session}) => {
-  const [chromecastAdress, setChromecastAdress] = useState<string>('');
-
-  const saveChromecastAdress = async () => {
-    const newSession = session;
-    newSession.chromecastAdress = chromecastAdress;
-    console.log(newSession);
-    try {
-      await storeEncryptedValue(
-        'user_session',
-        JSON.stringify(newSession),
-      ).then(() => {
-        useStore.setState({session: JSON.stringify(newSession)});
-      });
-    } catch (error) {
-      return 'Error in saving User session.';
-    }
+  const saveChromecastAdressEnabled = () => {
+    session.chromecastAdressEnabled = !session.chromecastAdressEnabled;
+    storeEncryptedValue('user_session', JSON.stringify(session))
+      .then(() => {
+        useStore.setState({session: session});
+        setSuccessSaving(succesSaving + 1);
+      })
+      .catch(err => new Error(err));
   };
 
-  const saveChromecastAdressEnabled = async () => {
-    const newSession = session;
-    newSession.chromecastAdressEnabled = !newSession.chromecastAdressEnabled;
-    console.log(newSession);
-    try {
-      await storeEncryptedValue(
-        'user_session',
-        JSON.stringify(newSession),
-      ).then(() => {
-        useStore.setState({session: JSON.stringify(newSession)});
-      });
-    } catch (error) {
-      return 'Error in saving User session.';
-    }
+  const saveChromecastAdress = () => {
+    chromecastAdress === ''
+      ? (session.chromecastAdress = null)
+      : (session.chromecastAdress = chromecastAdress);
+    storeEncryptedValue('user_session', JSON.stringify(session))
+      .then(() => {
+        useStore.setState({session: session});
+        setSuccessSaving(succesSaving + 1);
+      })
+      .catch(err => new Error(err));
   };
 
   return (
     <>
-      {session.chromecastAdress ? (
+      {session.chromecastAdress !== null ? (
         <Text style={styles.text}>
           Current Chromecast Adress: {session.chromecastAdress}
         </Text>
       ) : null}
       <TextInput
         style={styles.input}
-        onChangeText={setChromecastAdress}
+        onChangeText={url => setChromecastAdress(url)}
         value={chromecastAdress}
         autoCapitalize={'none'}
         placeholder={'https://jellyfin.example.com'}

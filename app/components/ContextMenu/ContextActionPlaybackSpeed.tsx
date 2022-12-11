@@ -8,7 +8,9 @@ const ContextActionPlaybackSpeed = () => {
     <ContextAction
       title="Set Playback Speed"
       ioniconIcon="speedometer"
-      action={() => console.log('pressed')}
+      action={() => {
+        return;
+      }}
       children={<PlaybackSpeedPicker />}
     />
   );

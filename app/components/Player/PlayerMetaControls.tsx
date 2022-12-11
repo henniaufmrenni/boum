@@ -1,11 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
 import {RepeatMode} from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -16,8 +10,6 @@ import {useStore} from '@boum/hooks';
 import {toggleRepeatMode} from '@boum/lib/audio';
 import {colours} from '@boum/constants';
 import {FavoriteAction, Session, SuccessMessage} from '@boum/types';
-
-const width = Dimensions.get('window').width;
 
 type PlayerMetaControlsProps = {
   navigation: NavigationProp<any>;
@@ -34,7 +26,7 @@ const PlayerMetaControls: React.FC<PlayerMetaControlsProps> = ({
   trackIsFavorite,
   isCastMode,
 }) => {
-  const jellyfin = useStore(state => state.jellyfinClient);
+  const jellyfin = useStore.getState().jellyfinClient;
 
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [actionStatus, setActionStatus] =
