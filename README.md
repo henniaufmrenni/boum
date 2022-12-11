@@ -44,7 +44,7 @@ The name _la_ boum [bum], originates from the "cool" french word for party in th
 
 ## Documentation
 
-The documentation for usage and development can be found [here](https://eindm.de/boum).
+The documentation for usage and development can be found [here](./DOCUMENTATION.md).
 
 For issues and feature requests, please submit an [issue in the Gitub repository](https://github.com/henniaufmrenni/boum/issues) using the appropriate issue template and ensure that your request or report isn't a duplicate.
 
