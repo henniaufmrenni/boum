@@ -2,21 +2,18 @@ import React from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 
-import {colours} from '@boum/constants';
-import {PlayerItem} from '@boum/types';
-
 const width = Dimensions.get('window').width;
 
 type PlayerAlbumImageProps = {
-  track: PlayerItem;
+  artwork: string;
 };
 
-const PlayerAlbumImage: React.FC<PlayerAlbumImageProps> = ({track}) => {
+const PlayerAlbumImage: React.FC<PlayerAlbumImageProps> = ({artwork}) => {
   return (
     <View style={styles.container}>
       <FastImage
         source={{
-          uri: track.artwork,
+          uri: artwork,
           headers: {
             Accept: 'image/avif,image/webp,*/*',
           },

@@ -1,17 +1,13 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {useProgress} from 'react-native-track-player';
 
 import {colours} from '@boum/constants';
 
-const ProgressBar: React.FC = () => {
-  const {position, duration} = useProgress();
+type ProgressBarProps = {
+  progress: number;
+};
 
-  let progress = 0;
-  if (duration > 0) {
-    progress = position / duration;
-  }
-
+const ProgressBar = ({progress}: ProgressBarProps) => {
   return (
     <View style={progressStyles.container}>
       <View style={[progressStyles.left, {flex: progress}]} />

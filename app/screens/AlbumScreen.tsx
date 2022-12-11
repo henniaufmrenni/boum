@@ -1,15 +1,17 @@
 import React from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
+import {State, usePlaybackState} from 'react-native-track-player';
+import {useMediaStatus} from 'react-native-google-cast';
+import {NavigationProp, RouteProp} from '@react-navigation/native';
 
 import {AlbumFooter} from '@boum/components/Album';
 import {ListHeader, ListRenderItem} from '@boum/components/ListItems';
 import {LoadingSpinner} from '@boum/components/Generic';
-import {colours} from '@boum/constants';
 import {useBitrateLimit, useStore} from '@boum/hooks';
 import {useGetAlbum} from '@boum/hooks/useGetAlbum';
+import {CastService} from '@boum/lib/cast';
+import {colours} from '@boum/constants';
 import {Session} from '@boum/types';
-import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {State, usePlaybackState} from 'react-native-track-player';
 
 type AlbumScreenProps = {
   navigation: NavigationProp<any>;
@@ -46,6 +48,11 @@ const AlbumScreen = ({navigation, route}: AlbumScreenProps) => {
 
   const playerState = usePlaybackState();
   const isPlaying = playerState === State.Playing;
+
+  const castService = useStore(state => state.castService);
+  const castClient = useStore(state => state.castClient);
+  const mediaStatus = useMediaStatus();
+
   return (
     <>
       <View style={styles.container}>
@@ -66,6 +73,7 @@ const AlbumScreen = ({navigation, route}: AlbumScreenProps) => {
                 mediaType={'Album'}
                 screenMode={'ListView'}
                 navigation={navigation}
+                castClient={castClient}
                 bitrateLimit={bitrateLimit}
                 isDownloaded={isDownloaded}
                 itemIsPlaying={
@@ -94,8 +102,16 @@ const AlbumScreen = ({navigation, route}: AlbumScreenProps) => {
                   albumItems={albumItems}
                   session={session}
                   bitrateLimit={bitrateLimit}
+                  castService={castService}
+                  castClient={castClient}
                   isPlaying={
-                    currentTrack && currentTrack.id === item.Id ? true : false
+                    mediaStatus?.currentQueueItem?.mediaInfo.contentId ===
+                      item.Id ||
+                    (!mediaStatus &&
+                      currentTrack &&
+                      currentTrack.id === item.Id)
+                      ? true
+                      : false
                   }
                 />
               );

@@ -1,12 +1,30 @@
 import React from 'react';
-import {Text, TouchableHighlight, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 
 import {playTrack} from '@boum/lib/audio';
 
 import {styles} from '@boum/components/Search';
+import {useBitrateLimit, useStore} from '@boum/hooks';
+import {LibraryItemList, MediaItem, Session} from '@boum/types';
 
-const RowSongs = ({songs, session}) => {
+type RowSongsProps = {
+  songs: LibraryItemList;
+  session: Session;
+};
+
+const RowSongs: React.FC<RowSongsProps> = ({songs, session}) => {
+  const bitrate = useBitrateLimit();
+  const castClient = useStore(state => state.castClient);
+  const castService = useStore(state => state.castService);
+
+  const playSong = async (item: MediaItem) => {
+    if (castClient !== null) {
+      castService.playTrack(session, item, 0, castClient);
+    } else {
+      await playTrack(item, session, bitrate);
+    }
+  };
   return (
     <>
       <View style={styles.resultsContainer}>
@@ -14,9 +32,9 @@ const RowSongs = ({songs, session}) => {
           <>
             <Text style={styles.resultCategoryTitle}>Songs</Text>
             {songs.Items.map(item => (
-              <TouchableHighlight
+              <TouchableOpacity
                 key={item.Id}
-                onPress={async () => await playTrack(item, session)}
+                onPress={() => playSong(item)}
                 style={styles.resultContainer}>
                 <>
                   {item.Id != null ? (
@@ -32,7 +50,7 @@ const RowSongs = ({songs, session}) => {
                   ) : null}
                   <Text style={styles.resultText}>{item.Name}</Text>
                 </>
-              </TouchableHighlight>
+              </TouchableOpacity>
             ))}
           </>
         ) : null}

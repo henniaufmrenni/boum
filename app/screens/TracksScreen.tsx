@@ -17,6 +17,7 @@ type TracksScreenProps = {
 
 const TracksScreen = ({navigation}: TracksScreenProps) => {
   const jellyfin = new jellyfinClient();
+
   // FIXME: Find a solution for this hack, which is necessary, since zustand can't store JSON.
   const rawSession = useStore(state => state.session);
   let session = {
@@ -93,7 +94,8 @@ const TracksScreen = ({navigation}: TracksScreenProps) => {
   };
   const bitrateLimit = useBitrateLimit();
 
-  useEffect(() => console.log(filters), [filters]);
+  const castClient = useStore(state => state.castClient);
+  const castService = useStore(state => state.castService);
 
   return (
     <>
@@ -125,6 +127,8 @@ const TracksScreen = ({navigation}: TracksScreenProps) => {
               item={item}
               session={session}
               bitrateLimit={bitrateLimit}
+              castClient={castClient}
+              castService={castService}
             />
           )}
           onEndReached={() => {

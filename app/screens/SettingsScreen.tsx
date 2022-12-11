@@ -1,24 +1,25 @@
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet, Text} from 'react-native';
+import {NavigationProp} from '@react-navigation/native';
 
+import {CastSettings} from '@boum/components/Cast';
 import {OpenURLButton} from '@boum/components/Generic';
 import {
   BitratePicker,
   ButtonBoum,
+  DownloadSettings,
   LogoutButton,
   OfflineModeSwitch,
-  DownloadSettings,
   SwitchWithDescription,
 } from '@boum/components/Settings';
 import {colours, versionBoum} from '@boum/constants';
 import {useScanLibrary, useStore} from '@boum/hooks';
-import {NavigationProp} from '@react-navigation/native';
 
-type Props = {
+type SettingsScreenProps = {
   navigation: NavigationProp<any>;
 };
 
-const SettingsScreen = ({navigation}: Props) => {
+const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
   const rawSession = useStore(state => state.session);
   const [refreshLibraryResult, setRefreshLibraryResult] = useState('');
   let session = {
@@ -52,6 +53,11 @@ const SettingsScreen = ({navigation}: Props) => {
             onPress={() => navigation.navigate('Downloads')}
           />
         </>
+      </SwitchWithDescription>
+      <SwitchWithDescription
+        title={'Chromecast'}
+        description={`Set up a different adress for Chromecast.`}>
+        <CastSettings session={session} />
       </SwitchWithDescription>
       <SwitchWithDescription
         title={'Offline Mode'}

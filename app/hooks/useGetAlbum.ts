@@ -1,8 +1,7 @@
 import {useEffect, useState} from 'react';
 import {Blurhash} from 'react-native-blurhash';
 
-import {useCheckParentIsDownloaded} from '@boum/hooks';
-import {jellyfinClient} from '@boum/lib/api';
+import {useCheckParentIsDownloaded, useStore} from '@boum/hooks';
 import {Session} from '@boum/types';
 
 const useGetAlbum = (
@@ -10,7 +9,7 @@ const useGetAlbum = (
   routeItemId: string,
   session: Session,
 ) => {
-  const jellyfin = new jellyfinClient();
+  const jellyfin = useStore(state => state.jellyfinClient);
   const [albumInfo, setAlbumInfo] = useState(false);
   const [averageColorRgb, setAverageColorRgb] = useState('');
 
@@ -33,9 +32,9 @@ const useGetAlbum = (
   useEffect(() => {
     function setBackGround() {
       if (albumInfo) {
-        if (albumInfo.ImageBlurHashes.Primary !== undefined) {
+        if (albumInfo?.ImageBlurHashes?.Primary !== undefined) {
           const averageColor = Blurhash.getAverageColor(
-            albumInfo.ImageBlurHashes.Primary[
+            albumInfo?.ImageBlurHashes?.Primary[
               Object.keys(albumInfo.ImageBlurHashes.Primary)[0]
             ],
           );
