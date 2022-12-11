@@ -7,31 +7,19 @@ import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {AlbumFooter} from '@boum/components/Album';
 import {ListHeader, ListRenderItem} from '@boum/components/ListItems';
 import {LoadingSpinner} from '@boum/components/Generic';
-import {useBitrateLimit, useStore} from '@boum/hooks';
-import {useGetAlbum} from '@boum/hooks/useGetAlbum';
-import {CastService} from '@boum/lib/cast';
+import {useBitrateLimit, useStore, useGetAlbum} from '@boum/hooks';
 import {colours} from '@boum/constants';
-import {Session} from '@boum/types';
+import {MediaItem} from '@boum/types';
 
 type AlbumScreenProps = {
   navigation: NavigationProp<any>;
-  route: RouteProp<any>;
+  route: RouteProp<{params: {item: MediaItem; itemId: string}}>;
 };
 
 const AlbumScreen = ({navigation, route}: AlbumScreenProps) => {
   const {itemId, item} = route.params;
 
-  const rawSession = useStore(state => state.session);
-  let session: Session = {
-    userId: '',
-    accessToken: '',
-    username: '',
-    hostname: '',
-    maxBitrateMobile: 140000000,
-    maxBitrateWifi: 140000000,
-    deviceId: '',
-  };
-  rawSession !== null ? (session = JSON.parse(rawSession)) : null;
+  const session = useStore(state => state.session);
 
   const {albumItems, similarAlbums, albumInfo, isDownloaded, averageColorRgb} =
     useGetAlbum(item, itemId, session);

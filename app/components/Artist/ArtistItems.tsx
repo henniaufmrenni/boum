@@ -1,11 +1,9 @@
 import React from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {ArtistItemsFooter, ArtistItemsHeader} from '@boum/components/Artist';
 import AlbumCard from '@boum/components/Lists/AlbumCard';
 import {NavigationDestination, Session} from '@boum/types';
-
-const width = Dimensions.get('window').width;
 
 const ArtistItems = ({
   screenItem,

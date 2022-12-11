@@ -3,38 +3,25 @@ import {Dimensions, StyleSheet, Text, View} from 'react-native';
 
 import {colours, sizes} from '@boum/constants';
 import {getHourMinutes} from '@boum/lib/helper/helper';
+import {LibraryItemList, MediaItem} from '@boum/types';
 
 const width = Dimensions.get('window').width;
 
 type ArtistItemsFooterProps = {
-  artistItems: object;
-  item: object;
+  item: MediaItem;
+  artistItems: LibraryItemList;
 };
 
-const ArtistItemsFooter: React.FC<ArtistItemsFooterProps> = ({
-  artistItems,
-  item,
-}) => {
-  const runTime = getHourMinutes(item.RunTimeTicks);
-  return (
-    <>
-      <ArtistItemsFooterContent
-        item={item}
-        artistItems={artistItems}
-        runTime={runTime}
-      />
-    </>
-  );
-};
+class ArtistItemsFooter extends React.PureComponent<ArtistItemsFooterProps> {
+  runTime = getHourMinutes(this.props.item.RunTimeTicks);
 
-class ArtistItemsFooterContent extends React.PureComponent {
   render() {
     return (
       <View style={artistItemsFooter.container}>
         <Text style={artistItemsFooter.text}>
           {this.props.artistItems.TotalRecordCount}{' '}
           {this.props.artistItems.TotalRecordCount > 1 ? 'Albums' : 'Album'} •{' '}
-          {this.props.runTime}
+          {this.runTime}
         </Text>
       </View>
     );

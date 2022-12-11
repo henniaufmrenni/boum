@@ -33,7 +33,6 @@ const CastButton: React.FC<CastButtonProps> = ({session, queue}) => {
           });
       }
     }
-
     getQueue();
   }, [client, device]);
   return (

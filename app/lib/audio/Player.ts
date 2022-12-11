@@ -13,7 +13,6 @@ const playAlbum = async (
   await mapJellyfinTrackToPlayer(jellyfinInput, session, bitrateLimit)
     .then(async object => {
       await TrackPlayer.reset();
-      console.log(object);
       await TrackPlayer.add(object).catch(err => console.log(err));
       await TrackPlayer.play();
     })
@@ -148,7 +147,6 @@ const mapJellyfinTrackToPlayer = async (
             session.accessToken,
           artwork: `${session.hostname}/Items/${inputItem.AlbumId}/Images/Primary?fillHeight=400&fillWidth=400&quality=96`,
         };
-        console.log(track.url);
         tracks.push(track);
       }
       if (jellyfinInput.length === index + 1) {

@@ -5,7 +5,6 @@ import {colours} from '@boum/constants';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Filters, Session, SortBy, SortOrder, SuccessMessage} from '@boum/types';
 import {Picker} from '@react-native-picker/picker';
-import {jellyfinClient} from '@boum/lib/api';
 import ButtonBoum from '@boum/components/Settings/ButtonBoum';
 import {LoadingSpinner} from '@boum/components/Generic';
 import {saveCustomList} from '@boum/lib/db/customLists';
@@ -16,7 +15,7 @@ type CustomListCreatorProps = {
 };
 
 const CustomListCreator: React.FC<CustomListCreatorProps> = ({session}) => {
-  const jellyfin = new jellyfinClient();
+  const jellyfin = useStore.getState().jellyfinClient;
 
   const triggerRefreshHomeScreen = useStore(
     state => state.setRefreshHomeScreen,

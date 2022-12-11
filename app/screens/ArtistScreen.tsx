@@ -1,32 +1,23 @@
 import React from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
+import {NavigationProp, RouteProp} from '@react-navigation/native';
 
 import ArtistHeader from '@boum/components/Artist/ArtistHeader';
 import {ArtistItems} from '@boum/components/Artist';
 import {LoadingSpinner} from '@boum/components/Generic';
 import {colours} from '@boum/constants';
 import {useGetArtist, useStore} from '@boum/hooks';
-import {NavigationProp, RouteProp} from '@react-navigation/native';
+import {MediaItem} from '@boum/types';
 
 type ArtistScreenProps = {
   navigation: NavigationProp<any>;
-  route: RouteProp<any>;
+  route: RouteProp<{params: {item: MediaItem; itemId: string}}>;
 };
 
 const ArtistScreen = ({navigation, route}: ArtistScreenProps) => {
   const {itemId, item} = route.params;
 
-  const rawSession = useStore(state => state.session);
-  let session: Session = {
-    userId: '',
-    accessToken: '',
-    username: '',
-    hostname: '',
-    maxBitrateMobile: 140000000,
-    maxBitrateWifi: 140000000,
-    deviceId: '',
-  };
-  rawSession !== null ? (session = JSON.parse(rawSession)) : null;
+  const session = useStore(state => state.session);
 
   const {
     artistInfo,

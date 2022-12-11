@@ -2,11 +2,11 @@ import React from 'react';
 
 import {ContextAction} from '@boum/components/ContextMenu';
 import {addAlbumToQueue} from '@boum/lib/audio';
-import {MediaItem, Session} from '@boum/types';
+import {LibraryItemList, MediaItem, Session} from '@boum/types';
 
 type ContextActionPlayNextProps = {
   item: MediaItem;
-  listItems?: Object;
+  listItems?: LibraryItemList;
   session: Session;
   bitrateLimit: number;
   currentTrack: number;

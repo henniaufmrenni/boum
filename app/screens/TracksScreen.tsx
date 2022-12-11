@@ -1,35 +1,20 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
+import {NavigationProp} from '@react-navigation/native';
 
 import LibraryHeader from '@boum/components/Library/LibraryHeader';
-import LibraryListItem from '@boum/components/Library/LibraryListItem';
-import {colours} from '@boum/constants';
+import {SongListItem} from '@boum/components/Library';
 import {useTracksStore, useStore, useBitrateLimit} from '@boum/hooks';
 import addNewItemsToOldObject from '@boum/lib/helper/addNewItemsToOldObject';
-import {NavigationProp} from '@react-navigation/native';
-import {jellyfinClient} from '@boum/lib/api';
-import {ListRenderItem} from '@boum/components/ListItems';
-import {SongListItem} from '@boum/components/Library';
+import {colours} from '@boum/constants';
 
 type TracksScreenProps = {
   navigation: NavigationProp<any>;
 };
 
 const TracksScreen = ({navigation}: TracksScreenProps) => {
-  const jellyfin = new jellyfinClient();
-
-  // FIXME: Find a solution for this hack, which is necessary, since zustand can't store JSON.
-  const rawSession = useStore(state => state.session);
-  let session = {
-    userId: '',
-    accessToken: '',
-    username: '',
-    hostname: '',
-    maxBitrateMobile: 140000000,
-    maxBitrateWifi: 140000000,
-    deviceId: '',
-  };
-  rawSession !== null ? (session = JSON.parse(rawSession)) : null;
+  const jellyfin = useStore.getState().jellyfinClient;
+  const session = useStore(state => state.session);
 
   // Infinite Loading
   const startIndex = useTracksStore(state => state.itemsPageIndex);

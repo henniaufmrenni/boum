@@ -34,13 +34,14 @@ const useLogin = async (
       maxBitrateVideo: 100000000,
       maxBitrateDownloadAudio: 140000000,
       deviceId: deviceId,
+      deviceName: 'boum ' + deviceId,
       chromecastAdress: null,
       chromecastAdressEnabled: false,
     };
 
     try {
       await storeEncryptedValue('user_session', JSON.stringify(item));
-      useStore.setState({session: JSON.stringify(item)});
+      useStore.setState({session: item});
       useStore.setState({gotLoginStatus: true});
     } catch (error) {
       return 'Error in saving User session.';

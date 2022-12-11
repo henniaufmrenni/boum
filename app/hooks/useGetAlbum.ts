@@ -9,7 +9,7 @@ const useGetAlbum = (
   routeItemId: string,
   session: Session,
 ) => {
-  const jellyfin = useStore(state => state.jellyfinClient);
+  const jellyfin = useStore.getState().jellyfinClient;
   const [albumInfo, setAlbumInfo] = useState(false);
   const [averageColorRgb, setAverageColorRgb] = useState('');
 

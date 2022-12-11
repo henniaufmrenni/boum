@@ -12,17 +12,7 @@ type Props = {
 };
 
 const SearchScreen = ({navigation}: Props) => {
-  const rawSession = useStore(state => state.session);
-  let session = {
-    userId: '',
-    accessToken: '',
-    username: '',
-    hostname: '',
-    maxBitrateMobile: 140000000,
-    maxBitrateWifi: 140000000,
-    deviceId: '',
-  };
-  rawSession !== null ? (session = JSON.parse(rawSession)) : null;
+  const session = useStore(state => state.session);
 
   const searchInput = useSearchStore(state => state.searchInput);
   const res = useCancelableSearch(session, searchInput);

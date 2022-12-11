@@ -10,7 +10,8 @@ const useIntializeSession = async () => {
     async function init() {
       await retrieveEncryptedValue('user_session')
         .then(async response => {
-          useStore.setState({session: response});
+          const json = JSON.parse(response);
+          useStore.setState({session: json});
           useStore.setState({gotLoginStatus: true});
         })
         .catch(error => {

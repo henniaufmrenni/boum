@@ -12,15 +12,15 @@ type ContextActionProps = {
   actionStatusMessage?: React.ReactNode;
 };
 
-const ContextAction = ({
+const ContextAction: React.FC<ContextActionProps> = ({
   title,
   ioniconIcon,
   action,
   children,
   actionStatusMessage,
-}: ContextActionProps): React.ReactNode => {
+}) => {
   return (
-    <TouchableOpacity onPress={() => action()}>
+    <TouchableOpacity onPress={action}>
       <View>
         <View style={contextActionStyles.container}>
           <Text style={contextActionStyles.title}>

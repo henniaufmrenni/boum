@@ -1,37 +1,24 @@
 import React, {useState} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
+import {NavigationProp, RouteProp} from '@react-navigation/native';
 
 import LibraryHeader from '@boum/components/Library/LibraryHeader';
 import LibraryListItem from '@boum/components/Library/LibraryListItem';
-import {colours} from '@boum/constants';
 import {useStore} from '@boum/hooks';
-import {jellyfinClient} from '@boum/lib/api';
 import addNewItemsToOldObject from '@boum/lib/helper/addNewItemsToOldObject';
-import {Session, SortBy, SortOrder} from '@boum/types';
-import {NavigationProp, RouteProp} from '@react-navigation/native';
+import {colours} from '@boum/constants';
+import {SortBy, SortOrder} from '@boum/types';
 
 type GenreScreenProps = {
   navigation: NavigationProp<any>;
-  route: RouteProp<any>;
+  route: RouteProp<{params: {name: string; itemId: string}}>;
 };
 
 const GenreScreen = ({navigation, route}: GenreScreenProps) => {
-  const jellyfin = new jellyfinClient();
-
-  // TODO: Find a solution for this hack, which is necessary, since Zustand can't store JSON.
-  const rawSession = useStore(state => state.session);
-  let session: Session = {
-    userId: '',
-    accessToken: '',
-    username: '',
-    hostname: '',
-    maxBitrateMobile: 140000000,
-    maxBitrateWifi: 140000000,
-    deviceId: '',
-  };
-  rawSession !== null ? (session = JSON.parse(rawSession)) : null;
-
   const {itemId, name} = route.params;
+
+  const jellyfin = useStore.getState().jellyfinClient;
+  const session = useStore(state => state.session);
 
   // We keep state local since it would be shared with all other genre screens otherwise
   // Infinite Loading

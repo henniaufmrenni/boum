@@ -11,33 +11,22 @@ import {
   useCheckParentIsDownloaded,
   useStore,
 } from '@boum/hooks';
-import {jellyfinClient} from '@boum/lib/api';
-import {Session} from '@boum/types';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {State, usePlaybackState} from 'react-native-track-player';
+import {MediaItem} from '@boum/types';
 
 type PlaylistScreenProps = {
-  route: RouteProp<any>;
   navigation: NavigationProp<any>;
+  route: RouteProp<{params: {item: MediaItem; itemId: string}}>;
 };
 
 const PlaylistScreen = ({route, navigation}: PlaylistScreenProps) => {
-  const jellyfin = new jellyfinClient();
+  const jellyfin = useStore.getState().jellyfinClient;
+  const session = useStore(state => state.session);
 
-  const [averageColorRgb, setAverageColorRgb] = useState(false);
+  const [averageColorRgb, setAverageColorRgb] =
+    useState<string>('rgb(168, 44, 69)');
   const {itemId, item} = route.params;
-
-  const rawSession = useStore(state => state.session);
-  let session: Session = {
-    userId: '',
-    accessToken: '',
-    username: '',
-    hostname: '',
-    maxBitrateMobile: 140000000,
-    maxBitrateWifi: 140000000,
-    deviceId: '',
-  };
-  rawSession !== null ? (session = JSON.parse(rawSession)) : null;
 
   const {albumItems, albumItemsMutate} = jellyfin.getAlbumItems(
     session,
@@ -57,8 +46,6 @@ const PlaylistScreen = ({route, navigation}: PlaylistScreenProps) => {
     }
     if (item.ImageBlurHashes.Primary !== undefined) {
       setBackGround();
-    } else {
-      setAverageColorRgb('rgb(168, 44, 69)');
     }
   }, [item.ImageBlurHashes.Primary]);
 

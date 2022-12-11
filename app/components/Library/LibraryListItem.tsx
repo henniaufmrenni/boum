@@ -17,13 +17,14 @@ class LibraryListItem extends React.PureComponent<LibraryListItemProps> {
   render() {
     return (
       <TouchableHighlight
-        onPress={() =>
+        onPress={() => {
+          // FIXME:  Extract this from the arrow function
           this.props.navigation.push(this.props.navigationDestination, {
             itemId: this.props.item.Id,
             name: this.props.item.Name,
             item: this.props.item,
-          })
-        }>
+          });
+        }}>
         <View style={styles.container}>
           <FastImage
             source={{

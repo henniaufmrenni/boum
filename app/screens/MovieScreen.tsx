@@ -1,39 +1,25 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, StyleSheet, Text, ScrollView} from 'react-native';
-
-import {AlbumFooter} from '@boum/components/Album';
-import {ListHeader, ListRenderItem} from '@boum/components/ListItems';
-import {LoadingSpinner} from '@boum/components/Generic';
-import {colours} from '@boum/constants';
-import {useBitrateLimit, useStore} from '@boum/hooks';
-import {useGetAlbum} from '@boum/hooks/useGetAlbum';
-import {Session} from '@boum/types';
-import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {State, usePlaybackState} from 'react-native-track-player';
-import {VideoHeader} from '@boum/components/Video';
-import {jellyfinClient} from '@boum/lib/api';
+import {StyleSheet, ScrollView} from 'react-native';
 import {Blurhash} from 'react-native-blurhash';
+import {NavigationProp, RouteProp} from '@react-navigation/native';
+
+import {LoadingSpinner} from '@boum/components/Generic';
+import {VideoHeader} from '@boum/components/Video';
+import {useStore} from '@boum/hooks';
+import {colours} from '@boum/constants';
+import {MediaItem} from '@boum/types';
 
 type MovieScreenProps = {
   navigation: NavigationProp<any>;
-  route: RouteProp<any>;
+  route: RouteProp<{params: {item: MediaItem}}>;
 };
 
 const MovieScreen = ({navigation, route}: MovieScreenProps) => {
-  const jellyfin = new jellyfinClient();
-  const {itemId, item} = route.params;
+  const jellyfin = useStore.getState().jellyfinClient;
+  const {item} = route.params;
 
-  const rawSession = useStore(state => state.session);
-  let session: Session = {
-    userId: '',
-    accessToken: '',
-    username: '',
-    hostname: '',
-    maxBitrateMobile: 140000000,
-    maxBitrateWifi: 140000000,
-    deviceId: '',
-  };
-  rawSession !== null ? (session = JSON.parse(rawSession)) : null;
+  const session = useStore(state => state.session);
+
   const [averageColorRgb, setAverageColorRgb] =
     useState<string>('rgb(168, 44, 69)');
 

@@ -3,7 +3,7 @@ import {Dimensions, SafeAreaView, StyleSheet, Text} from 'react-native';
 import Pdf from 'react-native-pdf';
 import {colours, versionBoum} from '@boum/constants';
 
-import {Session} from '@boum/types';
+import {MediaItem} from '@boum/types';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {useStore} from '@boum/hooks';
 import {LoadingSpinner} from '@boum/components/Generic';
@@ -13,22 +13,13 @@ const height = Dimensions.get('window').height;
 
 type BookScreenProps = {
   navigation: NavigationProp<any>;
-  route: RouteProp<any>;
+  route: RouteProp<{params: {item: MediaItem}}>;
 };
 
 const BookScreen = ({route}: BookScreenProps) => {
   const {item} = route.params;
-  const rawSession = useStore(state => state.session);
-  let session: Session = {
-    userId: '',
-    accessToken: '',
-    username: '',
-    hostname: '',
-    maxBitrateMobile: 140000000,
-    maxBitrateWifi: 140000000,
-    deviceId: '',
-  };
-  rawSession !== null ? (session = JSON.parse(rawSession)) : null;
+  const session = useStore(state => state.session);
+
   const [fileType, setFileType] = useState<undefined | string>(undefined);
   const fileUrl = `${session.hostname}/Items/${item.Id}/Download`;
   const source = {

@@ -20,18 +20,8 @@ type SettingsScreenProps = {
 };
 
 const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
-  const rawSession = useStore(state => state.session);
+  const session = useStore(state => state.session);
   const [refreshLibraryResult, setRefreshLibraryResult] = useState('');
-  let session = {
-    userId: '',
-    accessToken: '',
-    username: '',
-    hostname: '',
-    maxBitrateMobile: 140000000,
-    maxBitrateWifi: 140000000,
-    deviceId: '',
-  };
-  rawSession !== null ? (session = JSON.parse(rawSession)) : null;
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -62,7 +52,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
       <SwitchWithDescription
         title={'Offline Mode'}
         description="Turn on offline mode to only see the albums on your home screen which you've downloaded.">
-        <OfflineModeSwitch />
+        <OfflineModeSwitch session={session} />
       </SwitchWithDescription>
       <SwitchWithDescription
         title={'Custom Lists'}

@@ -20,18 +20,12 @@ const DownloadSettings = ({session}: DownloadSettingsProps) => {
   const [storageLocation, setStorageLocation] =
     useState<SelectedStorageLocation>('DocumentDirectory');
   const [successSavingLimit, setSuccessSavingLimit] = useState<boolean>(false);
-  const selectedStorageLocation = useStore(
-    state => state.selectedStorageLocation,
-  );
-  const setSelectedStorageLocation = useStore(
-    state => state.setSelectedStorageLocation,
-  );
 
   const [downloadQuality, setDownloadQuality] = useState<number>(140000000);
 
   useEffect(() => {
     setDownloadQuality(session.maxBitrateDownloadAudio);
-    setStorageLocation(selectedStorageLocation);
+    setStorageLocation(session.selectedStorageLocation);
   }, []);
 
   // TODO: Check whether device has an SD Card
@@ -98,7 +92,7 @@ const DownloadSettings = ({session}: DownloadSettingsProps) => {
         If you change the storage location, your previous downloads will remain
         (playable) at their current location.
       </Text>
-      {selectedStorageLocation !== 'DocumentDirectory' ? (
+      {session.selectedStorageLocation !== 'DocumentDirectory' ? (
         <Text style={styles.text}>
           {'\n'}
           ⚠️ When selecting the downloads folder or SD Card as storage location,
@@ -109,20 +103,15 @@ const DownloadSettings = ({session}: DownloadSettingsProps) => {
       <ButtonBoum
         title={'Save download settings'}
         onPress={() => {
-          setSelectedStorageLocation(storageLocation);
-          useStoreEncryptedValue(
-            'selected_storage_location',
+          useSetBitrateLimit(
+            session,
+            session.maxBitrateWifi,
+            session.maxBitrateMobile,
+            session.maxBitrateVideo,
+            downloadQuality,
             storageLocation,
           ).then(() => {
-            useSetBitrateLimit(
-              session,
-              session.maxBitrateWifi,
-              session.maxBitrateMobile,
-              session.maxBitrateVideo,
-              downloadQuality,
-            ).then(() => {
-              setSuccessSavingLimit(true);
-            });
+            setSuccessSavingLimit(true);
           });
         }}
       />

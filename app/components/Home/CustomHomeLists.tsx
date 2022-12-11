@@ -20,23 +20,23 @@ type HeaderHomeProps = {
 };
 
 const CustomHomeLists: React.FC<HeaderHomeProps> = ({navigation, data}) => {
+  function goToList(item: CustomHomeListItem) {
+    navigation.push('List', {
+      listTitle: item.title,
+      sortBy: item.sortBy,
+      sortOrder: item.sortOrder,
+      filters: item.filters,
+      genreId: item.genreId,
+      searchQuery: item.searchQuery,
+    });
+  }
+
   return (
     <View>
       <Text style={styles.title}>Your Lists</Text>
       <View style={styles.container}>
         {data.map(item => (
-          <TouchableOpacity
-            onPress={() =>
-              navigation.push('List', {
-                listTitle: item.title,
-                sortBy: item.sortBy,
-                sortOrder: item.sortOrder,
-                filters: item.filters,
-                genreId: item.genreId,
-                searchQuery: item.searchQuery,
-              })
-            }
-            key={item.title}>
+          <TouchableOpacity onPress={() => goToList(item)} key={item.title}>
             <View style={styles.itemContainer}>
               <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
                 {item.title}

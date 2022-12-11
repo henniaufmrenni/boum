@@ -9,10 +9,10 @@ const useBitrateLimit = () => {
   let bitrateLimit: number = 140000000;
 
   if (netInfo.type === 'wifi') {
-    const limit = JSON.parse(session).maxBitrateWifi;
+    const limit = session.maxBitrateWifi;
     bitrateLimit = limit;
   } else if (netInfo.type === 'cellular') {
-    const limit = JSON.parse(session).maxBitrateMobile;
+    const limit = session.maxBitrateMobile;
     bitrateLimit = limit;
   }
   return bitrateLimit;

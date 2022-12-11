@@ -27,19 +27,20 @@ class AlbumCard extends React.PureComponent<AlbumCardProps> {
     return (
       <View style={listRowStyles.container}>
         <TouchableOpacity
-          onPress={() =>
+          onPress={() => {
+            // FIXME:  Extract this from the arrow function
             this.props.navigation.push(this.props.navigationDestination, {
               itemId: this.props.item.Id,
               name: this.props.item.Name,
               item: this.props.item,
-            })
-          }>
+            });
+          }}>
           <View style={listRowStyles.imageContainer}>
             {this.props.item.Id != null ? (
               <FastImage
                 source={{
                   uri: this.props.imageLocation
-                    ? 'file:///' + this.props.imageLocation
+                    ? 'file://' + this.props.imageLocation
                     : `${this.props.session.hostname}/Items/${this.props.item.Id}/Images/Primary?fillHeight=400&fillWidth=400&quality=96`,
                   headers: {
                     Accept: 'image/webp,*/*',

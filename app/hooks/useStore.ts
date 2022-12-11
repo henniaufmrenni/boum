@@ -8,22 +8,20 @@ import {
   SortBy,
   SortOrder,
   Filters,
-  SelectedStorageLocation,
   CustomHomeListItem,
+  SelectedStorageLocation,
 } from '@boum/types';
 import {
   CastSession,
   Device,
-  MediaRepeatMode,
   MediaStatus,
   RemoteMediaClient,
-  useRemoteMediaClient,
 } from 'react-native-google-cast';
 import {CastService} from '@boum/lib/cast';
 import {jellyfinClient} from '@boum/lib/api';
 
 type BaseStore = {
-  session: Session | null;
+  session: Session;
   gotLoginStatus: boolean;
   homeData: object | null;
   queue: Object | null;
@@ -61,8 +59,25 @@ type BaseStore = {
   jellyfinClient: jellyfinClient;
 };
 
+const initialSession: Session = {
+  hostname: '',
+  accessToken: '',
+  userId: '',
+  username: '',
+  maxBitrateWifi: 140000000,
+  maxBitrateMobile: 140000000,
+  maxBitrateVideo: 100000000,
+  maxBitrateDownloadAudio: 140000000,
+  deviceName: '',
+  deviceId: '',
+  chromecastAdress: null,
+  chromecastAdressEnabled: false,
+  offlineMode: false,
+  selectedStorageLocation: 'DocumentDirectory',
+};
+
 const useStore = create<BaseStore>(set => ({
-  session: null,
+  session: initialSession,
   gotLoginStatus: false,
   homeData: null,
   queue: null,

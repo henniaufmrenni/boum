@@ -29,7 +29,6 @@ type PlayerControlsProps = {
   duration: number;
   castDevice: string | undefined;
   queuePosition: number | undefined;
-  queueLength: number | undefined;
   repeatMode?: RepeatMode;
   albumNavigation: () => void;
   artistNavigation: () => void;
@@ -38,7 +37,6 @@ type PlayerControlsProps = {
   pauseTrack: () => void;
   skipToNextTrack: () => void;
   seekTo: (number: number) => void;
-  setRepeatMode: () => void;
 };
 
 const PlayerControls: React.FC<PlayerControlsProps> = ({
@@ -52,7 +50,6 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({
   duration,
   castDevice,
   queuePosition,
-  queueLength,
   repeatMode,
   albumNavigation,
   artistNavigation,
@@ -61,7 +58,6 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({
   pauseTrack,
   skipToNextTrack,
   seekTo,
-  setRepeatMode,
 }) => {
   return (
     <View style={styles.controlsAndInfoContainer}>
@@ -201,25 +197,6 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colours.black,
-    height: '100%',
-    justifyContent: 'flex-start',
-  },
-  text: {
-    color: colours.white,
-    fontSize: 16,
-    fontWeight: '500',
-    textAlign: 'center',
-  },
-  image: {
-    alignSelf: 'center',
-  },
-  item: {
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
   albumTitle: {
     fontSize: 14,
     marginHorizontal: 8,
@@ -256,12 +233,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  playerMetaControlsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: '20%',
-  },
   sliderAndPositionContainer: {
     justifyContent: 'center',
     alignContent: 'center',
@@ -274,7 +245,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 12,
     maxHeight: 10,
   },
-  slider: {},
   textSlider: {
     color: colours.white,
     fontFamily: 'Inter-Medium',

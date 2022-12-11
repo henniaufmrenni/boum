@@ -13,6 +13,8 @@ type Session = {
   deviceId: string;
   chromecastAdress: string | null;
   chromecastAdressEnabled: boolean;
+  offlineMode: boolean;
+  selectedStorageLocation: SelectedStorageLocation;
 };
 
 type SelectedStorageLocation =

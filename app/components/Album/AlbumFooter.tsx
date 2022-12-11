@@ -7,7 +7,7 @@ import {NavigationProp} from '@react-navigation/native';
 
 import {SimilarAlbums} from '@boum/components/Album';
 
-type Props = {
+type AlbumFooterProps = {
   albumItems: Array<object>;
   session: Session;
   item: object;
@@ -15,7 +15,7 @@ type Props = {
   navigation: NavigationProp<any>;
 };
 
-class AlbumFooter extends React.Component<Props> {
+class AlbumFooter extends React.Component<AlbumFooterProps> {
   render() {
     return (
       <>

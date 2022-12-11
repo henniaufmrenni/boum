@@ -1,10 +1,19 @@
 import React from 'react';
 import {Text, TouchableHighlight, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
+import {NavigationProp} from '@react-navigation/native';
 
 import {styles} from '@boum/components/Search';
+import {LibraryItemList, Session} from '@boum/types';
 
-const RowNavigation = ({
+type RowNavigationProps = {
+  albums: LibraryItemList;
+  navigation: NavigationProp<any>;
+  navigationDestination: string;
+  session: Session;
+};
+
+const RowNavigation: React.FC<RowNavigationProps> = ({
   albums,
   navigation,
   navigationDestination,

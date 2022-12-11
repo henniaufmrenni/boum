@@ -25,20 +25,7 @@ type PlayerScreenProps = {
 };
 
 const PlayerScreen: React.FC<PlayerScreenProps> = ({navigation}) => {
-  const rawSession = useStore(state => state.session);
-  let session: Session = {
-    hostname: '',
-    accessToken: '',
-    userId: '',
-    username: '',
-    maxBitrateMobile: 140000000,
-    maxBitrateWifi: 140000000,
-    maxBitrateVideo: 140000000,
-    maxBitrateDownloadAudio: 140000000,
-    deviceName: '',
-    deviceId: '',
-  };
-  rawSession !== null ? (session = JSON.parse(rawSession)) : null;
+  const session = useStore(state => state.session);
 
   const [overlayHidden, setOverlayHidden] = useState<boolean>(true);
   const {position, duration} = useProgress();
