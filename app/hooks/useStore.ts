@@ -11,6 +11,16 @@ import {
   SelectedStorageLocation,
   CustomHomeListItem,
 } from '@boum/types';
+import {
+  CastSession,
+  Device,
+  MediaRepeatMode,
+  MediaStatus,
+  RemoteMediaClient,
+  useRemoteMediaClient,
+} from 'react-native-google-cast';
+import {CastService} from '@boum/lib/cast';
+import {jellyfinClient} from '@boum/lib/api';
 
 type BaseStore = {
   session: Session | null;
@@ -39,6 +49,16 @@ type BaseStore = {
   setRefreshHomeScreen: () => void;
   customLists: false | Array<CustomHomeListItem>;
   setCustomLists: (input: Array<CustomHomeListItem> | false) => void;
+  castClient: RemoteMediaClient | null;
+  setCastlient: (client: RemoteMediaClient | null) => void;
+  castSession: CastSession | null;
+  setCastSession: (session: CastSession | null) => void;
+  castMediaStatus: MediaStatus | null;
+  setCastMediaStatus: (status: MediaStatus | null) => void;
+  castDevice: Device | null;
+  setCastDevice: (device: Device | null) => void;
+  castService: CastService;
+  jellyfinClient: jellyfinClient;
 };
 
 const useStore = create<BaseStore>(set => ({
@@ -54,7 +74,7 @@ const useStore = create<BaseStore>(set => ({
   db: any,
   selectedStorageLocation: 'DocumentDirectory',
   setSelectedStorageLocation: (value: SelectedStorageLocation) =>
-    set(state => ({selectedStorageLocation: value})),
+    set(() => ({selectedStorageLocation: value})),
   offlineMode: false,
   playerIsSetup: false,
   toggleOfflineMode: () => set(state => ({offlineMode: !state.offlineMode})),
@@ -72,6 +92,17 @@ const useStore = create<BaseStore>(set => ({
   refreshHomeScreen: 0,
   setRefreshHomeScreen: () =>
     set(state => ({refreshHomeScreen: ++state.refreshHomeScreen})),
+  castClient: null,
+  setCastlient: (client: RemoteMediaClient | null) => set({castClient: client}),
+  castSession: null,
+  setCastSession: (client: CastSession | null) => set({castSession: client}),
+  castMediaStatus: null,
+  setCastMediaStatus: (status: MediaStatus | null) =>
+    set({castMediaStatus: status}),
+  castDevice: null,
+  setCastDevice: (device: Device | null) => set({castDevice: device}),
+  castService: new CastService(),
+  jellyfinClient: new jellyfinClient(),
 }));
 
 type ItemsStore = {

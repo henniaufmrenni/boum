@@ -34,6 +34,8 @@ const useLogin = async (
       maxBitrateVideo: 100000000,
       maxBitrateDownloadAudio: 140000000,
       deviceId: deviceId,
+      chromecastAdress: null,
+      chromecastAdressEnabled: false,
     };
 
     try {

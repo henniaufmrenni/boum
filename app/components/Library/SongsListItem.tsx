@@ -4,11 +4,15 @@ import {styles} from '@boum/components/Search';
 import {playTrack} from '@boum/lib/audio';
 import FastImage from 'react-native-fast-image';
 import {TouchableHighlight, Text} from 'react-native';
+import {RemoteMediaClient} from 'react-native-google-cast';
+import {CastService} from '@boum/lib/cast';
 
 type SongListItemProps = {
   item: MediaItem;
   session: Session;
   bitrateLimit: number;
+  castService: CastService;
+  castClient: RemoteMediaClient;
 };
 
 class SongListItem extends React.PureComponent<SongListItemProps> {
@@ -16,13 +20,22 @@ class SongListItem extends React.PureComponent<SongListItemProps> {
     return (
       <TouchableHighlight
         key={this.props.item.Id}
-        onPress={async () =>
-          await playTrack(
-            this.props.item,
-            this.props.session,
-            this.props.bitrateLimit,
-          )
-        }
+        onPress={async () => {
+          if (this.props.castClient !== null) {
+            this.props.castService.playTrack(
+              this.props.session,
+              this.props.item,
+              0,
+              this.props.castClient,
+            );
+          } else {
+            await playTrack(
+              this.props.item,
+              this.props.session,
+              this.props.bitrateLimit,
+            );
+          }
+        }}
         style={styles.resultContainer}>
         <>
           {this.props.item.Id != null ? (

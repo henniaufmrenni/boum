@@ -1,12 +1,7 @@
-import React, {useEffect, useState} from 'react';
-import {
-  Dimensions,
-  Easing,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {useState} from 'react';
+import {Dimensions, StyleSheet, View} from 'react-native';
+import {NavigationProp} from '@react-navigation/native';
+import {MediaPlayerState, useStreamPosition} from 'react-native-google-cast';
 import LinearGradient from 'react-native-linear-gradient';
 import TrackPlayer, {
   RepeatMode,
@@ -14,19 +9,14 @@ import TrackPlayer, {
   usePlaybackState,
   useProgress,
 } from 'react-native-track-player';
-import Icon from 'react-native-vector-icons/Ionicons';
-import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import PlayerAlbumImage from '@boum/components/Player/PlayerImage';
 import SingleItemHeader from '@boum/components/SingleItemHeader';
+import {PlayerControls} from '@boum/components/Player/PlayerControls';
+import {PlayerMetaControls} from '@boum/components/Player/PlayerMetaControls';
+import {useStore} from '@boum/hooks';
 import {colours} from '@boum/constants';
-import {useStore, useToggleRepeatMode} from '@boum/hooks';
-import {getMinSec} from '@boum/lib/helper';
-import {NavigationProp} from '@react-navigation/native';
-import {Slider} from '@sharcoux/slider';
-import {jellyfinClient} from '@boum/lib/api';
-import {SuccessMessage} from '@boum/types';
-import TextTicker from '@boum/components/External/TextTicker';
+import {Session} from '@boum/types';
 
 const width = Dimensions.get('window').width;
 
@@ -34,33 +24,33 @@ type PlayerScreenProps = {
   navigation: NavigationProp<any>;
 };
 
-const PlayerScreen = ({navigation}: PlayerScreenProps) => {
-  const jellyfin = new jellyfinClient();
-  const [overlayHidden, setOverlayHidden] = useState<boolean>(true);
-  const [isFavorite, setIsFavorite] = useState<boolean>(false);
-  const [actionStatus, setActionStatus] =
-    useState<SuccessMessage>('not triggered');
+const PlayerScreen: React.FC<PlayerScreenProps> = ({navigation}) => {
+  const rawSession = useStore(state => state.session);
+  let session: Session = {
+    hostname: '',
+    accessToken: '',
+    userId: '',
+    username: '',
+    maxBitrateMobile: 140000000,
+    maxBitrateWifi: 140000000,
+    maxBitrateVideo: 140000000,
+    maxBitrateDownloadAudio: 140000000,
+    deviceName: '',
+    deviceId: '',
+  };
+  rawSession !== null ? (session = JSON.parse(rawSession)) : null;
 
+  const [overlayHidden, setOverlayHidden] = useState<boolean>(true);
   const {position, duration} = useProgress();
   const playerState = usePlaybackState();
 
-  const repeatMode = useStore(state => state.repeatMode);
-
   const track = useStore(state => state.currentTrack);
   const queue = useStore(state => state.queue);
-  const rawSession = useStore(state => state.session);
-  let session = {userId: '', accessToken: '', username: '', hostname: ''};
-  rawSession !== null ? (session = JSON.parse(rawSession)) : null;
 
-  const currentTrack = queue[track];
-  const sleepTimer = useStore(state => state.sleepTimer);
-  const playbackSpeed = useStore(state => state.playbackSpeed);
-
-  useEffect(() => {
-    setIsFavorite(currentTrack.isFavorite);
-    setActionStatus('not triggered');
-  }, [currentTrack]);
-
+  const castClient = useStore(state => state.castClient);
+  const mediaStatus = useStore(state => state.castMediaStatus);
+  const castDevice = useStore(state => state.castDevice);
+  const streamPosition = useStreamPosition();
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -68,311 +58,120 @@ const PlayerScreen = ({navigation}: PlayerScreenProps) => {
         style={styles.container}
         start={{x: 0, y: 0}}
         end={{x: 0.5, y: 0.65}}>
-        <SingleItemHeader
-          mediaItem={currentTrack}
-          mediaType={'Song'}
-          screenMode={'PlayerView'}
-          navigation={navigation}
-          contextAction={() => setOverlayHidden(!overlayHidden)}
-          session={session}
-        />
-        {queue && currentTrack ? (
-          <PlayerAlbumImage track={currentTrack} />
-        ) : (
-          <Text>Error Image</Text>
-        )}
-        <View style={styles.controlsAndInfoContainer}>
-          {currentTrack ? (
+        <>
+          {castClient !== null ? (
             <>
-              <TouchableOpacity
-                onPress={() =>
+              <SingleItemHeader navigation={navigation} />
+              <PlayerAlbumImage
+                artwork={`${session.hostname}/Items/${mediaStatus?.currentQueueItem?.mediaInfo.contentId}/Images/Primary?fillHeight=400&fillWidth=400&quality=96`}
+              />
+              <PlayerControls
+                trackTitle={mediaStatus?.mediaInfo?.metadata?.title}
+                albumTitle={mediaStatus?.mediaInfo?.metadata?.albumTitle}
+                artistTitle={mediaStatus?.mediaInfo?.metadata?.artist}
+                isPlaying={
+                  mediaStatus?.playerState === MediaPlayerState.PLAYING
+                    ? true
+                    : false
+                }
+                isLoading={false}
+                position={streamPosition && mediaStatus ? streamPosition : 0}
+                duration={mediaStatus?.mediaInfo?.streamDuration}
+                repeatMode={RepeatMode.Queue}
+                albumNavigation={() =>
                   navigation.navigate('Album', {
-                    itemId: currentTrack.albumId,
-                    itemName: currentTrack.albumId,
+                    itemId: mediaStatus?.mediaInfo?.customData.albumId,
                     item: undefined,
                   })
-                }>
-                <Text
-                  style={styles.albumTitle}
-                  numberOfLines={1}
-                  ellipsizeMode="tail">
-                  {currentTrack.album}
-                </Text>
-                <View style={styles.trackTitleContainer}>
-                  <TextTicker
-                    style={styles.trackTitle}
-                    duration={18000}
-                    loop={true}
-                    bounce={true}
-                    repeatSpacer={100}
-                    easing={Easing.bezier(0.37, 0, 0.63, 1)}
-                    marqueeDelay={0}>
-                    {currentTrack.title}
-                  </TextTicker>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() =>
+                }
+                artistNavigation={() =>
                   navigation.navigate('Artist', {
-                    itemId: currentTrack.artistId,
-                    itemName: currentTrack.artist,
+                    itemId: mediaStatus?.mediaInfo?.customData?.artistId,
+                    itemName: mediaStatus?.mediaInfo?.metadata.artist,
                     item: undefined,
                   })
-                }>
-                <Text style={styles.artistTitle}>{currentTrack.artist}</Text>
-              </TouchableOpacity>
+                }
+                skipToPreviousTrack={() => castClient.queuePrev()}
+                playTrack={() => castClient.play()}
+                pauseTrack={() => castClient.pause()}
+                skipToNextTrack={() => castClient.queueNext()}
+                seekTo={position => castClient.seek({position: position})}
+                queuePosition={mediaStatus?.currentItemId}
+                queueLength={2}
+                castDevice={castDevice?.friendlyName}
+              />
+              <PlayerMetaControls
+                session={session}
+                navigation={navigation}
+                trackId={mediaStatus?.mediaInfo?.contentId}
+                trackIsFavorite={
+                  mediaStatus?.mediaInfo?.customData?.isFavorite === 'true'
+                    ? true
+                    : false
+                }
+                isCastMode={castClient !== null ? true : false}
+              />
             </>
-          ) : (
-            <Text style={styles.albumTitle}>Not Playing</Text>
-          )}
-          <View style={styles.playerControlsContainer}>
+          ) : track !== null && queue !== null && queue[track] ? (
             <>
-              {track >= 1 ? (
-                <TouchableOpacity
-                  onPress={async () =>
-                    await TrackPlayer.skipToPrevious().catch(() =>
-                      console.log('No previous track'),
-                    )
-                  }
-                  style={styles.button}>
-                  <Text>
-                    <Icon
-                      name="play-skip-back"
-                      size={45}
-                      color={colours.accent}
-                    />
-                  </Text>
-                </TouchableOpacity>
-              ) : (
-                <Text style={styles.button}>
-                  <Icon
-                    name="play-skip-back"
-                    size={45}
-                    color={colours.grey['700']}
-                  />
-                </Text>
-              )}
+              <SingleItemHeader
+                mediaItem={queue[track]}
+                mediaType={'Song'}
+                screenMode={'PlayerView'}
+                navigation={navigation}
+                contextAction={() => setOverlayHidden(!overlayHidden)}
+                session={session}
+              />
+              <PlayerAlbumImage artwork={queue[track].artwork} />
+              <PlayerControls
+                trackTitle={queue[track].title}
+                albumTitle={queue[track].album}
+                artistTitle={queue[track].artist}
+                isPlaying={playerState === State.Playing ? true : false}
+                isLoading={
+                  playerState === State.Connecting ||
+                  playerState === State.Buffering
+                    ? true
+                    : false
+                }
+                position={position ? position : 0}
+                duration={duration}
+                repeatMode={RepeatMode.Queue}
+                albumNavigation={() =>
+                  navigation.navigate('Album', {
+                    itemId: queue[track].albumId,
+                    item: undefined,
+                  })
+                }
+                artistNavigation={() =>
+                  navigation.navigate('Artist', {
+                    itemId: queue[track].artistId,
+                    itemName: queue[track].artist,
+                    item: undefined,
+                  })
+                }
+                skipToPreviousTrack={async () =>
+                  await TrackPlayer.skipToPrevious()
+                }
+                playTrack={async () => await TrackPlayer.play()}
+                pauseTrack={async () => await TrackPlayer.pause()}
+                skipToNextTrack={async () => await TrackPlayer.skipToNext()}
+                seekTo={async position => await TrackPlayer.seekTo(position)}
+                queuePosition={track}
+                queueLength={queue.length}
+                castDevice={undefined}
+                trackUrl={queue[track].url}
+              />
+              <PlayerMetaControls
+                session={session}
+                navigation={navigation}
+                trackId={queue[track].id}
+                isCastMode={false}
+                trackIsFavorite={queue[track].isFavorite ? true : false}
+              />
             </>
-            {playerState === State.Playing ? (
-              <TouchableOpacity
-                onPress={async () => await TrackPlayer.pause()}
-                style={styles.playButton}>
-                <Text>
-                  <Icon name="pause-circle" size={90} color={colours.accent} />
-                </Text>
-              </TouchableOpacity>
-            ) : playerState === State.Buffering ||
-              playerState === State.Connecting ? (
-              <View style={styles.playButton}>
-                <Text>
-                  <Icon
-                    name="play-circle"
-                    size={90}
-                    color={colours.grey['600']}
-                  />
-                </Text>
-              </View>
-            ) : (
-              <TouchableOpacity
-                onPress={async () => await TrackPlayer.play()}
-                style={styles.playButton}>
-                <Text>
-                  <Icon name="play-circle" size={90} color={colours.accent} />
-                </Text>
-              </TouchableOpacity>
-            )}
-            {repeatMode === RepeatMode.Queue || queue.length !== track + 1 ? (
-              <TouchableOpacity
-                onPress={async () =>
-                  await TrackPlayer.skipToNext().catch(() =>
-                    console.log('No next track'),
-                  )
-                }
-                style={styles.button}>
-                <Text>
-                  <Icon
-                    name="play-skip-forward"
-                    size={45}
-                    color={colours.accent}
-                  />
-                </Text>
-              </TouchableOpacity>
-            ) : (
-              <Text style={styles.button}>
-                <Icon
-                  name="play-skip-forward"
-                  size={45}
-                  color={colours.grey['700']}
-                />
-              </Text>
-            )}
-          </View>
-          {position && duration ? (
-            <View style={styles.sliderAndPositionContainer}>
-              <Text style={styles.textSlider}>{getMinSec(position)}</Text>
-              <View style={styles.sliderContainer}>
-                <Slider
-                  style={styles.slider}
-                  value={position / duration}
-                  minimumTrackTintColor={colours.accent}
-                  thumbTintColor={colours.accent}
-                  enabled={true}
-                  maximumTrackTintColor={'#222'}
-                  trackHeight={3}
-                  onSlidingComplete={async (value: number) => {
-                    await TrackPlayer.seekTo(~~(value * duration)).catch(err =>
-                      console.warn(err),
-                    );
-                  }}
-                />
-              </View>
-              <Text style={styles.textSlider}>{getMinSec(duration)}</Text>
-            </View>
-          ) : (
-            <View style={styles.sliderAndPositionContainer}>
-              <Text style={styles.textSlider}>0:00</Text>
-              <View style={styles.sliderContainer}>
-                <Slider
-                  style={styles.slider}
-                  value={0.01}
-                  enabled={false}
-                  minimumTrackTintColor={colours.accent}
-                  maximumTrackTintColor={'#222'}
-                  trackHeight={3}
-                  onSlidingComplete={(value: number) => console.log(value)}
-                />
-              </View>
-              <Text style={styles.textSlider}>0:00</Text>
-            </View>
-          )}
-          <>
-            {currentTrack.url.slice(0, 7) === 'file://' ? (
-              <Text style={styles.textSource}>Local Playback</Text>
-            ) : currentTrack.url.includes('&static=false') ? (
-              <Text style={styles.textSource}>Streaming Transcoded</Text>
-            ) : (
-              <Text style={styles.textSource}>Streaming Direct</Text>
-            )}
-          </>
-          <View style={styles.playerMetaControlsContainer}>
-            <View>
-              {isFavorite ? (
-                <TouchableOpacity
-                  onPress={async () => {
-                    await jellyfin
-                      .postFavorite(session, currentTrack.id, 'DELETE')
-                      .then(status => {
-                        if (status === 200) {
-                          setIsFavorite(false);
-                          setActionStatus('success');
-                        } else {
-                          setActionStatus('fail');
-                        }
-                      });
-                  }}
-                  style={styles.button}>
-                  <Text>
-                    <Icon name="heart" size={30} color={colours.accent} />
-                  </Text>
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  onPress={async () => {
-                    await jellyfin
-                      .postFavorite(session, currentTrack.id, 'POST')
-                      .then(status => {
-                        if (status === 200) {
-                          setIsFavorite(true);
-                          setActionStatus('success');
-                        } else {
-                          setActionStatus('fail');
-                        }
-                      });
-                  }}
-                  style={styles.button}>
-                  <Text>
-                    <Icon
-                      name="heart-outline"
-                      size={30}
-                      color={colours.accent}
-                    />
-                  </Text>
-                </TouchableOpacity>
-              )}
-              {actionStatus === 'fail' ? (
-                <Icon name="close-circle" size={20} color={'red'} />
-              ) : null}
-            </View>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('Queue', {});
-              }}
-              style={styles.button}>
-              <Text>
-                <Icon name="list-outline" size={30} color={colours.accent} />
-              </Text>
-            </TouchableOpacity>
-            {repeatMode === RepeatMode.Track ? (
-              <TouchableOpacity
-                onPress={() =>
-                  useToggleRepeatMode(repeatMode).then(mode =>
-                    useStore.setState({repeatMode: mode}),
-                  )
-                }
-                style={styles.button}>
-                <Text>
-                  <MCIcon name="repeat-once" size={30} color={colours.accent} />
-                </Text>
-              </TouchableOpacity>
-            ) : repeatMode === RepeatMode.Queue ? (
-              <TouchableOpacity
-                title="Repeat queue"
-                onPress={() =>
-                  useToggleRepeatMode(repeatMode).then(mode =>
-                    useStore.setState({repeatMode: mode}),
-                  )
-                }
-                style={styles.button}>
-                <Text>
-                  <MCIcon name="repeat" size={30} color={colours.accent} />
-                </Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                title="Repeat off"
-                onPress={() =>
-                  useToggleRepeatMode(repeatMode).then(mode =>
-                    useStore.setState({repeatMode: mode}),
-                  )
-                }
-                style={styles.button}>
-                <Text>
-                  <MCIcon name="repeat-off" size={30} color={colours.accent} />
-                </Text>
-              </TouchableOpacity>
-            )}
-          </View>
-          <Text style={styles.textSource}>
-            {sleepTimer && sleepTimer !== 0 ? (
-              <>
-                <Icon name={'moon'} size={18} color={colours.white} />
-                {'   '}
-                {/* eslint-disable-next-line no-bitwise */}
-                {~~((sleepTimer - Date.now()) / 60000)} min
-              </>
-            ) : null}
-            {sleepTimer && sleepTimer !== 0 && playbackSpeed !== 1 ? (
-              <>{'       '}</>
-            ) : null}
-            {playbackSpeed !== 1 ? (
-              <>
-                <Icon name={'speedometer'} size={18} color={colours.white} />
-                {'   '}
-                {playbackSpeed}
-              </>
-            ) : null}
-          </Text>
-        </View>
+          ) : null}
+        </>
       </LinearGradient>
     </View>
   );
@@ -452,7 +251,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 12,
     maxHeight: 10,
   },
-  slider: {},
   textSlider: {
     color: colours.white,
     fontFamily: 'Inter-Medium',

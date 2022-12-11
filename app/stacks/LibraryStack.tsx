@@ -19,6 +19,8 @@ import {
 import {NavigationProp} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {FolderScreen} from '@boum/screens/FolderScreen';
+import {useStore} from '@boum/hooks';
+import {Session} from '@boum/types';
 
 type LibraryStackProps = {
   navigation: NavigationProp<any>;
@@ -51,7 +53,7 @@ const LibraryStack = ({navigation, route}: LibraryStackProps) => {
         <LibraryStack.Screen name="Playlists" component={PlaylistsScreen} />
         <LibraryStack.Screen name="Tracks" component={TracksScreen} />
       </LibraryStack.Navigator>
-      <NowPlayingBar navigation={navigation} route={route} />
+      <NowPlayingBar navigation={navigation} />
     </>
   );
 };

@@ -14,86 +14,195 @@ import TrackPlayer, {
   useProgress,
 } from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/Ionicons';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {colours} from '@boum/constants';
 import {useStore} from '@boum/hooks';
 import {NavigationProp} from '@react-navigation/native';
 import ProgressBar from '@boum/components/Player/ProgressBar';
 import TextTicker from '@boum/components/External/TextTicker';
+import {
+  MediaPlayerState,
+  RemoteMediaClient,
+  useStreamPosition,
+} from 'react-native-google-cast';
+import {Session} from '@boum/types';
 
 type NowPlayingBarProps = {
   navigation: NavigationProp<any>;
 };
 
 const NowPlayingBar: React.FC<NowPlayingBarProps> = ({navigation}) => {
-  const {position, duration} = useProgress();
-  const progressValue = position / duration;
-
+  // Trackplayer
   const track = useStore.getState().currentTrack;
   const queue = useStore.getState().queue;
-
+  const {position, duration} = useProgress();
   const playerState = usePlaybackState();
   const isPlaying = playerState === State.Playing;
 
+  // Chromecast
+  const castClient = useStore(state => state.castClient);
+  const streamPosition = useStreamPosition();
+  const mediaStatus = useStore(state => state.castMediaStatus);
+  const castDevice = useStore(state => state.castDevice);
+
+  const rawSession = useStore(state => state.session);
+  let session: Session = {
+    hostname: '',
+    accessToken: '',
+    userId: '',
+    username: '',
+    maxBitrateMobile: 140000000,
+    maxBitrateWifi: 140000000,
+    maxBitrateVideo: 140000000,
+    maxBitrateDownloadAudio: 140000000,
+    deviceName: '',
+    deviceId: '',
+  };
+  rawSession !== null ? (session = JSON.parse(rawSession)) : null;
+
   return (
     <>
-      {queue && queue[track] ? (
-        <TouchableHighlight onPress={() => navigation.navigate('Player')}>
-          <View>
-            {progressValue ? <ProgressBar /> : null}
-            {track !== undefined && queue ? (
-              <View style={styles.viewcontainer}>
-                <FastImage
-                  source={{
-                    uri: queue[track].artwork,
-                    headers: {
-                      Accept: 'image/avif,image/webp,*/*',
-                    },
-                  }}
-                  style={styles.image}
-                />
-                <View style={styles.textContainer}>
-                  <TextTicker
-                    style={styles.track}
-                    duration={18000}
-                    loop={true}
-                    bounce={true}
-                    repeatSpacer={100}
-                    easing={Easing.bezier(0.37, 0, 0.63, 1)}
-                    marqueeDelay={0}>
-                    {queue[track].title}
-                  </TextTicker>
-                  <Text
-                    style={styles.artist}
-                    numberOfLines={1}
-                    ellipsizeMode="tail">
-                    {queue[track].artist}
-                  </Text>
-                </View>
-                {isPlaying ? (
-                  <TouchableOpacity
-                    title="Pause"
-                    onPress={async () => await TrackPlayer.pause()}
-                    style={styles.button}>
-                    <Text>
-                      <Icon name="pause" size={30} color={colours.accent} />
-                    </Text>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    title="Play"
-                    onPress={async () => await TrackPlayer.play()}
-                    style={styles.button}>
-                    <Text>
-                      <Icon name="play" size={30} color={colours.accent} />
-                    </Text>
-                  </TouchableOpacity>
-                )}
-              </View>
-            ) : null}
-          </View>
-        </TouchableHighlight>
+      {castClient !== null && mediaStatus !== null ? (
+        <>
+          <NowPlayingBarContent
+            navigation={navigation}
+            progressValue={
+              mediaStatus
+                ? streamPosition / mediaStatus?.mediaInfo?.streamDuration
+                : 0
+            }
+            artwork={`${session.hostname}/Items/${mediaStatus?.currentQueueItem?.mediaInfo.contentId}/Images/Primary?fillHeight=400&fillWidth=400&quality=96`}
+            trackTitle={mediaStatus?.mediaInfo?.metadata?.title}
+            artistTitle={mediaStatus?.mediaInfo?.metadata?.albumArtist}
+            isPlaying={
+              mediaStatus?.playerState === MediaPlayerState.PLAYING
+                ? true
+                : false
+            }
+            castDevice={castDevice?.friendlyName}
+            castClient={castClient}
+          />
+        </>
+      ) : queue !== null && track !== null && queue[track] ? (
+        <>
+          <NowPlayingBarContent
+            navigation={navigation}
+            progressValue={position / duration}
+            artwork={queue[track].artwork}
+            trackTitle={queue[track].title}
+            artistTitle={queue[track].artist}
+            isPlaying={isPlaying}
+            castDevice={''}
+            castClient={null}
+          />
+        </>
       ) : null}
+    </>
+  );
+};
+
+type NowPlayingBarContentProps = {
+  navigation: NavigationProp<any>;
+  progressValue: number;
+  artwork: string;
+  trackTitle: string;
+  artistTitle: string;
+  isPlaying: boolean;
+  castDevice: string;
+  castClient: RemoteMediaClient | null;
+};
+
+const NowPlayingBarContent = ({
+  navigation,
+  progressValue,
+  artwork,
+  trackTitle,
+  artistTitle,
+  isPlaying,
+  castDevice,
+  castClient,
+}: NowPlayingBarContentProps) => {
+  const navigateToPlayer = () => {
+    navigation.navigate('Player');
+  };
+
+  const onButtonPlayPause = async () => {
+    if (castClient !== null) {
+      if (isPlaying) {
+        await castClient.pause();
+      } else {
+        await castClient.play();
+      }
+    } else {
+      if (isPlaying) {
+        await TrackPlayer.pause();
+      } else {
+        await TrackPlayer.pause();
+      }
+    }
+  };
+  return (
+    <>
+      <TouchableHighlight onPress={navigateToPlayer}>
+        <View>
+          {progressValue ? <ProgressBar progress={progressValue} /> : null}
+          {trackTitle !== undefined ? (
+            <View style={styles.viewcontainer}>
+              <FastImage
+                source={{
+                  uri: artwork,
+                  headers: {
+                    Accept: 'image/avif,image/webp,*/*',
+                  },
+                }}
+                style={styles.image}
+              />
+              <View style={styles.textContainer}>
+                <TextTicker
+                  style={styles.track}
+                  duration={18000}
+                  loop={true}
+                  bounce={true}
+                  repeatSpacer={100}
+                  easing={Easing.bezier(0.37, 0, 0.63, 1)}
+                  marqueeDelay={0}>
+                  {trackTitle}
+                </TextTicker>
+                <Text
+                  style={styles.artist}
+                  numberOfLines={1}
+                  ellipsizeMode="tail">
+                  {castClient !== null ? (
+                    <>
+                      <MaterialIcon name={'cast-connected'} size={12} />
+                      {'  '}
+                    </>
+                  ) : null}
+                  {castClient !== null ? castDevice : artistTitle}
+                </Text>
+              </View>
+              {isPlaying ? (
+                <TouchableOpacity
+                  onPress={onButtonPlayPause}
+                  style={styles.button}>
+                  <Text>
+                    <Icon name="pause" size={30} color={colours.accent} />
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={onButtonPlayPause}
+                  style={styles.button}>
+                  <Text>
+                    <Icon name="play" size={30} color={colours.accent} />
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          ) : null}
+        </View>
+      </TouchableHighlight>
     </>
   );
 };

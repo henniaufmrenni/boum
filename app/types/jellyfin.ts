@@ -296,6 +296,7 @@ export type {
   FavoriteAction,
   Filters,
   ItemTypes,
+  LibraryItemList,
   MediaItem,
   MediaType,
   PlaybackInfo,

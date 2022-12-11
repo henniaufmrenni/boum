@@ -1,4 +1,4 @@
-import TrackPlayer, {TrackType} from 'react-native-track-player';
+import TrackPlayer, {TrackType, RepeatMode} from 'react-native-track-player';
 
 import {getDBConnection, readFileLocationItem} from '@boum/lib/db/service';
 import {shuffleArray} from '@boum/lib/helper/helper';
@@ -10,7 +10,6 @@ const playAlbum = async (
   session: Session,
   bitrateLimit: number,
 ) => {
-  console.log('Jellyfin Input', jellyfinInput);
   await mapJellyfinTrackToPlayer(jellyfinInput, session, bitrateLimit)
     .then(async object => {
       await TrackPlayer.reset();
@@ -35,6 +34,19 @@ const playShuffleList = async (
   await TrackPlayer.reset();
   await TrackPlayer.add(shuffledTrackObject);
   await TrackPlayer.play();
+};
+
+const toggleRepeatMode = async (currentMode: RepeatMode) => {
+  if (currentMode === RepeatMode.Off) {
+    await TrackPlayer.setRepeatMode(RepeatMode.Queue);
+  } else if (currentMode === RepeatMode.Queue) {
+    await TrackPlayer.setRepeatMode(RepeatMode.Track);
+  } else {
+    await TrackPlayer.setRepeatMode(RepeatMode.Off);
+  }
+  const mode = await TrackPlayer.getRepeatMode();
+
+  return mode;
 };
 
 const addAlbumToQueue = async (
@@ -127,7 +139,7 @@ const mapJellyfinTrackToPlayer = async (
           type: bitrateLimit === 140000000 ? TrackType.Default : TrackType.HLS,
           isFavorite: inputItem.UserData.IsFavorite,
           url:
-            `${session.hostname}/Audio/${inputItem.Id}/universal?UserId=${session.userId}&MaxStreamingBitrate=${bitrateLimit}&Container=opus,webm|opus,mp3,aac,m4a|aac,m4b|aac,flac,webma,webm|webma,wav,ogg&TranscodingContainer=ts&TranscodingProtocol=hls&AudioCodec=mp3` +
+            `${session.hostname}/audio/${inputItem.Id}/universal?UserId=${session.userId}&MaxStreamingBitrate=${bitrateLimit}&Container=opus,webm|opus,mp3,aac,m4a|aac,m4b|aac,flac,webma,webm|webma,wav,ogg&TranscodingContainer=ts&TranscodingProtocol=hls&AudioCodec=mp3` +
             '&static=' +
             (bitrateLimit === 140000000 ? true : false) +
             '&deviceId=' +
@@ -136,6 +148,7 @@ const mapJellyfinTrackToPlayer = async (
             session.accessToken,
           artwork: `${session.hostname}/Items/${inputItem.AlbumId}/Images/Primary?fillHeight=400&fillWidth=400&quality=96`,
         };
+        console.log(track.url);
         tracks.push(track);
       }
       if (jellyfinInput.length === index + 1) {
@@ -147,4 +160,11 @@ const mapJellyfinTrackToPlayer = async (
   return tracks;
 };
 
-export {playAudio, playAlbum, addAlbumToQueue, playTrack, playShuffleList};
+export {
+  playAudio,
+  playAlbum,
+  addAlbumToQueue,
+  playTrack,
+  playShuffleList,
+  toggleRepeatMode,
+};

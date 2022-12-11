@@ -20,9 +20,10 @@ import {
   playShuffleList,
 } from '@boum/lib/audio';
 import {getHourMinutes} from '@boum/lib/helper/helper';
-import {useDownloadItem} from '@boum/hooks';
+import {useDownloadItem, useStore} from '@boum/hooks';
 import {
   isDownloaded,
+  LibraryItemList,
   MediaItem,
   MediaType,
   ScreenMode,
@@ -35,6 +36,9 @@ import TrackPlayer from 'react-native-track-player';
 import {SlideInContextMenu} from '@boum/components/ContextMenu';
 import {jellyfinClient} from '@boum/lib/api';
 import Animated, {FadeIn} from 'react-native-reanimated';
+import {RemoteMediaClient} from 'react-native-google-cast';
+import {CastService} from '@boum/lib/cast';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const width = Dimensions.get('window').width;
 
@@ -46,6 +50,7 @@ type ListHeaderProps = {
   averageColorRgb: string;
   mutate: () => void;
   navigation: () => void;
+  castClient: RemoteMediaClient | null;
   bitrateLimit: number;
   isDownloaded: isDownloaded;
   isPlaying: boolean;
@@ -62,6 +67,7 @@ const ListHeader = ({
   averageColorRgb,
   mutate,
   navigation,
+  castClient,
   bitrateLimit,
   isDownloaded,
   isPlaying,
@@ -79,6 +85,8 @@ const ListHeader = ({
       setIsFavorite(item.UserData.IsFavorite);
     }
   }, []);
+
+  const cast = useStore(state => state.castService);
   return (
     <>
       {averageColorRgb && item ? (
@@ -246,7 +254,21 @@ const ListHeader = ({
                   </TouchableOpacity>
                 </View>
                 <View>
-                  {isPlaying && itemIsPlaying ? (
+                  {castClient !== null ? (
+                    <TouchableOpacity
+                      onPress={async () =>
+                        await cast.playAlbum(session, albumItems, 0, castClient)
+                      }
+                      style={styles.playButton}>
+                      <Text>
+                        <MaterialIcon
+                          name="cast-audio-variant"
+                          size={70}
+                          color={colours.accent}
+                        />
+                      </Text>
+                    </TouchableOpacity>
+                  ) : isPlaying && itemIsPlaying ? (
                     <TouchableOpacity
                       title="Pause"
                       onPress={async () => await TrackPlayer.pause()}
@@ -434,10 +456,12 @@ const listFooterStyle = StyleSheet.create({
 });
 
 type ListRenderItemProps = {
-  albumItems: Array<MediaItem>;
+  albumItems: LibraryItemList;
   index: number | false;
   session: Session;
   bitrateLimit: number;
+  castService: CastService;
+  castClient?: RemoteMediaClient;
 };
 
 class ListRenderItem extends React.PureComponent<ListRenderItemProps> {
@@ -445,14 +469,23 @@ class ListRenderItem extends React.PureComponent<ListRenderItemProps> {
     return (
       <View style={listItemStyles.container}>
         <TouchableOpacity
-          onPress={async () =>
-            await playAudio(
-              this.props.albumItems.Items,
-              this.props.index,
-              this.props.session,
-              this.props.bitrateLimit,
-            )
-          }>
+          onPress={async () => {
+            if (this.props.castClient !== null) {
+              await this.props.castService.playAlbum(
+                this.props.session,
+                this.props.albumItems,
+                this.props.index,
+                this.props.castClient,
+              );
+            } else {
+              await playAudio(
+                this.props.albumItems.Items,
+                this.props.index,
+                this.props.session,
+                this.props.bitrateLimit,
+              );
+            }
+          }}>
           <View style={listItemStyles.containerArtistTitle}>
             <Text
               numberOfLines={1}

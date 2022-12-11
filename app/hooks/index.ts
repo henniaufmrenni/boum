@@ -21,3 +21,4 @@ export * from '@boum/hooks/useStoreEncryptedValue';
 export * from '@boum/hooks/useToggleRepeatMode';
 export * from '@boum/hooks/useTrackPlayer';
 export * from '@boum/hooks/useValidateLogin';
+export * from '@boum/hooks/useInitializeCastClient';

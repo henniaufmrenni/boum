@@ -9,15 +9,15 @@ import {
   SearchScreen,
 } from '@boum/screens/';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {useStore} from '@boum/hooks';
+import {Session} from '@boum/types';
 
 type SearchStackProps = {
   navigation: NavigationProp<any>;
-  route: any;
 };
 
-const SearchStack = ({navigation, route}: SearchStackProps) => {
+const SearchStack = ({navigation}: SearchStackProps) => {
   const SearchStack = createNativeStackNavigator();
-
   return (
     <>
       <SearchStack.Navigator
@@ -27,7 +27,7 @@ const SearchStack = ({navigation, route}: SearchStackProps) => {
         <SearchStack.Screen name="Artist" component={ArtistScreen} />
         <SearchStack.Screen name="Genre" component={GenreScreen} />
       </SearchStack.Navigator>
-      <NowPlayingBar navigation={navigation} route={route} />
+      <NowPlayingBar navigation={navigation} />
     </>
   );
 };

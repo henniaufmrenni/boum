@@ -11,6 +11,8 @@ type Session = {
   maxBitrateDownloadAudio: number;
   deviceName: string;
   deviceId: string;
+  chromecastAdress: string | null;
+  chromecastAdressEnabled: boolean;
 };
 
 type SelectedStorageLocation =

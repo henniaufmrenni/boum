@@ -14,4 +14,9 @@ module.exports = {
     'jest-hoist',
     'react-native-reanimated/plugin',
   ],
+  env: {
+    production: {
+      plugins: ['transform-remove-console'],
+    },
+  },
 };

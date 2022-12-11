@@ -18,7 +18,7 @@ const height = Dimensions.get('window').height;
 
 type Props = {
   navigation: NavigationProp<any>;
-  contextAction: () => void;
+  contextAction?: () => void;
   mediaItem: MediaItem;
   mediaType: MediaType;
   session?: Session;
@@ -32,7 +32,7 @@ class SingleItemHeader extends React.PureComponent<Props> {
       <>
         <View style={styles.topButtonsContainer}>
           <TouchableOpacity
-            onPress={() => this.props.navigation.goBack()}
+            onPress={this.props.navigation.goBack}
             style={styles.actionButton}>
             <Text>
               <Icon name="ios-arrow-back" size={25} color={colours.white} />
