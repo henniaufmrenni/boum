@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
 import {MediaPlayerState, useStreamPosition} from 'react-native-google-cast';
@@ -16,7 +16,6 @@ import {PlayerControls} from '@boum/components/Player/PlayerControls';
 import {PlayerMetaControls} from '@boum/components/Player/PlayerMetaControls';
 import {useStore} from '@boum/hooks';
 import {colours} from '@boum/constants';
-import {Session} from '@boum/types';
 
 const width = Dimensions.get('window').width;
 
@@ -38,6 +37,14 @@ const PlayerScreen: React.FC<PlayerScreenProps> = ({navigation}) => {
   const mediaStatus = useStore(state => state.castMediaStatus);
   const castDevice = useStore(state => state.castDevice);
   const streamPosition = useStreamPosition();
+
+  //  Navigate back when casting is ended
+  useEffect(() => {
+    if (castDevice === null && queue?.length === 0) {
+      navigation.goBack();
+    }
+  }, [castDevice, track, mediaStatus]);
+
   return (
     <View style={styles.container}>
       <LinearGradient

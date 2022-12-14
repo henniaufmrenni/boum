@@ -24,7 +24,7 @@ type BaseStore = {
   session: Session;
   gotLoginStatus: boolean;
   homeData: object | null;
-  queue: Object | null;
+  queue: Array<Object> | null;
   currentTrack: Object | null;
   device: Object | null;
   initializedState: boolean;
