@@ -8,9 +8,9 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 
-import {ArtistHeader, ArtistItemsFooter} from '@boum/components/Artist';
+import {ArtistItemsFooter} from '@boum/components/Artist';
 
-import AlbumCard from '@boum/components/Lists/AlbumCard';
+import {AlbumCard} from '@boum/components/Library/AlbumCard';
 import {colours, sizes} from '@boum/constants';
 import {NavigationDestination, Session} from '@boum/types';
 
@@ -172,4 +172,4 @@ const artistItems = StyleSheet.create({
   },
 });
 
-export {ArtistHeader, ArtistItems, ArtistItemsRenderItem};
+export {ArtistItems, ArtistItemsRenderItem};

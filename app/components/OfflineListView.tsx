@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import RNFS from 'react-native-fs';
 
-import AlbumCard from '@boum/components/Lists/AlbumCard';
+import {AlbumCard} from '@boum/components/Library/AlbumCard';
 import {useGetDownloadItems} from '@boum/hooks';
 import {Session} from '@boum/types';
 import {NavigationProp} from '@react-navigation/native';
@@ -19,8 +19,8 @@ const OfflineListView = ({navigation, session}: Props) => {
 
   return (
     <View style={styles.container}>
-      {items !== undefined && items.length >= 1
-        ? items.map(album => (
+      {items !== undefined && items.downloadItems.length >= 1
+        ? items.downloadItems.map(album => (
             <AlbumCard
               item={album.metadata}
               navigation={navigation}

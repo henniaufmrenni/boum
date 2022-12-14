@@ -2,23 +2,25 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 
 import {ArtistItemsFooter, ArtistItemsHeader} from '@boum/components/Artist';
-import AlbumCard from '@boum/components/Lists/AlbumCard';
-import {NavigationDestination, Session} from '@boum/types';
+import {AlbumCard} from '@boum/components/Library/AlbumCard';
+import {LibraryItemList, NavigationDestination, Session} from '@boum/types';
 
-const ArtistItems = ({
+type ArtistItemsProps = {
+  screenItem: any;
+  items: LibraryItemList;
+  navigation: any;
+  text: string;
+  session: Session;
+  navigationDestination: NavigationDestination;
+};
+
+const ArtistItems: React.FC<ArtistItemsProps> = ({
   screenItem,
   items,
   navigation,
   text,
   session,
   navigationDestination,
-}: {
-  screenItem: any;
-  items: object;
-  navigation: any;
-  text: string;
-  session: Session;
-  navigationDestination: NavigationDestination;
 }) => {
   return (
     <>
