@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
     color: colours.white,
     fontFamily: 'Inter-Medium',
     padding: 10,
+    borderRadius: 7,
   },
   button: {
     color: colours.white,
