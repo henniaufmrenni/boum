@@ -106,7 +106,7 @@ const SlideInContextMenu = ({
 }: SlideInContextMenuProps) => {
   const bitrateLimit = useBitrateLimit();
   const currentTrack = useStore(state => state.currentTrack);
-
+  const castDevice = useStore(state => state.castDevice);
   return (
     <Menu renderer={SlideInMenu}>
       <MenuTrigger>
@@ -147,19 +147,24 @@ const SlideInContextMenu = ({
                 />
                 <ContextActionLike mediaItem={mediaItem} session={session} />
                 <ContextActionPlaylist item={mediaItem} session={session} />
-                <ContextActionAddToQueue
-                  item={mediaItem}
-                  bitrateLimit={bitrateLimit}
-                  session={session}
-                  listItems={listItems}
-                />
-                <ContextActionPlayNext
-                  item={mediaItem}
-                  bitrateLimit={bitrateLimit}
-                  session={session}
-                  listItems={listItems}
-                  currentTrack={currentTrack}
-                />
+                {/* FIXME: Add this functionality for casting aswell. */}
+                {castDevice === null ? (
+                  <>
+                    <ContextActionAddToQueue
+                      item={mediaItem}
+                      bitrateLimit={bitrateLimit}
+                      session={session}
+                      listItems={listItems}
+                    />
+                    <ContextActionPlayNext
+                      item={mediaItem}
+                      bitrateLimit={bitrateLimit}
+                      session={session}
+                      listItems={listItems}
+                      currentTrack={currentTrack}
+                    />
+                  </>
+                ) : null}
               </>
             )}
             {children}
