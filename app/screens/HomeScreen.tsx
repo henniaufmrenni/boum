@@ -1,6 +1,5 @@
-import React, {useCallback, useState} from 'react';
+import React, {useState} from 'react';
 import {
-  ActivityIndicator,
   RefreshControl,
   StyleSheet,
   Text,

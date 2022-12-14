@@ -12,9 +12,6 @@ import {
 import {NavigationProp} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import {Session} from '@boum/types';
-import {useStore} from '@boum/hooks';
-
 type HomeStackProps = {
   navigation: NavigationProp<any>;
   route: any;

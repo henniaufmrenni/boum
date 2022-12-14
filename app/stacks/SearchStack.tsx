@@ -9,8 +9,6 @@ import {
   SearchScreen,
 } from '@boum/screens/';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {useStore} from '@boum/hooks';
-import {Session} from '@boum/types';
 
 type SearchStackProps = {
   navigation: NavigationProp<any>;

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 
 import ButtonBoum from '@boum/components/Settings/ButtonBoum';
 import {useStore} from '@boum/hooks';

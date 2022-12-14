@@ -9,7 +9,7 @@ import {
 import FastImage from 'react-native-fast-image';
 
 import {colours} from '@boum/constants';
-import {MediaItem, Session, VideoMediaItem, VideoPerson} from '@boum/types';
+import {Session, VideoMediaItem, VideoPerson} from '@boum/types';
 import {NavigationProp} from '@react-navigation/native';
 
 const width = Dimensions.get('window').width;

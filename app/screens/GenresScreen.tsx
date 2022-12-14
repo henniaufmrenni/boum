@@ -7,7 +7,6 @@ import {LoadingSpinner} from '@boum/components/Generic';
 import {colours} from '@boum/constants';
 import {useStore} from '@boum/hooks';
 import {NavigationProp} from '@react-navigation/native';
-import {jellyfinClient} from '@boum/lib/api';
 
 type GenresScreenProps = {
   navigation: NavigationProp<any>;

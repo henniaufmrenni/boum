@@ -43,7 +43,7 @@ const PlayerScreen: React.FC<PlayerScreenProps> = ({navigation}) => {
     if (castDevice === null && queue?.length === 0) {
       navigation.goBack();
     }
-  }, [castDevice, track, mediaStatus]);
+  }, [castDevice]);
 
   return (
     <View style={styles.container}>

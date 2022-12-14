@@ -1,10 +1,6 @@
 import RNFS from 'react-native-fs';
 
-import {
-  deleteParentWithChildren,
-  getChildrenEntriesForParent,
-  getDBConnection,
-} from '@boum/lib/db/service';
+import {deleteParentWithChildren, getDBConnection} from '@boum/lib/db/service';
 
 const useDeleteAlbum = async (album: object) => {
   const db = await getDBConnection();

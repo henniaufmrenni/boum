@@ -10,7 +10,6 @@ import {
   ActivityIndicator,
   PanResponder,
   ToastAndroid,
-  Dimensions,
   TouchableWithoutFeedback,
 } from 'react-native';
 

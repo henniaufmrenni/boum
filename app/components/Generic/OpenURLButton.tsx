@@ -1,5 +1,4 @@
 import React from 'react';
-import {Alert, Linking} from 'react-native';
 
 import ButtonBoum from '@boum/components/Settings/ButtonBoum';
 import {handleClick} from '@boum/lib/helper';

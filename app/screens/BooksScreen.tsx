@@ -6,7 +6,6 @@ import LibraryListItem from '@boum/components/Library/LibraryListItem';
 import {colours} from '@boum/constants';
 import {useBooksStore, useGetBooks, useStore} from '@boum/hooks';
 import {NavigationProp} from '@react-navigation/native';
-import {Session} from '@boum/types';
 
 type BooksScreenProps = {
   navigation: NavigationProp<any>;

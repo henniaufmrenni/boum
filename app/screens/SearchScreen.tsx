@@ -3,8 +3,7 @@ import {ScrollView, StyleSheet, View} from 'react-native';
 
 import {RowNavigation, RowSongs, SearchBar} from '@boum/components/Search';
 import {colours} from '@boum/constants';
-import {useSearchStore, useStore} from '@boum/hooks';
-import {useCancelableSearch} from '@boum/hooks';
+import {useCancelableSearch, useSearchStore, useStore} from '@boum/hooks';
 import {NavigationProp} from '@react-navigation/native';
 
 type Props = {
