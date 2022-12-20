@@ -5,13 +5,14 @@ import {
   getDBConnection,
   readParentEntries,
 } from '@boum/lib/db/service';
+import {TableName} from '@boum/types';
 
 const getDownloadItems = async () => {
   return new Promise(async function (resolve, reject) {
     const db = await getDBConnection();
 
-    const items = await readParentEntries(db, 'parent_items').catch(err =>
-      reject(`Couldn't get data from DB: ${err}`),
+    const items = await readParentEntries(db, TableName.ParentItems).catch(
+      err => reject(`Couldn't get data from DB: ${err}`),
     );
 
     let downloadItems: [] = [];

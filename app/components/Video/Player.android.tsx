@@ -68,7 +68,6 @@ class VideoPlayer extends Component<VideoPlayerProps> {
     loop: false,
     showRNVControls: false,
     selectedBitrate: 0,
-    srcList: 0,
     playbackInfo: {},
     secondsPassedSinceProgressUpdate: 0,
   };
@@ -165,7 +164,7 @@ class VideoPlayer extends Component<VideoPlayerProps> {
 
   postProgress = data => {
     if (this.state.secondsPassedSinceProgressUpdate > 20) {
-      this.ws.send(`{"MessageType":"KeepAlive"}`);
+      this.ws.send(`{"MessageType":"KeepAlive"}`); // eslint-disable quotes
 
       this.jellyfin.postProgressUpdate(
         this.props.session,
@@ -273,7 +272,7 @@ class VideoPlayer extends Component<VideoPlayerProps> {
         <Text
           style={[
             styles.controlOption,
-            {fontWeight: isSelected ? 'bold' : 'normal'},
+            {fontWeight: isSelected ? 'bold' : 'normal'}, //eslint-disable react-native/no-inline-styles
           ]}>
           {rate}
         </Text>
@@ -302,7 +301,6 @@ class VideoPlayer extends Component<VideoPlayerProps> {
 
   onEnd = () => {
     return;
-    this.channelUp();
   };
 
   toggleFullscreen() {
@@ -387,10 +385,6 @@ class VideoPlayer extends Component<VideoPlayerProps> {
         <Text style={[styles.controlOption]}>{'fullscreen'}</Text>
       </TouchableOpacity>
     );
-  }
-
-  renderBitratePicker() {
-    return <VideoBitratePicker />;
   }
 
   renderSkipBack() {
@@ -547,15 +541,15 @@ class VideoPlayer extends Component<VideoPlayerProps> {
   initSeekPanResponder() {
     this.seekPanResponder = PanResponder.create({
       // Ask to be the responder.
-      onStartShouldSetPanResponder: (evt, gestureState) => true,
-      onMoveShouldSetPanResponder: (evt, gestureState) => true,
+      onStartShouldSetPanResponder: (_evt, _gestureState) => true,
+      onMoveShouldSetPanResponder: (_evt, _gestureState) => true,
 
       /**
        * When we start the pan tell the machine that we're
        * seeking. This stops it from updating the seekbar
        * position in the onProgress listener.
        */
-      onPanResponderGrant: (evt, gestureState) => {
+      onPanResponderGrant: (evt, _gestureState) => {
         const state = this.state;
         // this.clearControlTimeout()
         const position = evt.nativeEvent.locationX;
@@ -567,7 +561,7 @@ class VideoPlayer extends Component<VideoPlayerProps> {
       /**
        * When panning, update the seekbar position, duh.
        */
-      onPanResponderMove: (evt, gestureState) => {
+      onPanResponderMove: (_evt, gestureState) => {
         const position = this.state.seekerOffset + gestureState.dx;
         this.setSeekerPosition(position);
       },
@@ -577,7 +571,7 @@ class VideoPlayer extends Component<VideoPlayerProps> {
        * If you seek to the end of the video we fire the
        * onEnd callback
        */
-      onPanResponderRelease: (evt, gestureState) => {
+      onPanResponderRelease: (_evt, _gestureState) => {
         const time = this.calculateTimeFromSeekerPosition();
         const state = this.state;
         if (time >= state.duration && !state.isLoading) {
@@ -640,7 +634,7 @@ class VideoPlayer extends Component<VideoPlayerProps> {
   }
 
   IndicatorLoadingView() {
-    if (this.state.isLoading)
+    if (this.state.isLoading) {
       return (
         <ActivityIndicator
           color={colours.accent}
@@ -648,7 +642,9 @@ class VideoPlayer extends Component<VideoPlayerProps> {
           style={styles.IndicatorStyle}
         />
       );
-    else return <View />;
+    } else {
+      return <View />;
+    }
   }
 
   renderTopControl() {
@@ -712,7 +708,7 @@ class VideoPlayer extends Component<VideoPlayerProps> {
                     <Picker
                       style={styles.picker}
                       selectedValue={this.state.selectedTextTrack?.value}
-                      onValueChange={(itemValue, itemIndex) => {
+                      onValueChange={(itemValue, _itemIndex) => {
                         console.log('on value change ' + itemValue);
                         this.setState({
                           selectedTextTrack: {

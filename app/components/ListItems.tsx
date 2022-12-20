@@ -9,6 +9,8 @@ import {
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Animated, {FadeIn} from 'react-native-reanimated';
+import {RemoteMediaClient} from 'react-native-google-cast';
 
 import {LoadingSpinner} from '@boum/components/Generic';
 import SingleItemHeader from '@boum/components/SingleItemHeader';
@@ -20,9 +22,9 @@ import {
   playShuffleList,
 } from '@boum/lib/audio';
 import {getHourMinutes} from '@boum/lib/helper/helper';
-import {useDownloadItem, useStore} from '@boum/hooks';
+import {useStore} from '@boum/hooks';
 import {
-  isDownloaded,
+  IsDownloaded,
   LibraryItemList,
   MediaItem,
   MediaType,
@@ -34,9 +36,8 @@ import {
 import {ArtistItems} from '@boum/components/ArtistComponents';
 import TrackPlayer from 'react-native-track-player';
 import {SlideInContextMenu} from '@boum/components/ContextMenu';
+import {downloadItem} from '@boum/lib/storage';
 
-import Animated, {FadeIn} from 'react-native-reanimated';
-import {RemoteMediaClient} from 'react-native-google-cast';
 import {CastService} from '@boum/lib/cast';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -48,11 +49,10 @@ type ListHeaderProps = {
   mediaType: MediaType;
   session: Session;
   averageColorRgb: string;
-  mutate: () => void;
   navigation: () => void;
   castClient: RemoteMediaClient | null;
   bitrateLimit: number;
-  isDownloaded: isDownloaded;
+  isDownloaded: IsDownloaded;
   isPlaying: boolean;
   itemIsPlaying?: boolean;
   screenMode: ScreenMode;
@@ -65,7 +65,6 @@ const ListHeader = ({
   mediaType,
   session,
   averageColorRgb,
-  mutate,
   navigation,
   castClient,
   bitrateLimit,
@@ -84,7 +83,7 @@ const ListHeader = ({
     if (item.UserData !== undefined) {
       setIsFavorite(item.UserData.IsFavorite);
     }
-  }, []);
+  }, [item.UserData]);
 
   const cast = useStore(state => state.castService);
   return (
@@ -163,7 +162,7 @@ const ListHeader = ({
                   ) : (
                     <TouchableOpacity
                       onPress={async () =>
-                        useDownloadItem(
+                        downloadItem(
                           session,
                           albumItems,
                           item,

@@ -17,7 +17,7 @@ type QueueScreenProps = {
   navigation: NavigationProp<any>;
 };
 
-const QueueScreen = ({navigation}: QueueScreenProps) => {
+const QueueScreen: React.FC<QueueScreenProps> = ({navigation}) => {
   const queue = useStore(state => state.queue);
   const setPlaybackUpdate = useStore(state => state.setPlaybackUpdate);
 

@@ -16,7 +16,6 @@ const useGetBooks = (session: Session) => {
   // Sorting & Filtering
   const sortBy = useBooksStore(state => state.sortBy);
   const sortOrder = useBooksStore(state => state.sortOrder);
-  const searchTerm = useBooksStore(state => state.searchTerm);
 
   const [apiResponse, setApiResponse] = useState<boolean | object>(false);
 
@@ -34,7 +33,7 @@ const useGetBooks = (session: Session) => {
   useEffect(() => {
     const getData = async () => {
       await jellyfin
-        .getAllBooks(session, startIndex, sortBy, sortOrder, '', searchTerm)
+        .getAllBooks(session, startIndex, sortBy, sortOrder)
         .then(data => {
           if (!data.allBooksError) {
             setApiResponse(data.allBooksData);
@@ -46,7 +45,7 @@ const useGetBooks = (session: Session) => {
         });
     };
     getData();
-  }, [startIndex]);
+  }, [startIndex, session, sortBy, sortOrder, jellyfin]);
 
   return {
     allAudiobooks,

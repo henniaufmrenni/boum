@@ -33,10 +33,7 @@ type BaseStore = {
   db: any;
   selectedStorageLocation: SelectedStorageLocation;
   setSelectedStorageLocation: (value: SelectedStorageLocation) => void;
-  offlineMode: boolean;
   playerIsSetup: boolean;
-  toggleOfflineMode: () => void;
-  setOfflineMode: (state: boolean) => void;
   sleepTimer: number;
   setSleepTimer: (time: number) => void;
   playbackUpdate: number;
@@ -90,10 +87,7 @@ const useStore = create<BaseStore>(set => ({
   selectedStorageLocation: 'DocumentDirectory',
   setSelectedStorageLocation: (value: SelectedStorageLocation) =>
     set(() => ({selectedStorageLocation: value})),
-  offlineMode: false,
   playerIsSetup: false,
-  toggleOfflineMode: () => set(state => ({offlineMode: !state.offlineMode})),
-  setOfflineMode: (state: boolean) => set({offlineMode: state}),
   sleepTimer: 0,
   setSleepTimer: (timer: number) => set({sleepTimer: timer}),
   playbackUpdate: 0,

@@ -23,7 +23,7 @@ type ListScreenProps = {
   }>;
 };
 
-const ListScreen = ({navigation, route}: ListScreenProps) => {
+const ListScreen: React.FC<ListScreenProps> = ({navigation, route}) => {
   const {sortBy, sortOrder, filters, listTitle, genreId, searchQuery} =
     route.params;
 

@@ -1,8 +1,10 @@
-import {useStore} from '@boum/hooks';
-import {Session, TrackBoum} from '@boum/types';
 import React, {useEffect} from 'react';
+import {StyleSheet} from 'react-native';
 import {CastButton as CastFrameworkButton} from 'react-native-google-cast';
 import TrackPlayer from 'react-native-track-player';
+
+import {useStore} from '@boum/hooks';
+import {Session, TrackBoum} from '@boum/types';
 
 type CastButtonProps = {
   session: Session;
@@ -26,7 +28,7 @@ const CastButton: React.FC<CastButtonProps> = ({session, queue}) => {
                 queueData: mappedQueue,
               })
               .catch(err => console.log(err))
-              .then(res => {
+              .then(() => {
                 TrackPlayer.pause();
                 TrackPlayer.reset();
               });
@@ -34,10 +36,16 @@ const CastButton: React.FC<CastButtonProps> = ({session, queue}) => {
       }
     }
     getQueue();
-  }, [client, device]);
-  return (
-    <CastFrameworkButton style={{width: 24, height: 24, tintColor: 'white'}} />
-  );
+  }, [client, device, service, queue, session]);
+  return <CastFrameworkButton style={styles.button} />;
 };
+
+const styles = StyleSheet.create({
+  button: {
+    width: 24,
+    height: 24,
+    tintColor: 'white',
+  },
+});
 
 export {CastButton};

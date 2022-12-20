@@ -12,7 +12,7 @@ type GenresScreenProps = {
   navigation: NavigationProp<any>;
 };
 
-const GenresScreen = ({navigation}: GenresScreenProps) => {
+const GenresScreen: React.FC<GenresScreenProps> = ({navigation}) => {
   const jellyfin = useStore.getState().jellyfinClient;
   const session = useStore(state => state.session);
 

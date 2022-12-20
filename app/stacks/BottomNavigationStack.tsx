@@ -8,7 +8,7 @@ import LibraryStack from '@boum/stacks/LibraryStack';
 import SearchStack from '@boum/stacks/SearchStack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-const BottomNavigationStack = ({}) => {
+const BottomNavigationStack: React.FC = () => {
   const Tab = createBottomTabNavigator();
   return (
     <Tab.Navigator

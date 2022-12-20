@@ -12,25 +12,25 @@ const useInitializeCastClient = () => {
   const client = useRemoteMediaClient();
   useEffect(() => {
     setClient(client);
-  }, [client]);
+  }, [client, setClient]);
 
   const castSession = useCastSession();
   const setSession = useStore(state => state.setCastSession);
   useEffect(() => {
     setSession(castSession);
-  }, [castSession]);
+  }, [castSession, setSession]);
 
   const mediaStatus = useMediaStatus();
   const setMediaStatus = useStore(state => state.setCastMediaStatus);
   useEffect(() => {
     setMediaStatus(mediaStatus);
-  }, [mediaStatus]);
+  }, [mediaStatus, setMediaStatus]);
 
   const castDevice = useCastDevice();
   const setCastDevice = useStore(state => state.setCastDevice);
   useEffect(() => {
     setCastDevice(castDevice);
-  }, [castDevice]);
+  }, [castDevice, setCastDevice]);
 };
 
 export {useInitializeCastClient};

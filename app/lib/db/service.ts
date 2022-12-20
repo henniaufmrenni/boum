@@ -3,13 +3,9 @@
 
 import SQLite, {SQLiteDatabase} from 'react-native-sqlite-storage';
 
-import {DownloadStatus} from '@boum/types';
+import {DownloadStatus, TableName} from '@boum/types';
 
-const singleItemsName = 'single_items';
-const parentItemsName = 'parent_items';
-const keyValueTableName = 'key_value';
-const customListsTableName = 'custom_lists';
-type tableName = 'single_items' | 'parent_items' | 'key_value';
+const tableName = TableName;
 
 SQLite.enablePromise(true);
 
@@ -20,7 +16,7 @@ const getDBConnection = async () => {
 const createTables = async (db: SQLiteDatabase) => {
   // prettier-ignore
   const createParentItemsTable = `
-  CREATE TABLE IF NOT EXISTS ${parentItemsName}(
+  CREATE TABLE IF NOT EXISTS ${tableName.ParentItems}(
     id TEXT NOT NULL UNIQUE,
     name TEXT NOT NULL UNIQUE,
     metadata TEXT NOT NULL,
@@ -34,7 +30,7 @@ const createTables = async (db: SQLiteDatabase) => {
 
   // prettier-ignore
   const createIdTable = `
-  CREATE TABLE IF NOT EXISTS ${singleItemsName}(
+  CREATE TABLE IF NOT EXISTS ${tableName.SingleItems}(
     id TEXT NOT NULL UNIQUE,
     name TEXT NOT NULL UNIQUE,
     file_location TEXT NOT NULL,
@@ -44,7 +40,7 @@ const createTables = async (db: SQLiteDatabase) => {
     parent_id TEXT NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (parent_id) 
-       REFERENCES ${parentItemsName} (id) 
+       REFERENCES ${tableName.ParentItems} (id) 
           ON DELETE NO ACTION 
           ON UPDATE NO ACTION
  );`;
@@ -55,7 +51,7 @@ const createTables = async (db: SQLiteDatabase) => {
     .catch(() => console.log('Error creating single items table.'));
 
   const createKeyValueTable = `
-    CREATE TABLE IF NOT EXISTS ${keyValueTableName}(
+    CREATE TABLE IF NOT EXISTS ${tableName.KeyValue}(
       key TEXT NOT NULL UNIQUE,
       value TEXT
     );`;
@@ -67,7 +63,7 @@ const createTables = async (db: SQLiteDatabase) => {
 
   // prettier-ignore
   const createCustomListsTable = `
-  CREATE TABLE IF NOT EXISTS ${customListsTableName}(
+  CREATE TABLE IF NOT EXISTS ${tableName.CustomLists}(
     title TEXT NOT NULL UNIQUE,
     sort_order TEXT NOT NULL,
     sort_by TEXT NOT NULL,
@@ -94,8 +90,8 @@ const createSingleItemEntries = async (
   imageLocation: string,
 ) => {
   // prettier-ignore
-  const insertQuery = 
-  `INSERT OR REPLACE INTO ${singleItemsName}(id, name, file_location, image_location, metadata, status, parent_id) 
+  const insertQuery =
+  `INSERT OR REPLACE INTO ${tableName.SingleItems}(id, name, file_location, image_location, metadata, status, parent_id) 
    values ('${albumItem.Id}', '${albumItem.Name.replace(/\'/g,"''")}', '${fileLocation.replace(/\'/g,"''")
   }', '${imageLocation.replace(/\'/g,"''")}', '${JSON.stringify(albumItem).replace(/\'/g,"''")}', 'started', '${parentId}')`;
 
@@ -111,8 +107,8 @@ const createParentItemEntries = async (
   parentItem: object,
 ) => {
   // prettier-ignore
-  const insertQuery = 
-  `INSERT OR REPLACE INTO ${parentItemsName}(id, name, metadata) 
+  const insertQuery =
+  `INSERT OR REPLACE INTO ${tableName.ParentItems}(id, name, metadata) 
    values ('${parentItem.Id}', '${parentItem.Name.replace(/\'/g,"''")}','${JSON.stringify(parentItem).replace(/\'/g,"''")}')`;
 
   await db
@@ -128,8 +124,8 @@ const updateSingleItemStatus = async (
   status: DownloadStatus,
 ) => {
   // prettier-ignore
-  const insertQuery = 
-  `UPDATE ${singleItemsName}
+  const insertQuery =
+  `UPDATE ${tableName.SingleItems}
    SET status = ('${status}')
    WHERE id = '${itemId}'; `;
 
@@ -142,10 +138,11 @@ const updateSingleItemStatus = async (
 
 const readSingleEntry = async (
   db: SQLiteDatabase,
-  table: tableName,
+  table: TableName,
   itemId: string,
 ) => {
   let result;
+  // prettier-ignore
   const query = `
   SELECT * 
   FROM ${table} 
@@ -166,10 +163,11 @@ const readSingleEntry = async (
 
 const readSingleEntryId = async (
   db: SQLiteDatabase,
-  table: tableName,
+  table: TableName,
   itemId: string,
 ) => {
   let result;
+  // prettier-ignore
   const query = `
   SELECT id 
   FROM ${table} 
@@ -190,7 +188,7 @@ const readSingleEntryId = async (
 
 export const readParentEntries = async (
   db: SQLiteDatabase,
-  table: tableName,
+  table: TableName,
 ) => {
   const query = `
   SELECT * 
@@ -228,7 +226,7 @@ const getChildrenEntriesForParent = async (
 ) => {
   const query = `
   SELECT id, name, status, file_location
-  FROM ${singleItemsName}
+  FROM ${tableName.SingleItems}
   WHERE parent_id = ('${parentId}');`;
 
   let entries: [] = [];
@@ -257,15 +255,15 @@ const getChildrenEntriesForParent = async (
 
 const deleteParentWithChildren = async (db: SQLiteDatabase, id: number) => {
   const queryParents = `
-  DELETE FROM ${parentItemsName} WHERE id = '${id}';`;
+  DELETE FROM ${tableName.ParentItems} WHERE id = '${id}';`;
 
   const queryItems = `
-  DELETE FROM ${singleItemsName} WHERE parent_id = '${id}';`;
+  DELETE FROM ${tableName.ParentItems} WHERE parent_id = '${id}';`;
 
   await db
     .executeSql(queryItems)
     .then(res => {
-      //console.log('DB: Successfully deleted items entry ', res);
+      console.log('DB: Successfully deleted items entry ', res);
     })
     .catch(err => {
       console.warn('DB: Error deleting items entry ', err);
@@ -274,7 +272,7 @@ const deleteParentWithChildren = async (db: SQLiteDatabase, id: number) => {
   await db
     .executeSql(queryParents)
     .then(res => {
-      //console.log('DB: Successfully deleted parents entry ', res);
+      console.log('DB: Successfully deleted parents entry ', res);
     })
     .catch(err => {
       console.warn('DB: Error deleting parents entry ', err);
@@ -287,14 +285,13 @@ export const readFileLocationItem = async (
 ) => {
   const query = `
   SELECT file_location, status, image_location 
-  FROM ${singleItemsName} 
+  FROM ${tableName.SingleItems} 
   WHERE id = ('${itemId}');`;
 
   let files: Array<Object> = [];
   await db
     .executeSql(query)
     .then(results => {
-      //console.log('DB: Successfully read song file location');
       results.forEach(result => {
         for (let index = 0; index < result.rows.length; index++) {
           const entryObject = {
@@ -319,7 +316,7 @@ const writeKeyValueData = async (
   key: string,
   value: string,
 ) => {
-  const query = `INSERT OR REPLACE INTO ${keyValueTableName}(key, value) 
+  const query = `INSERT OR REPLACE INTO ${tableName.KeyValue}(key, value) 
    values ('${key}', '${JSON.stringify(value).replace(/\'/g, "''")}');`;
 
   await db
@@ -330,12 +327,11 @@ const writeKeyValueData = async (
 };
 
 const readKeyValueData = async (db: SQLiteDatabase, key: string) => {
-  const query = `SELECT * FROM ${keyValueTableName} WHERE key = ('${key}');`;
+  const query = `SELECT * FROM ${tableName.KeyValue} WHERE key = ('${key}');`;
   let result;
   await db
     .executeSql(query)
     .then(results => {
-      //console.log('DB: Successfully read key value data');
       result = results[0].rows.item(0).value.replace(/\''/g, "'");
     })
     .catch(err => console.warn('DB: Error read key value data', err));
@@ -344,10 +340,10 @@ const readKeyValueData = async (db: SQLiteDatabase, key: string) => {
 
 const deleteAllRows = async (db: SQLiteDatabase) => {
   const queries: Array<string> = [
-    `DELETE FROM ${singleItemsName};`,
-    `DELETE FROM ${parentItemsName};`,
-    `DELETE FROM ${keyValueTableName};`,
-    `DELETE FROM ${customListsTableName};`,
+    `DELETE FROM ${tableName.CustomLists};`,
+    `DELETE FROM ${tableName.KeyValue};`,
+    `DELETE FROM ${tableName.ParentItems};`,
+    `DELETE FROM ${tableName.SingleItems};`,
   ];
 
   queries.forEach(async query => {

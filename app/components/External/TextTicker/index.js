@@ -24,6 +24,8 @@ SOFTWARE.
 https://github.com/deanhet/react-native-text-ticker
 */
 
+/* eslint-disable react-native/no-inline-styles, no-unused-vars, no-shadow*/
+
 import React, {PureComponent} from 'react';
 import {
   Animated,

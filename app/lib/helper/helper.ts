@@ -1,5 +1,3 @@
-/* eslint-disable no-bitwise */
-
 const getMinSec = (time: number) => {
   let mins = ~~((time % 3600) / 60);
   let secs = ~~time % 60;
@@ -42,7 +40,7 @@ const shuffleArray = (array: Array<any>) => {
   let currentIndex = array.length;
   let randomIndex;
 
-  while (currentIndex != 0) {
+  while (currentIndex !== 0) {
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex--;
 

@@ -12,7 +12,7 @@ type ArtistsScreenProps = {
   navigation: NavigationProp<any>;
 };
 
-const ArtistsScreen = ({navigation}: ArtistsScreenProps) => {
+const ArtistsScreen: React.FC<ArtistsScreenProps> = ({navigation}) => {
   const jellyfin = useStore.getState().jellyfinClient;
 
   // TODO: Find a solution for this hack, which is necessary, since Zustand can't store JSON.

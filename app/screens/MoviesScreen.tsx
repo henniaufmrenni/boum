@@ -12,7 +12,7 @@ type MoviesScreenProps = {
   navigation: NavigationProp<any>;
 };
 
-const MoviesScreen = ({navigation}: MoviesScreenProps) => {
+const MoviesScreen: React.FC<MoviesScreenProps> = ({navigation}) => {
   const jellyfin = useStore.getState().jellyfinClient;
   const session = useStore(state => state.session);
 
