@@ -342,16 +342,35 @@ const readKeyValueData = async (db: SQLiteDatabase, key: string) => {
   return result;
 };
 
+const deleteAllRows = async (db: SQLiteDatabase) => {
+  const queries: Array<string> = [
+    `DELETE FROM ${singleItemsName};`,
+    `DELETE FROM ${parentItemsName};`,
+    `DELETE FROM ${keyValueTableName};`,
+    `DELETE FROM ${customListsTableName};`,
+  ];
+
+  queries.forEach(async query => {
+    await db
+      .executeSql(query)
+      .then(() => {
+        console.log('DB: Successfully executed: ', query);
+      })
+      .catch(err => console.warn('DB: Error read key value data', err));
+  });
+};
+
 export {
-  getDBConnection,
-  createTables,
-  createSingleItemEntries,
   createParentItemEntries,
-  updateSingleItemStatus,
+  createSingleItemEntries,
+  createTables,
+  deleteAllRows,
+  deleteParentWithChildren,
   getChildrenEntriesForParent,
+  getDBConnection,
+  readKeyValueData,
   readSingleEntry,
   readSingleEntryId,
-  deleteParentWithChildren,
+  updateSingleItemStatus,
   writeKeyValueData,
-  readKeyValueData,
 };

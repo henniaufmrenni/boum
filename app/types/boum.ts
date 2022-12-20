@@ -50,6 +50,26 @@ type NavigationDestination = 'Artist' | 'Album';
 
 type SuccessMessage = 'success' | 'fail' | 'not triggered';
 
+/*
+ * DB types
+ */
+
+// Audio with id
+type singleItem = {
+  id: string;
+  parentId: string;
+  fileLocation: string;
+  imageLocation: string;
+  metaData: string;
+  status: string;
+};
+
+// Album | Playlist
+type parentItem = {
+  id: number;
+  metaData: string;
+};
+
 export type {
   Headers,
   SelectedStorageLocation,
