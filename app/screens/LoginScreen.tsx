@@ -3,12 +3,13 @@ import {Dimensions, StyleSheet, Text, TextInput, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 
 import ButtonBoum from '@boum/components/Settings/ButtonBoum';
+import {useValidateLogin} from '@boum/hooks';
 import {boumLogo, colours} from '@boum/constants';
-import {useLogin, useValidateLogin} from '@boum/hooks';
+import {login} from '@boum/lib/settings/login';
 
 const width = Dimensions.get('window').width;
 
-const LoginScreen = ({}) => {
+const LoginScreen: React.FC = () => {
   const [hostname, onChangeHostname] = useState<string>('');
   const [username, onChangeUsername] = useState<string>('');
   const [password, onChangePassword] = useState<string>('');
@@ -18,7 +19,6 @@ const LoginScreen = ({}) => {
   useValidateLogin(
     hostname,
     username,
-    password,
     isValidUrl,
     setIsValidUrl,
     setLoginDisabled,
@@ -70,7 +70,7 @@ const LoginScreen = ({}) => {
       />
       <ButtonBoum
         onPress={async () => {
-          useLogin(hostname, username, password, setLoginStatus).then(res =>
+          await login(hostname, username, password, setLoginStatus).then(res =>
             console.log(res),
           );
           setLoginDisabled(true);

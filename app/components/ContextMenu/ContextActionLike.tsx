@@ -25,7 +25,7 @@ const ContextActionLike = ({session, mediaItem}: ContextActionLikeProps) => {
       setIsFavorite(mediaItem.UserData.IsFavorite);
     }
     setActionStatus('not triggered');
-  }, []);
+  }, [mediaItem]);
   return (
     <>
       {isFavorite ? (

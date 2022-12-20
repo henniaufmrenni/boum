@@ -3,7 +3,6 @@ import {useEffect} from 'react';
 const useValidateLogin = (
   hostname: string,
   username: string,
-  password: string,
   isValidUrl: boolean,
   setIsValidUrl: (boolean: boolean) => void,
 
@@ -15,13 +14,13 @@ const useValidateLogin = (
     } else {
       setIsValidUrl(false);
     }
-  }, [hostname]);
+  }, [hostname, setIsValidUrl]);
 
   useEffect(() => {
     if (isValidUrl && username.length >= 1) {
       setLoginDisabled(false);
     }
-  }, [hostname, username, password]);
+  }, [username, isValidUrl, setLoginDisabled]);
 };
 
 export {useValidateLogin};

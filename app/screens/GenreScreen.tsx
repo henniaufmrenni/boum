@@ -14,7 +14,7 @@ type GenreScreenProps = {
   route: RouteProp<{params: {name: string; itemId: string}}>;
 };
 
-const GenreScreen = ({navigation, route}: GenreScreenProps) => {
+const GenreScreen: React.FC<GenreScreenProps> = ({navigation, route}) => {
   const {itemId, name} = route.params;
 
   const jellyfin = useStore.getState().jellyfinClient;

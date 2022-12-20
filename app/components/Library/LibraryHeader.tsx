@@ -53,7 +53,7 @@ class LibraryHeader extends React.PureComponent<LibraryHeaderProps> {
               style={[
                 styles.inputAndHeartContainer,
                 {
-                  width: this.props.setFilters !== undefined ? '85%' : '100%',
+                  width: this.props.setFilters !== undefined ? '85%' : '100%', // eslint-disable react-native/no-inline-styles
                 },
               ]}>
               <TextInput

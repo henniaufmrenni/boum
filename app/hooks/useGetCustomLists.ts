@@ -10,7 +10,7 @@ const useGetCustomLists = (refresh: number) => {
       await getCustomLists().then(res => setCustomLists(res));
     }
     getItems();
-  }, [refresh]);
+  }, [refresh, setCustomLists]);
 };
 
 export {useGetCustomLists};

@@ -15,7 +15,7 @@ type FolderScreenProps = {
   route: RouteProp<{params: {item: MediaItem; itemId: string}}>;
 };
 
-const FolderScreen = ({navigation, route}: FolderScreenProps) => {
+const FolderScreen: React.FC<FolderScreenProps> = ({navigation, route}) => {
   const {itemId, item} = route.params;
 
   const session = useStore(state => state.session);

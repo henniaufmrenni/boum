@@ -114,7 +114,6 @@ const PlayerMetaControls: React.FC<PlayerMetaControlsProps> = ({
           <>
             <Icon name={'moon'} size={18} color={colours.white} />
             {'   '}
-            {/* eslint-disable-next-line no-bitwise */}
             {~~((sleepTimer - Date.now()) / 60000)} min
           </>
         ) : null}

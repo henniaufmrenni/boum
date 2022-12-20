@@ -1,13 +1,13 @@
 import React from 'react';
 
 import {ButtonBoum} from '@boum/components/Settings';
-import useLogout from '@boum/hooks/useLogout';
+import {logout} from '@boum/lib/settings';
 
 const LogoutButton = () => {
   return (
     <ButtonBoum
       onPress={async () =>
-        await useLogout()
+        await logout()
           .then(response => {
             console.log('Logged out', response);
           })

@@ -16,7 +16,7 @@ type BookScreenProps = {
   route: RouteProp<{params: {item: MediaItem}}>;
 };
 
-const BookScreen = ({route}: BookScreenProps) => {
+const BookScreen: React.FC<BookScreenProps> = ({route}) => {
   const {item} = route.params;
   const session = useStore(state => state.session);
 
@@ -45,7 +45,7 @@ const BookScreen = ({route}: BookScreenProps) => {
       });
     }
     getBookType();
-  }, []);
+  }, [fileUrl, session]);
 
   return (
     <SafeAreaView style={styles.container}>

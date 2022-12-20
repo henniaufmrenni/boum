@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
-import {NavigationProp} from '@react-navigation/native';
 
 import LibraryHeader from '@boum/components/Library/LibraryHeader';
 import {SongListItem} from '@boum/components/Library';
@@ -8,11 +7,7 @@ import {useTracksStore, useStore, useBitrateLimit} from '@boum/hooks';
 import addNewItemsToOldObject from '@boum/lib/helper/addNewItemsToOldObject';
 import {colours} from '@boum/constants';
 
-type TracksScreenProps = {
-  navigation: NavigationProp<any>;
-};
-
-const TracksScreen = ({navigation}: TracksScreenProps) => {
+const TracksScreen: React.FC = () => {
   const jellyfin = useStore.getState().jellyfinClient;
   const session = useStore(state => state.session);
 

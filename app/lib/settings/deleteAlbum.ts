@@ -2,7 +2,7 @@ import RNFS from 'react-native-fs';
 
 import {deleteParentWithChildren, getDBConnection} from '@boum/lib/db/service';
 
-const useDeleteAlbum = async (album: object) => {
+const deleteAlbum = async (album: object) => {
   const db = await getDBConnection();
 
   album.children.forEach(child => {
@@ -14,8 +14,8 @@ const useDeleteAlbum = async (album: object) => {
       .catch(err => {
         console.log(err.message);
       });
-  }),
-    await deleteParentWithChildren(db, album.metadata.Id);
+  });
+  await deleteParentWithChildren(db, album.metadata.Id);
 };
 
-export {useDeleteAlbum};
+export {deleteAlbum};

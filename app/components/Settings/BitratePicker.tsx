@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import {ButtonBoum} from '@boum/components/Settings';
 import {colours} from '@boum/constants';
-import {useSetBitrateLimit} from '@boum/hooks';
+import {saveBitrateSettings} from '@boum/lib/settings';
 import {Session} from '@boum/types';
 import {Picker} from '@react-native-picker/picker';
 
@@ -20,7 +20,7 @@ const BitratePicker = ({session}: Props) => {
   useEffect(() => {
     setMobileLimit(session.maxBitrateMobile);
     setWifiLimit(session.maxBitrateWifi);
-  }, []);
+  }, [session]);
 
   return (
     <View style={styles.container}>
@@ -77,8 +77,8 @@ const BitratePicker = ({session}: Props) => {
       ) : null}
       <ButtonBoum
         title={'Save bitrate changes'}
-        onPress={() => {
-          useSetBitrateLimit(
+        onPress={async () => {
+          await saveBitrateSettings(
             session,
             wifiLimit,
             mobileLimit,

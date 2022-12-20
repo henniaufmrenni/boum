@@ -3,16 +3,11 @@ import {ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import {colours} from '@boum/constants';
 import {useStore} from '@boum/hooks';
-import {NavigationProp} from '@react-navigation/native';
 import {CustomListCreator} from '@boum/components/Settings';
 import {useGetCustomLists} from '@boum/hooks/useGetCustomLists';
 import {CustomListItem} from '@boum/components/Settings/CustomListItem';
 
-type Props = {
-  navigation: NavigationProp<any>;
-};
-
-const ListManagerScreen = ({navigation}: Props) => {
+const ListManagerScreen: React.FC = () => {
   const session = useStore(state => state.session);
   const refreshHomeScreen = useStore(state => state.refreshHomeScreen);
   const customLists = useStore(state => state.customLists);

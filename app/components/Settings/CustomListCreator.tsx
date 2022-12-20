@@ -62,9 +62,7 @@ const CustomListCreator: React.FC<CustomListCreatorProps> = ({session}) => {
             ))}
           </Picker>
 
-          <Text style={styles.text} style={styles.text}>
-            Sort by
-          </Text>
+          <Text style={styles.text}>Sort by</Text>
           <Picker
             selectedValue={sortBy}
             onValueChange={itemValue => setSortBy(itemValue)}
@@ -86,9 +84,7 @@ const CustomListCreator: React.FC<CustomListCreatorProps> = ({session}) => {
             />
           </Picker>
 
-          <Text style={styles.text} style={styles.text}>
-            Sort order
-          </Text>
+          <Text style={styles.text}>Sort order</Text>
           <Picker
             selectedValue={sortOrder}
             onValueChange={itemValue => setSortOrder(itemValue)}
@@ -105,9 +101,7 @@ const CustomListCreator: React.FC<CustomListCreatorProps> = ({session}) => {
             />
           </Picker>
 
-          <Text style={styles.text} style={styles.text}>
-            Filter favorites
-          </Text>
+          <Text style={styles.text}>Filter favorites</Text>
           <Picker
             selectedValue={filters}
             onValueChange={itemValue => setFilters(itemValue)}
@@ -120,9 +114,7 @@ const CustomListCreator: React.FC<CustomListCreatorProps> = ({session}) => {
             />
           </Picker>
 
-          <Text style={styles.text} style={styles.text}>
-            Search query
-          </Text>
+          <Text style={styles.text}>Search query</Text>
           <TextInput
             style={styles.input}
             onChangeText={input => setSearchQuery(input)}
@@ -135,9 +127,7 @@ const CustomListCreator: React.FC<CustomListCreatorProps> = ({session}) => {
             accessibilityLabel={'search query input'}
           />
 
-          <Text style={styles.text} style={styles.text}>
-            List name*
-          </Text>
+          <Text style={styles.text}>List name*</Text>
           <TextInput
             style={styles.input}
             onChangeText={input => setListTitle(input)}

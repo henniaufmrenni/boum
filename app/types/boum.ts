@@ -1,4 +1,4 @@
-import {Filters, SortBy, SortOrder} from '@boum/types';
+import {Filters, MediaItem, SortBy, SortOrder} from '@boum/types';
 
 type Session = {
   hostname: string;
@@ -44,21 +44,60 @@ type ScreenMode = 'ListView' | 'PlayerView';
 
 type DownloadStatus = 'started' | 'active' | 'success' | 'failure';
 
-type isDownloaded = 'isDownloaded' | 'isNotDownloaded' | 'loading';
+type IsDownloaded = 'isDownloaded' | 'isNotDownloaded' | 'loading';
 
 type NavigationDestination = 'Artist' | 'Album';
 
 type SuccessMessage = 'success' | 'fail' | 'not triggered';
 
+type OfflineItem = {
+  id: string;
+  name: string;
+  metadata: MediaItem;
+  children: Array<MediaItem>;
+};
+
+/*
+ * DB types
+ */
+
+// Audio with id
+type SingleItem = {
+  id: string;
+  parentId: string;
+  fileLocation: string;
+  imageLocation: string;
+  metaData: string;
+  status: string;
+};
+
+// Album | Playlist
+type ParentItem = {
+  id: number;
+  metaData: string;
+};
+
+enum TableName {
+  SingleItems = 'single_items',
+  ParentItems = 'parent_items',
+  KeyValue = 'key_value',
+  CustomLists = 'custom_lists',
+}
+
+export {TableName};
+
 export type {
-  Headers,
-  SelectedStorageLocation,
-  Result,
   CustomHomeListItem,
   DownloadStatus,
-  isDownloaded,
+  Headers,
+  IsDownloaded,
   NavigationDestination,
-  SuccessMessage,
+  OfflineItem,
+  ParentItem,
+  Result,
   ScreenMode,
+  SelectedStorageLocation,
   Session,
+  SingleItem,
+  SuccessMessage,
 };

@@ -93,7 +93,7 @@ const useGetPlaybackInfo = (
       );
     }
     getPlaybackInfo();
-  }, [maxBitrateVideo]);
+  }, [maxBitrateVideo, session, jellyfin, startTime, item]);
 
   return {playbackInfo, textStreams, sourceList};
 };

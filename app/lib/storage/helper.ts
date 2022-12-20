@@ -1,4 +1,3 @@
-/* eslint-disable no-bitwise */
 import RNFS from 'react-native-fs';
 
 import {SelectedStorageLocation} from '@boum/types';

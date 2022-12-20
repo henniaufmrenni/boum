@@ -5,7 +5,7 @@ import {useStore} from '@boum/hooks';
 import {storeEncryptedValue} from '@boum/lib/encryptedStorage/encryptedStorage';
 import {Session} from '@boum/types';
 
-const useLogin = async (
+const login = async (
   hostname: string,
   username: string,
   password: string,
@@ -87,4 +87,4 @@ const getToken = async (
     });
 };
 
-export {useLogin};
+export {login};

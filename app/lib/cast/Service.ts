@@ -46,7 +46,7 @@ class CastService {
     mediaItems: LibraryItemList,
     startIndex: number,
   ) {
-    return new Promise<MediaQueueData>(function (resolve, reject) {
+    return new Promise<MediaQueueData>(function (resolve, _reject) {
       let mediaQueue: MediaQueueData = {
         items: [],
         startIndex: startIndex,
@@ -107,7 +107,7 @@ class CastService {
     session: Session,
     startIndex: number,
   ) {
-    return new Promise<MediaQueueData>(function (resolve, reject) {
+    return new Promise<MediaQueueData>(function (resolve, _reject) {
       let mediaQueue: MediaQueueData = {
         items: [],
         containerMetadata: {

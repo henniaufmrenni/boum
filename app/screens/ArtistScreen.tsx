@@ -14,7 +14,7 @@ type ArtistScreenProps = {
   route: RouteProp<{params: {item: MediaItem; itemId: string}}>;
 };
 
-const ArtistScreen = ({navigation, route}: ArtistScreenProps) => {
+const ArtistScreen: React.FC<ArtistScreenProps> = ({navigation, route}) => {
   const {itemId, item} = route.params;
 
   const session = useStore(state => state.session);

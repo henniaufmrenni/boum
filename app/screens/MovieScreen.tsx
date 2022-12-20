@@ -14,7 +14,7 @@ type MovieScreenProps = {
   route: RouteProp<{params: {item: MediaItem}}>;
 };
 
-const MovieScreen = ({navigation, route}: MovieScreenProps) => {
+const MovieScreen: React.FC<MovieScreenProps> = ({navigation, route}) => {
   const jellyfin = useStore.getState().jellyfinClient;
   const {item} = route.params;
 

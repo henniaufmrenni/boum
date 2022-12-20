@@ -21,7 +21,7 @@ type HomeScreenProps = {
   navigation: NavigationProp<any>;
 };
 
-const HomeScreen = ({navigation}: HomeScreenProps) => {
+const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [triggerRefresh, setTriggerRefresh] = useState<number>(0);
   const session = useStore(state => state.session);
@@ -40,7 +40,6 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     mutateGetHome,
   } = useGetHome(session);
 
-  const offlineMode = useStore(state => state.offlineMode);
   const customLists = useStore(state => state.customLists);
   useGetCustomLists(triggerRefresh);
 

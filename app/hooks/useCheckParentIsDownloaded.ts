@@ -1,15 +1,15 @@
 import {useEffect, useState} from 'react';
 
 import {getDBConnection, readSingleEntryId} from '@boum/lib/db/service';
-import {isDownloaded} from '@boum/types';
+import {IsDownloaded, TableName} from '@boum/types';
 
-const useCheckParentIsDownloaded = (itemId: string): isDownloaded => {
-  const [isDownloaded, setIsDownloaded] = useState('loading');
+const useCheckParentIsDownloaded = (itemId: string): IsDownloaded => {
+  const [isDownloaded, setIsDownloaded] = useState<IsDownloaded>('loading');
 
   useEffect(() => {
     async function check() {
       const db = await getDBConnection();
-      const result = await readSingleEntryId(db, 'parent_items', itemId);
+      const result = await readSingleEntryId(db, TableName.ParentItems, itemId);
       if (result[0].rows.length >= 1) {
         setIsDownloaded('isDownloaded');
       } else {
@@ -17,7 +17,7 @@ const useCheckParentIsDownloaded = (itemId: string): isDownloaded => {
       }
     }
     check();
-  }, []);
+  }, [itemId]);
 
   return isDownloaded;
 };

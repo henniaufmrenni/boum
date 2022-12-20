@@ -15,7 +15,9 @@ const readAsyncData = async (key: string) => {
     const value = await AsyncStorage.getItem(key);
     if (value !== null) {
       return value;
-    } else throw 'No such key';
+    } else {
+      throw 'No such key';
+    }
   } catch (e) {
     throw e;
   }

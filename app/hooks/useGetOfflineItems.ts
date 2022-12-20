@@ -5,16 +5,17 @@ import {
   getDBConnection,
   readParentEntries,
 } from '@boum/lib/db/service';
+import {OfflineItem, TableName} from '@boum/types';
 
 const getOfflineItems = async () => {
   return new Promise(async function (resolve, reject) {
     const db = await getDBConnection();
 
-    const items = await readParentEntries(db, 'parent_items').catch(err =>
-      reject(`Couldn't get data from DB: ${err}`),
+    const items = await readParentEntries(db, TableName.ParentItems).catch(
+      err => reject(`Couldn't get data from DB: ${err}`),
     );
 
-    let downloadItems: [] = [];
+    let downloadItems: Array<OfflineItem> = [];
 
     items.forEach(async (item, index) => {
       const children = await getChildrenEntriesForParent(db, item.id);
@@ -42,7 +43,7 @@ const useGetDownloadItems = () => {
     getItems();
   }, []);
 
-  return parents;
+  return items;
 };
 
 export default useGetDownloadItems;

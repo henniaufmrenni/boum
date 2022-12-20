@@ -27,7 +27,7 @@ const useGetArtist = (
       data().then(data => setArtistInfo(data));
     }
     setState();
-  }, [routeItemId]);
+  }, [routeItemId, jellyfin, routeItem, session]);
 
   useEffect(() => {
     function setBackGround() {

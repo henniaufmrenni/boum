@@ -9,17 +9,16 @@ const useCancelableSearch = (session: Session, query: string) => {
   const [songs, setSongs] = useState([]);
   const controllerRef = useRef<AbortController | null>();
 
-  const header = `MediaBrowser Client="Boum", DeviceId="${session.deviceId}", Version="${versionBoum}", Token=${session.accessToken}`;
-  const fetchOptions = {
-    method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      'X-Emby-Authorization': header,
-    },
-    signal: controllerRef.current?.signal,
-  };
-
   useEffect(() => {
+    const header = `MediaBrowser Client="Boum", DeviceId="${session.deviceId}", Version="${versionBoum}", Token=${session.accessToken}`;
+    const fetchOptions = {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'X-Emby-Authorization': header,
+      },
+      signal: controllerRef.current?.signal,
+    };
     async function search() {
       if (controllerRef.current) {
         controllerRef.current.abort();
@@ -55,7 +54,7 @@ const useCancelableSearch = (session: Session, query: string) => {
     if (query.length >= 2) {
       search();
     }
-  }, [query]);
+  }, [query, session]);
 
   return {albums, artists, songs};
 };

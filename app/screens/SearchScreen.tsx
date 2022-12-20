@@ -6,11 +6,11 @@ import {colours} from '@boum/constants';
 import {useCancelableSearch, useSearchStore, useStore} from '@boum/hooks';
 import {NavigationProp} from '@react-navigation/native';
 
-type Props = {
+type SearchScreenProps = {
   navigation: NavigationProp<any>;
 };
 
-const SearchScreen = ({navigation}: Props) => {
+const SearchScreen: React.FC<SearchScreenProps> = ({navigation}) => {
   const session = useStore(state => state.session);
 
   const searchInput = useSearchStore(state => state.searchInput);

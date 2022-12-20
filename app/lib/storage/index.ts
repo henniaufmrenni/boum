@@ -1,1 +1,2 @@
-export * from '@boum/lib/storage/Storage';
+export * from '@boum/lib/storage/helper';
+export * from '@boum/lib/storage/downloadItem';

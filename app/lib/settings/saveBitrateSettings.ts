@@ -2,7 +2,7 @@ import {useStore} from '@boum/hooks';
 import {storeEncryptedValue} from '@boum/lib/encryptedStorage/encryptedStorage';
 import {Session, SelectedStorageLocation} from '@boum/types';
 
-const useSetBitrateLimit = async (
+const saveBitrateSettings = async (
   session: Session,
   maxBitrateWifi: number,
   maxBitrateMobile: number,
@@ -21,4 +21,4 @@ const useSetBitrateLimit = async (
     .catch(err => new Error(err));
 };
 
-export {useSetBitrateLimit};
+export {saveBitrateSettings};

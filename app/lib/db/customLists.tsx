@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 import {getDBConnection} from '@boum/lib/db/service';
 
 import {CustomHomeListItem, SuccessMessage} from '@boum/types';
@@ -13,7 +14,7 @@ const saveCustomList = async ({
   const db = await getDBConnection();
   let result;
   // prettier-ignore
-  const insertQuery = 
+  const insertQuery =
     `INSERT OR REPLACE INTO custom_lists(title, sort_order, sort_by, filters, search_query, genre_id) 
      values ('${title.replace(/\'/g,"''")}', '${sortOrder}','${sortBy}','${filters ? filters : ""}','${searchQuery ?  searchQuery.replace(/\'/g,"''") : ""}','${genreId ? genreId : ""}')`;
 
@@ -40,7 +41,7 @@ const getCustomLists = async () => {
   await db
     .executeSql(query)
     .then(results => {
-      //console.log('DB: Successfully read single entry');
+      console.log('DB: Successfully read single entry');
       results.forEach(result => {
         for (let index = 0; index < result.rows.length; index++) {
           const entryObject: CustomHomeListItem = {
@@ -71,7 +72,7 @@ const deleteCustomList = async (title: string): Promise<SuccessMessage> => {
 
   await db
     .executeSql(query)
-    .then(res => {
+    .then(() => {
       console.log('DB: Successfully custom list data');
       result = 'success';
     })

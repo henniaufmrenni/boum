@@ -4,13 +4,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import {ButtonBoum} from '@boum/components/Settings';
 import {colours} from '@boum/constants';
-import {
-  useSetBitrateLimit,
-  useStore,
-  useStoreEncryptedValue,
-} from '@boum/hooks';
 import {SelectedStorageLocation, Session} from '@boum/types';
 import {Picker} from '@react-native-picker/picker';
+import {saveBitrateSettings} from '@boum/lib/settings';
 
 type DownloadSettingsProps = {
   session: Session;
@@ -26,7 +22,7 @@ const DownloadSettings = ({session}: DownloadSettingsProps) => {
   useEffect(() => {
     setDownloadQuality(session.maxBitrateDownloadAudio);
     setStorageLocation(session.selectedStorageLocation);
-  }, []);
+  }, [session]);
 
   // TODO: Check whether device has an SD Card
   return (
@@ -102,8 +98,8 @@ const DownloadSettings = ({session}: DownloadSettingsProps) => {
       ) : null}
       <ButtonBoum
         title={'Save download settings'}
-        onPress={() => {
-          useSetBitrateLimit(
+        onPress={async () => {
+          await saveBitrateSettings(
             session,
             session.maxBitrateWifi,
             session.maxBitrateMobile,

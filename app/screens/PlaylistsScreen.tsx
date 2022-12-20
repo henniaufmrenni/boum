@@ -13,7 +13,7 @@ type PlaylistsScreenProps = {
   navigation: NavigationProp<any>;
 };
 
-const PlaylistsScreen = ({navigation}: PlaylistsScreenProps) => {
+const PlaylistsScreen: React.FC<PlaylistsScreenProps> = ({navigation}) => {
   const jellyfin = useStore.getState().jellyfinClient;
   const session = useStore(state => state.session);
 

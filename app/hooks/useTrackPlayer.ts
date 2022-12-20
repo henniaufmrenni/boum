@@ -99,7 +99,7 @@ const useTrackPlayer = () => {
     if (playerIsSetup && initializedQueue) {
       saveCurrentTrack();
     }
-  }, [playbackUpdate]);
+  }, [playbackUpdate, initializedQueue, playerIsSetup]);
 
   // Sleeptimer
   useEffect(() => {
@@ -107,7 +107,7 @@ const useTrackPlayer = () => {
       TrackPlayer.pause();
       setSleepTimerState(0);
     }
-  }, [playbackUpdate, playerUpdate]);
+  }, [playbackUpdate, playerUpdate, sleepTimer, setSleepTimerState]);
 };
 
 export {useTrackPlayer};
