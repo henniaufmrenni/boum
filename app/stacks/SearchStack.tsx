@@ -14,7 +14,7 @@ type SearchStackProps = {
   navigation: NavigationProp<any>;
 };
 
-const SearchStack = ({navigation}: SearchStackProps) => {
+const SearchStack: React.FC<SearchStackProps> = ({navigation}) => {
   const SearchStack = createNativeStackNavigator();
   return (
     <>

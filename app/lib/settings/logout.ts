@@ -22,7 +22,7 @@ const initialSession: Session = {
   selectedStorageLocation: 'DocumentDirectory',
 };
 
-const useLogout = async () => {
+const logout = async () => {
   try {
     await clearAllEncryptedValues();
     useStore.setState({session: initialSession});
@@ -35,4 +35,4 @@ const useLogout = async () => {
   }
 };
 
-export default useLogout;
+export {logout};

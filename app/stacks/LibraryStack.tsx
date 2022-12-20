@@ -22,10 +22,9 @@ import {FolderScreen} from '@boum/screens/FolderScreen';
 
 type LibraryStackProps = {
   navigation: NavigationProp<any>;
-  route: any;
 };
 
-const LibraryStack = ({navigation, route}: LibraryStackProps) => {
+const LibraryStack: React.FC<LibraryStackProps> = ({navigation}) => {
   const LibraryStack = createNativeStackNavigator();
 
   return (
@@ -33,11 +32,7 @@ const LibraryStack = ({navigation, route}: LibraryStackProps) => {
       <LibraryStack.Navigator
         screenOptions={{animation: 'none', headerShown: false}}>
         <LibraryStack.Screen name="LibraryLanding" component={LibraryScreen} />
-        <LibraryStack.Screen
-          name="Album"
-          component={AlbumScreen}
-          options={({route}) => ({title: route.params.name})}
-        />
+        <LibraryStack.Screen name="Album" component={AlbumScreen} />
         <LibraryStack.Screen name="Albums" component={AlbumsScreen} />
         <LibraryStack.Screen name="Artist" component={ArtistScreen} />
         <LibraryStack.Screen name="Artists" component={ArtistsScreen} />

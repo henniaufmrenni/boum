@@ -23,11 +23,7 @@ const SleeptimePicker = () => {
         onValueChange={(itemValue: number) => setSleeptimer(itemValue)}
         enabled={true}
         itemStyle={styles.picker}>
-        <Picker.Item
-          label="--- Set 
-      Sleep Timer ---"
-          style={styles.item}
-        />
+        <Picker.Item label="--- Set Sleep Timer ---" style={styles.item} />
         <Picker.Item label="Turn off" value={false} style={styles.item} />
         <Picker.Item label="5 min" value={300000} style={styles.item} />
         <Picker.Item label="10 min" value={600000} style={styles.item} />

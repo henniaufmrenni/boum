@@ -12,8 +12,9 @@ import {
   OfflineModeSwitch,
   SwitchWithDescription,
 } from '@boum/components/Settings';
+import {useStore} from '@boum/hooks';
+import {scanLibrary} from '@boum/lib/settings';
 import {colours, versionBoum} from '@boum/constants';
-import {useScanLibrary, useStore} from '@boum/hooks';
 
 type SettingsScreenProps = {
   navigation: NavigationProp<any>;
@@ -35,7 +36,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
       </SwitchWithDescription>
       <SwitchWithDescription
         title={'Downloads'}
-        description="View your downloads and their status.">
+        description={'View your downloads and their status.'}>
         <>
           <DownloadSettings session={session} />
           <ButtonBoum
@@ -46,17 +47,21 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
       </SwitchWithDescription>
       <SwitchWithDescription
         title={'Chromecast'}
-        description={`Set up a different adress for Chromecast.`}>
+        description={'Set up a different adress for Chromecast.'}>
         <CastSettings session={session} />
       </SwitchWithDescription>
       <SwitchWithDescription
         title={'Offline Mode'}
-        description="Turn on offline mode to only see the albums on your home screen which you've downloaded.">
+        description={
+          "Turn on offline mode to only see the albums on your home screen which you've downloaded."
+        }>
         <OfflineModeSwitch session={session} />
       </SwitchWithDescription>
       <SwitchWithDescription
         title={'Custom Lists'}
-        description="Manage your existing and create new custom lists for your homescreen.">
+        description={
+          'Manage your existing and create new custom lists for your homescreen.'
+        }>
         <ButtonBoum
           title={'Manage Your Lists'}
           onPress={() => navigation.navigate('ListManager')}
@@ -69,7 +74,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
           <ButtonBoum
             title={'Scan Music Libraries'}
             onPress={async () => {
-              const res = await useScanLibrary(session);
+              const res = await scanLibrary(session);
               setRefreshLibraryResult(res);
             }}
           />
@@ -84,16 +89,16 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
         description={`boum version ${versionBoum}\n © Hendrik Stöldt & contributors \nboum is open-source and licensed under GPL-3.0-only.`}>
         <>
           <OpenURLButton
-            title="View on Github"
-            url="https://github.com/henniaufmrenni/boum"
+            title={'View on Github'}
+            url={'https://github.com/henniaufmrenni/boum'}
           />
           <OpenURLButton
-            title="View the Documentation"
-            url="https://eindm.de/projects/boum"
+            title={'View the Documentation'}
+            url={'https://eindm.de/projects/boum'}
           />
           <OpenURLButton
-            title="Sponsor"
-            url="https://github.com/sponsors/henniaufmrenni"
+            title={'Sponsor'}
+            url={'https://github.com/sponsors/henniaufmrenni'}
           />
         </>
       </SwitchWithDescription>

@@ -16,7 +16,7 @@ type LibraryScreenProps = {
   navigation: NavigationProp<any>;
 };
 
-const LibraryScreen = ({navigation}: LibraryScreenProps) => {
+const LibraryScreen: React.FC<LibraryScreenProps> = ({navigation}) => {
   return (
     <ScrollView style={styles.screen}>
       <Text style={styles.title}>Library</Text>

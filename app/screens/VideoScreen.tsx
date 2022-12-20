@@ -13,7 +13,7 @@ type VideoScreenProps = {
   route: RouteProp<{params: {item: MediaItem; session: Session}}>;
 };
 
-const VideoScreen = ({navigation, route}: VideoScreenProps) => {
+const VideoScreen: React.FC<VideoScreenProps> = ({navigation, route}) => {
   const {item, session} = route.params;
   const jellyfin = useStore.getState().jellyfinClient;
 
@@ -24,7 +24,7 @@ const VideoScreen = ({navigation, route}: VideoScreenProps) => {
     item,
     session,
     bitrate,
-    videoProgress,
+    0,
   );
 
   useEffect(() => {
@@ -53,7 +53,7 @@ const VideoScreen = ({navigation, route}: VideoScreenProps) => {
       backAction,
     );
     return () => backHandler.remove();
-  }, []);
+  }, [bitrate, jellyfin, navigation, playbackInfo, session, videoProgress]);
 
   return (
     <>

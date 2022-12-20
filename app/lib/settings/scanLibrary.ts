@@ -1,7 +1,7 @@
 import {versionBoum} from '@boum/constants';
 import {Session} from '@boum/types';
 
-const useScanLibrary = async (session: Session) => {
+const scanLibrary = async (session: Session) => {
   let result = '';
   let numberOfMusicLibraries = 0;
   const headers = `MediaBrowser Client="Boum",DeviceId="${session.deviceId}", Version="${versionBoum}", Token=${session.accessToken}`;
@@ -56,4 +56,4 @@ const useScanLibrary = async (session: Session) => {
   return result;
 };
 
-export {useScanLibrary};
+export {scanLibrary};

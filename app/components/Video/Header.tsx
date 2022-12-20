@@ -186,7 +186,9 @@ const VideoHeader = ({
             </View>
             <Text style={styles.cast}>Cast</Text>
           </Animated.View>
-          <ScrollView horizontal={true} style={{marginBottom: 20}}>
+          <ScrollView
+            horizontal={true}
+            style={styles.horizontalScrollContainer}>
             {item.People.filter(
               person =>
                 person.Role !== 'Director' &&
@@ -282,6 +284,9 @@ const styles = StyleSheet.create({
     fontWeight: sizes.fontWeightPrimary,
     color: colours.white,
     paddingVertical: 12,
+  },
+  horizontalScrollContainer: {
+    marginBottom: 20,
   },
 });
 

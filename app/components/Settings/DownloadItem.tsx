@@ -3,7 +3,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import {colours} from '@boum/constants';
-import {useDeleteAlbum} from '@boum/hooks';
+import {deleteAlbum} from '@boum/lib/settings';
 
 const DownloadItem = ({item}) => {
   const completedLength = item.children.filter(
@@ -21,7 +21,7 @@ const DownloadItem = ({item}) => {
         {completedLength === totalLength ? (
           <View>
             <Icon name="checkmark-circle" size={30} color={colours.green} />
-            <TouchableOpacity onPress={async () => await useDeleteAlbum(item)}>
+            <TouchableOpacity onPress={async () => await deleteAlbum(item)}>
               <Text style={styles.deleteButton}>Delete</Text>
             </TouchableOpacity>
           </View>

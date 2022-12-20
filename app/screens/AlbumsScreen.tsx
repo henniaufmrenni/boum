@@ -12,7 +12,7 @@ type AlbumsScreenProps = {
   navigation: NavigationProp<any>;
 };
 
-const AlbumsScreen = ({navigation}: AlbumsScreenProps) => {
+const AlbumsScreen: React.FC<AlbumsScreenProps> = ({navigation}) => {
   const jellyfin = useStore.getState().jellyfinClient;
   // FIXME: Find a solution for this hack, which is necessary, since zustand can't store JSON.
   const session = useStore(state => state.session);

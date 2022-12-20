@@ -11,7 +11,7 @@ type BooksScreenProps = {
   navigation: NavigationProp<any>;
 };
 
-const BooksScreen = ({navigation}: BooksScreenProps) => {
+const BooksScreen: React.FC<BooksScreenProps> = ({navigation}) => {
   const session = useStore(state => state.session);
 
   const {allAudiobooks, setLoadedMore} = useGetBooks(session);

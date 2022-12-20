@@ -104,7 +104,7 @@ const mapJellyfinTrackToPlayer = async (
 
   const tracks: Promise<Array<TrackBoum>> = new Promise(function (
     resolve,
-    reject,
+    _reject,
   ) {
     let tracks: Array<TrackBoum> = [];
     jellyfinInput.forEach(async (inputItem, index) => {

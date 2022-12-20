@@ -13,7 +13,7 @@ import {
 import BottomNavigationStack from '@boum/stacks/BottomNavigationStack';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-const RootStack = () => {
+const RootStack: React.FC = () => {
   const RootStack = createNativeStackNavigator();
   return (
     <>

@@ -16,7 +16,7 @@ type AlbumScreenProps = {
   route: RouteProp<{params: {item: MediaItem; itemId: string}}>;
 };
 
-const AlbumScreen = ({navigation, route}: AlbumScreenProps) => {
+const AlbumScreen: React.FC<AlbumScreenProps> = ({navigation, route}) => {
   const {itemId, item} = route.params;
 
   const session = useStore(state => state.session);

@@ -21,7 +21,7 @@ const uploadProgress = (res: DownloadProgressCallbackResult, size: number) => {
   console.log(`Download ${~~((res.bytesWritten / size) * 100)}% completed.`);
 };
 
-const useDownloadItem = async (
+const downloadItem = async (
   session: Session,
   items: Array<MediaItem>,
   album: object,
@@ -85,11 +85,11 @@ const useDownloadItem = async (
       },
     })
       .promise.then(async res => {
-        if (res.statusCode == 200) {
+        if (res.statusCode === 200) {
           RNFS.moveFile(tempPath, permPath)
             .then(() => {
-              console.log('FILES DOWNLOADED!'),
-                updateSingleItemStatus(db, item.Id, 'success');
+              console.log('FILES DOWNLOADED!');
+              updateSingleItemStatus(db, item.Id, 'success');
             })
             .catch(err => {
               console.log('Error saving file to final destination: ', err);
@@ -110,4 +110,4 @@ const useDownloadItem = async (
   return queue;
 };
 
-export {useDownloadItem};
+export {downloadItem};

@@ -14,10 +14,9 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 type HomeStackProps = {
   navigation: NavigationProp<any>;
-  route: any;
 };
 
-const HomeStack = ({navigation, route}: HomeStackProps) => {
+const HomeStack: React.FC<HomeStackProps> = ({navigation}) => {
   const HomeStack = createNativeStackNavigator();
 
   return (

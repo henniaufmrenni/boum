@@ -8,7 +8,7 @@ import {useGetDownloadItems} from '@boum/hooks';
 
 const width = Dimensions.get('window').width;
 
-const DownloadsScreen = ({}) => {
+const DownloadsScreen: React.FC = () => {
   const {downloadItems, gotDownloadItems} = useGetDownloadItems();
 
   // TODO: Make this look nicer and refresh status programatically every few seconds

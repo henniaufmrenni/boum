@@ -27,7 +27,7 @@ const useGetAlbum = (
       data().then(data => setAlbumInfo(data));
     }
     setState();
-  }, [routeItemId]);
+  }, [routeItemId, jellyfin, routeItem, session]);
 
   useEffect(() => {
     function setBackGround() {

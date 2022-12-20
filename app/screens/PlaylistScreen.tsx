@@ -20,7 +20,7 @@ type PlaylistScreenProps = {
   route: RouteProp<{params: {item: MediaItem; itemId: string}}>;
 };
 
-const PlaylistScreen = ({route, navigation}: PlaylistScreenProps) => {
+const PlaylistScreen: React.FC<PlaylistScreenProps> = ({route, navigation}) => {
   const jellyfin = useStore.getState().jellyfinClient;
   const session = useStore(state => state.session);
 
