@@ -13,6 +13,7 @@ import {
   SortOrder,
   ProgressUpdateType,
   VideoMediaItem,
+  HttpMethod,
 } from '@boum/types';
 
 import {requestPlaybackInfoBody} from '@boum/lib/api';
@@ -334,7 +335,7 @@ class jellyfinClient {
   public postFavorite = async (
     session: Session,
     id: string,
-    action: FavoriteAction,
+    action: HttpMethod,
   ) => {
     const query = `${session.hostname}/Users/${session.userId}/FavoriteItems/${id}`;
 

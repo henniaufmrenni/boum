@@ -4,21 +4,32 @@ import {Dimensions, ScrollView, StyleSheet, Text} from 'react-native';
 import {LoadingSpinner} from '@boum/components/Generic';
 import DownloadItem from '@boum/components/Settings/DownloadItem';
 import {colours, sizes} from '@boum/constants';
-import {useGetDownloadItems} from '@boum/hooks';
+import {useGetDownloadItems, useStore} from '@boum/hooks';
+import {ButtonBoum} from '@boum/components/Settings';
 
 const width = Dimensions.get('window').width;
 
 const DownloadsScreen: React.FC = () => {
   const {downloadItems, gotDownloadItems} = useGetDownloadItems();
 
-  // TODO: Make this look nicer and refresh status programatically every few seconds
+  const storageService = useStore.getState().storageService;
+  const dbService = useStore.getState().dbService;
+  const session = useStore.getState().session;
+
+  // TODO: Make this look nicer
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Downloads</Text>
+      <ButtonBoum
+        onPress={async () => {
+          await storageService.redownloadItems(session);
+        }}
+        title={'Re-trigger downloads'}
+      />
       {downloadItems !== undefined && downloadItems ? (
         <>
           {downloadItems.map(item => (
-            <DownloadItem key={item.id} item={item} />
+            <DownloadItem key={item.id} item={item} dbService={dbService} />
           ))}
         </>
       ) : gotDownloadItems ? (

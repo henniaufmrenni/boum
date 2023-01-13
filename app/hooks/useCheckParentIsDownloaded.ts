@@ -1,15 +1,20 @@
 import {useEffect, useState} from 'react';
 
-import {getDBConnection, readSingleEntryId} from '@boum/lib/db/service';
 import {IsDownloaded, TableName} from '@boum/types';
+import {useStore} from '@boum/hooks';
 
 const useCheckParentIsDownloaded = (itemId: string): IsDownloaded => {
   const [isDownloaded, setIsDownloaded] = useState<IsDownloaded>('loading');
+  const dbService = useStore.getState().dbService;
 
   useEffect(() => {
     async function check() {
-      const db = await getDBConnection();
-      const result = await readSingleEntryId(db, TableName.ParentItems, itemId);
+      const db = await dbService.getDBConnection();
+      const result = await dbService.readSingleEntryId(
+        db,
+        TableName.ParentItems,
+        itemId,
+      );
       if (result[0].rows.length >= 1) {
         setIsDownloaded('isDownloaded');
       } else {

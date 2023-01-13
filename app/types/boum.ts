@@ -24,6 +24,13 @@ type SelectedStorageLocation =
 
 type Result<T, E = Error> = {ok: true; value: T} | {ok: false; error: E};
 
+type UnfinishedDownload = {
+  id: string;
+  fileLocation: string;
+  status: DownloadStatus;
+  imageLocation: string;
+};
+
 /*
  * Customizable shortcut for the homescreen
  */
@@ -42,7 +49,12 @@ type Headers = {
 
 type ScreenMode = 'ListView' | 'PlayerView';
 
-type DownloadStatus = 'started' | 'active' | 'success' | 'failure';
+enum DownloadStatus {
+  Started = 'started',
+  Pending = 'pending',
+  Success = 'success',
+  Failure = 'failure',
+}
 
 type IsDownloaded = 'isDownloaded' | 'isNotDownloaded' | 'loading';
 
@@ -84,11 +96,32 @@ enum TableName {
   CustomLists = 'custom_lists',
 }
 
-export {TableName};
+type DownloadQueueItem = {
+  jobId: number;
+  itemId: string;
+  status: DownloadStatus;
+};
+
+enum DownloadListType {
+  Playlist = 'playlist',
+  Album = 'album',
+}
+
+enum HttpMethod {
+  GET = 'GET',
+  HEAD = 'HEAD',
+  POST = 'POST',
+  PUT = 'PUT',
+  DELETE = 'DELETE',
+  OPTIONS = 'OPTIONS',
+  TRACE = 'TRACE',
+  PATCH = 'PATCH',
+}
+
+export {DownloadListType, TableName, DownloadStatus, HttpMethod};
 
 export type {
   CustomHomeListItem,
-  DownloadStatus,
   Headers,
   IsDownloaded,
   NavigationDestination,
@@ -100,4 +133,6 @@ export type {
   Session,
   SingleItem,
   SuccessMessage,
+  DownloadQueueItem,
+  UnfinishedDownload,
 };

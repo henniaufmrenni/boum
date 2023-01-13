@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import {ContextAction} from '@boum/components/ContextMenu';
-import {MediaItem, Session, SuccessMessage} from '@boum/types';
+import {HttpMethod, MediaItem, Session, SuccessMessage} from '@boum/types';
 import {useStore} from '@boum/hooks';
 
 type ContextActionLikeProps = {
@@ -37,7 +37,7 @@ const ContextActionLike = ({session, mediaItem}: ContextActionLikeProps) => {
               .postFavorite(
                 session,
                 mediaItem.Id ? mediaItem.Id : mediaItem.id,
-                'DELETE',
+                HttpMethod.DELETE,
               )
               .then(status => {
                 if (status === 200) {
@@ -65,7 +65,7 @@ const ContextActionLike = ({session, mediaItem}: ContextActionLikeProps) => {
               .postFavorite(
                 session,
                 mediaItem.Id ? mediaItem.Id : mediaItem.id,
-                'POST',
+                HttpMethod.POST,
               )
               .then(status => {
                 if (status === 200) {

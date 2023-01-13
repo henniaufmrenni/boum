@@ -4,8 +4,14 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import {colours} from '@boum/constants';
 import {deleteAlbum} from '@boum/lib/settings';
+import {DbService} from '@boum/lib/db';
 
-const DownloadItem = ({item}) => {
+type DownloadItemProps = {
+  item: object;
+  dbService: DbService;
+};
+
+const DownloadItem = ({item, dbService}: DownloadItemProps) => {
   const completedLength = item.children.filter(
     obj => obj.status === 'success',
   ).length;
@@ -21,7 +27,8 @@ const DownloadItem = ({item}) => {
         {completedLength === totalLength ? (
           <View>
             <Icon name="checkmark-circle" size={30} color={colours.green} />
-            <TouchableOpacity onPress={async () => await deleteAlbum(item)}>
+            <TouchableOpacity
+              onPress={async () => await deleteAlbum(item, dbService)}>
               <Text style={styles.deleteButton}>Delete</Text>
             </TouchableOpacity>
           </View>
@@ -36,7 +43,13 @@ const DownloadItem = ({item}) => {
               100
             )}% | ${totalLength} tracks`}
           </Text>
-          <ProgressBar duration={totalLength} progress={completedLength} />
+          <View>
+            <ProgressBar duration={totalLength} progress={completedLength} />
+            <TouchableOpacity
+              onPress={async () => await deleteAlbum(item, dbService)}>
+              <Text style={styles.deleteButton}>Delete</Text>
+            </TouchableOpacity>
+          </View>
         </>
       ) : null}
     </View>
@@ -71,9 +84,17 @@ const styles = StyleSheet.create({
     color: colours.white,
     fontSize: 18,
   },
+  text: {
+    color: colours.white,
+  },
 });
 
-const ProgressBar = ({duration, progress}) => {
+type ProgressBarProps = {
+  duration: number;
+  progress: number;
+};
+
+const ProgressBar = ({duration, progress}: ProgressBarProps) => {
   const progressPercentage = progress / duration;
 
   return (
@@ -98,8 +119,3 @@ const progressStyles = StyleSheet.create({
 });
 
 export default DownloadItem;
-/*
-
-{"Artists": ["Donald Byrd", "Hank Mobley", "Lee Morgan"], "ChannelId": null, "Id": "973def8474d07d7ed2dfdacb7f6f96bd", "ImageBlurHashes": {"Primary": [Object]}, "ImageTags": {"Primary": "5c7cee51db4b42f6a875b1a616f80578"}, "IsFolder": true, "LocationType": "FileSystem", "Name": "Hank Mobley With Donald Byrd And Lee Morgan", "PremiereDate": "2018-09-28T00:00:00.0000000Z", "PrimaryImageAspectRatio": 1, "ProductionYear": 2018, "RunTimeTicks": 22452932608, "ServerId": "6a12f69590e34cfb99ae55fcf1e16007", "SortName": "hank mobley with donald byrd and lee morgan", "Type": "MusicAlbum", "UserData": {"IsFavorite": false, "Key": "Donald Byrd-Hank Mobley With Donald Byrd And Lee Morgan", "PlayCount": 0, "PlaybackPositionTicks": 0, "Played": false}}, "name": "Hank Mobley With Donald Byrd And Lee Morgan"}
-
-*/

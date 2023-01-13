@@ -4,12 +4,7 @@ import TrackPlayer, {
   useTrackPlayerEvents,
 } from 'react-native-track-player';
 
-import {useStore} from '@boum/hooks/useStore';
-import {
-  getDBConnection,
-  readKeyValueData,
-  writeKeyValueData,
-} from '@boum/lib/db/service';
+import {useStore} from '@boum/hooks';
 
 const events = [
   Event.PlaybackState,
@@ -25,6 +20,7 @@ const useTrackPlayer = () => {
   const playbackUpdate = useStore(state => state.playbackUpdate);
   const setPlaybackUpdate = useStore(state => state.setPlaybackUpdate);
   const setSleepTimerState = useStore(state => state.setSleepTimer);
+  const dbService = useStore.getState().dbService;
 
   useTrackPlayerEvents(events, event => {
     if (event.type === Event.PlaybackError) {
@@ -63,10 +59,10 @@ const useTrackPlayer = () => {
   // the session.
   useEffect(() => {
     async function init() {
-      const db = await getDBConnection();
+      const db = await dbService.getDBConnection();
       if (playerIsSetup) {
-        const queue = await readKeyValueData(db, 'queue');
-        const trackId = await readKeyValueData(db, 'trackId');
+        const queue = await dbService.readKeyValueData(db, 'queue');
+        const trackId = await dbService.readKeyValueData(db, 'trackId');
         if (queue && trackId) {
           TrackPlayer.add(JSON.parse(queue));
           TrackPlayer.skip(parseInt(trackId));
@@ -80,17 +76,17 @@ const useTrackPlayer = () => {
   // Persist currentTrack and queue to SQLite.
   useEffect(() => {
     async function saveCurrentTrack() {
-      const db = await getDBConnection();
+      const db = await dbService.getDBConnection();
       await TrackPlayer.getCurrentTrack()
         .then(response => {
-          writeKeyValueData(db, 'trackId', response);
+          dbService.writeKeyValueData(db, 'trackId', response);
         })
         .catch(error => {
           console.error(error);
         });
       await TrackPlayer.getQueue()
         .then(response => {
-          writeKeyValueData(db, 'queue', response);
+          dbService.writeKeyValueData(db, 'queue', response);
         })
         .catch(error => {
           console.error(error);

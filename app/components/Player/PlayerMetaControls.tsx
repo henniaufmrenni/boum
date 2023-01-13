@@ -9,7 +9,7 @@ import {CastButton} from '@boum/components/Cast';
 import {useStore} from '@boum/hooks';
 import {toggleRepeatMode} from '@boum/lib/audio';
 import {colours} from '@boum/constants';
-import {FavoriteAction, Session, SuccessMessage} from '@boum/types';
+import {HttpMethod, Session, SuccessMessage} from '@boum/types';
 
 type PlayerMetaControlsProps = {
   navigation: NavigationProp<any>;
@@ -48,10 +48,10 @@ const PlayerMetaControls: React.FC<PlayerMetaControlsProps> = ({
     );
   };
 
-  const postFavorite = async (method: FavoriteAction) => {
+  const postFavorite = async (method: HttpMethod) => {
     await jellyfin.postFavorite(session, trackId, method).then(status => {
       if (status === 200) {
-        setIsFavorite(method === 'DELETE' ? false : true);
+        setIsFavorite(method === HttpMethod.DELETE ? false : true);
         setActionStatus('success');
       } else {
         setActionStatus('fail');
@@ -67,13 +67,13 @@ const PlayerMetaControls: React.FC<PlayerMetaControlsProps> = ({
       <View style={styles.playerMetaControlsContainer}>
         <View>
           {isFavorite ? (
-            <TouchableOpacity onPress={() => postFavorite('DELETE')}>
+            <TouchableOpacity onPress={() => postFavorite(HttpMethod.DELETE)}>
               <Text>
                 <Icon name="heart" size={30} color={colours.accent} />
               </Text>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity onPress={() => postFavorite('POST')}>
+            <TouchableOpacity onPress={() => postFavorite(HttpMethod.POST)}>
               <Text>
                 <Icon name="heart-outline" size={30} color={colours.accent} />
               </Text>

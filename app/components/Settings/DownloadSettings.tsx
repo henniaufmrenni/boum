@@ -35,11 +35,6 @@ const DownloadSettings = ({session}: DownloadSettingsProps) => {
           enabled={true}
           prompt={'Select audio download quality:'}
           itemStyle={styles.picker}>
-          <Picker.Item
-            label="Direct download"
-            value={140000000}
-            style={styles.item}
-          />
           <Picker.Item label="64 kbps" value={64000} style={styles.item} />
           <Picker.Item label="96 kbps" value={96000} style={styles.item} />
           <Picker.Item label="128 kbps" value={128000} style={styles.item} />
@@ -47,6 +42,11 @@ const DownloadSettings = ({session}: DownloadSettingsProps) => {
           <Picker.Item label="192 kbps" value={192000} style={styles.item} />
           <Picker.Item label="256 kbps" value={256000} style={styles.item} />
           <Picker.Item label="320 kbps" value={320000} style={styles.item} />
+          <Picker.Item
+            label="Transcoded to AAC"
+            value={64000}
+            style={styles.item}
+          />
         </Picker>
       </View>
       <Text style={styles.text}>Select a storage location:</Text>

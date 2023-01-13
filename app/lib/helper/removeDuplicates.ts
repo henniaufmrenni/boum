@@ -1,9 +1,9 @@
-const removeDuplicates = array => {
-  return array.arr.filter((value, index) => {
+const removeDuplicates = (array: Array<any>) => {
+  return array.filter((value, index) => {
     const _value = JSON.stringify(value);
     return (
       index ===
-      array.arr.findIndex(obj => {
+      array.findIndex(obj => {
         return JSON.stringify(obj) === _value;
       })
     );
