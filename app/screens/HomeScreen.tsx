@@ -169,60 +169,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
               <Text style={styles.text}>Error Favourites</Text>
             )}
           </ScrollView>
-          <Text style={styles.text}>Frequently Played</Text>
-          {frequentlyPlayedAlbums ? (
-            <>
-              <>
-                <ScrollView
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}>
-                  {frequentlyPlayedAlbums.Items.map(album => (
-                    <AlbumCard
-                      key={album.Id}
-                      item={album}
-                      navigation={navigation}
-                      navigationDestination={'Album'}
-                      session={session}
-                    />
-                  ))}
-                </ScrollView>
-              </>
-            </>
-          ) : frequentlyPlayedAlbumsLoading ? (
-            <View style={styles.loadingContainer}>
-              <Text style={styles.text}>Frequently Played</Text>
-              <LoadingSpinner />
-            </View>
-          ) : (
-            <Text style={styles.text}>Error frequent</Text>
-          )}
-          {recentlyPlayedAlbums ? (
-            <>
-              <Text style={styles.text}>Recently Played</Text>
-              <ScrollView
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}>
-                <>
-                  {recentlyPlayedAlbums.Items.map(album => (
-                    <AlbumCard
-                      key={album.Id}
-                      item={album}
-                      navigation={navigation}
-                      navigationDestination={'Album'}
-                      session={session}
-                    />
-                  ))}
-                </>
-              </ScrollView>
-            </>
-          ) : recentlyPlayedAlbumsLoading ? (
-            <View style={styles.loadingContainer}>
-              <Text style={styles.text}>Recently Played</Text>
-              <LoadingSpinner />
-            </View>
-          ) : (
-            <Text style={styles.text}>Error Recent</Text>
-          )}
         </View>
       )}
     </ScrollView>
