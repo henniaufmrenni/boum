@@ -20,12 +20,14 @@ import {
 import {colours, sizes} from '@boum/constants';
 import {useBitrateLimit, useStore} from '@boum/hooks';
 import {
+  LibraryItemList,
   MediaItem,
   MediaType,
   PlayerItem,
   ScreenMode,
   Session,
 } from '@boum/types';
+import {CastButton} from 'react-native-google-cast';
 
 const {SlideInMenu} = renderers;
 
@@ -91,7 +93,7 @@ type SlideInContextMenuProps = {
   children: React.ReactNode;
   mediaType: MediaType;
   mediaItem: MediaItem;
-  listItems?: Array<MediaItem>;
+  listItems?: LibraryItemList;
   session: Session;
   screenMode: ScreenMode;
 };
@@ -168,6 +170,11 @@ const SlideInContextMenu = ({
               </>
             )}
             {children}
+            {castDevice === null ? (
+              <View style={contextMenuStyles.castButtonContainer}>
+                <CastButton />
+              </View>
+            ) : null}
           </ScrollView>
         )}
       />
@@ -225,6 +232,11 @@ const contextMenuStyles = StyleSheet.create({
   image: {
     width: 100,
     height: 100,
+  },
+  castButtonContainer: {
+    paddingVertical: 20,
+    alignContent: 'center',
+    alignItems: 'center',
   },
 });
 

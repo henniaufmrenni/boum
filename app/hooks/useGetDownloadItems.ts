@@ -1,24 +1,21 @@
 import {useEffect, useState} from 'react';
 
-import {
-  getChildrenEntriesForParent,
-  getDBConnection,
-  readParentEntries,
-} from '@boum/lib/db/service';
+import {DbService} from '@boum/lib/db/Service';
+import {useStore} from '@boum/hooks';
 import {TableName} from '@boum/types';
 
-const getDownloadItems = async () => {
+const getDownloadItems = async (dbService: DbService) => {
   return new Promise(async function (resolve, reject) {
-    const db = await getDBConnection();
+    const db = await dbService.getDBConnection();
 
-    const items = await readParentEntries(db, TableName.ParentItems).catch(
-      err => reject(`Couldn't get data from DB: ${err}`),
-    );
+    const items = await dbService
+      .readParentEntries(db, TableName.ParentItems)
+      .catch(err => reject(`Couldn't get data from DB: ${err}`));
 
-    let downloadItems: [] = [];
+    let downloadItems: Array<any> = [];
 
     items.forEach(async (item, index) => {
-      const children = await getChildrenEntriesForParent(db, item.id);
+      const children = await dbService.getChildrenEntriesForParent(db, item.id);
 
       downloadItems.push({
         id: item.id,
@@ -38,15 +35,24 @@ const useGetDownloadItems = () => {
     false,
   );
   const [gotDownloadItems, setGotDownloadItems] = useState<boolean>(false);
+  const [time, setTime] = useState(Date.now());
+  const dbService = useStore.getState().dbService;
+
+  useEffect(() => {
+    const interval = setInterval(() => setTime(Date.now()), 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   useEffect(() => {
     async function getItems() {
-      getDownloadItems().then(res => {
+      getDownloadItems(dbService).then(res => {
         setDownloadItems(res);
       });
     }
     getItems().then(() => setGotDownloadItems(true));
-  }, []);
+  }, [time]);
 
   return {downloadItems, gotDownloadItems};
 };

@@ -11,7 +11,13 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {colours, sizes} from '@boum/constants';
 import {NavigationProp} from '@react-navigation/native';
 import {SlideInContextMenu} from '@boum/components/ContextMenu/ContextMenu';
-import {MediaItem, MediaType, ScreenMode, Session} from '@boum/types';
+import {
+  LibraryItemList,
+  MediaItem,
+  MediaType,
+  ScreenMode,
+  Session,
+} from '@boum/types';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -23,7 +29,7 @@ type Props = {
   mediaType: MediaType;
   session?: Session;
   screenMode: ScreenMode;
-  listItems?: Array<MediaItem>;
+  listItems?: LibraryItemList;
 };
 
 class SingleItemHeader extends React.PureComponent<Props> {

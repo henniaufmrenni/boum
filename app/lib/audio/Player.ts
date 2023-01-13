@@ -1,6 +1,6 @@
 import TrackPlayer, {TrackType, RepeatMode} from 'react-native-track-player';
 
-import {getDBConnection, readFileLocationItem} from '@boum/lib/db/service';
+import {DbService} from '@boum/lib/db/Service';
 import {shuffleArray} from '@boum/lib/helper/helper';
 import {MediaItem, Session, TrackBoum} from '@boum/types';
 
@@ -100,7 +100,8 @@ const mapJellyfinTrackToPlayer = async (
   session: Session,
   bitrateLimit: number,
 ): Promise<Array<TrackBoum>> => {
-  const db = await getDBConnection();
+  const dbService = new DbService();
+  const db = await dbService.getDBConnection();
 
   const tracks: Promise<Array<TrackBoum>> = new Promise(function (
     resolve,
@@ -108,7 +109,7 @@ const mapJellyfinTrackToPlayer = async (
   ) {
     let tracks: Array<TrackBoum> = [];
     jellyfinInput.forEach(async (inputItem, index) => {
-      const localFile = await readFileLocationItem(db, inputItem.Id);
+      const localFile = await dbService.readFileLocationItem(db, inputItem.Id);
       if (localFile[0] !== undefined && localFile[0].status === 'success') {
         //console.log('Player: Playing local audio ', inputItem.Name);
         const track: TrackBoum = {

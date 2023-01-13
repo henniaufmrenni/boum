@@ -19,6 +19,8 @@ import {
 } from 'react-native-google-cast';
 import {CastService} from '@boum/lib/cast';
 import {jellyfinClient} from '@boum/lib/api';
+import {StorageService} from '@boum/lib/storage';
+import {DbService} from '@boum/lib/db';
 
 type BaseStore = {
   session: Session;
@@ -54,6 +56,8 @@ type BaseStore = {
   setCastDevice: (device: Device | null) => void;
   castService: CastService;
   jellyfinClient: jellyfinClient;
+  storageService: StorageService;
+  dbService: DbService;
 };
 
 const initialSession: Session = {
@@ -112,6 +116,8 @@ const useStore = create<BaseStore>(set => ({
   setCastDevice: (device: Device | null) => set({castDevice: device}),
   castService: new CastService(),
   jellyfinClient: new jellyfinClient(),
+  storageService: new StorageService(),
+  dbService: new DbService(),
 }));
 
 type ItemsStore = {

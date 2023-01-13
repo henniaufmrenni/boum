@@ -7,7 +7,7 @@ import {Filters, Session, SortBy, SortOrder, SuccessMessage} from '@boum/types';
 import {Picker} from '@react-native-picker/picker';
 import ButtonBoum from '@boum/components/Settings/ButtonBoum';
 import {LoadingSpinner} from '@boum/components/Generic';
-import {saveCustomList} from '@boum/lib/db/customLists';
+
 import {useStore} from '@boum/hooks';
 
 type CustomListCreatorProps = {
@@ -16,6 +16,7 @@ type CustomListCreatorProps = {
 
 const CustomListCreator: React.FC<CustomListCreatorProps> = ({session}) => {
   const jellyfin = useStore.getState().jellyfinClient;
+  const dbService = useStore.getState().dbService;
 
   const triggerRefreshHomeScreen = useStore(
     state => state.setRefreshHomeScreen,
@@ -31,6 +32,7 @@ const CustomListCreator: React.FC<CustomListCreatorProps> = ({session}) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [successSaving, setSuccessSaving] =
     useState<SuccessMessage>('not triggered');
+
   return (
     <>
       {!allGenresLoading && allGenres !== undefined ? (
@@ -153,23 +155,25 @@ const CustomListCreator: React.FC<CustomListCreatorProps> = ({session}) => {
               title={'Create List'}
               isDisabled={listTitle === '' ? true : false}
               onPress={() => {
-                saveCustomList({
-                  title: listTitle,
-                  sortOrder: sortOrder,
-                  sortBy: sortBy,
-                  filters: filters,
-                  searchQuery: searchQuery,
-                  genreId: genreId,
-                }).then(() => {
-                  setSuccessSaving('success');
-                  setListTitle('');
-                  setSortBy('DateCreated');
-                  setSortOrder('Ascending');
-                  setGenreId('');
-                  setFilters('');
-                  setSearchQuery('');
-                  triggerRefreshHomeScreen();
-                });
+                dbService
+                  .saveCustomList({
+                    title: listTitle,
+                    sortOrder: sortOrder,
+                    sortBy: sortBy,
+                    filters: filters,
+                    searchQuery: searchQuery,
+                    genreId: genreId,
+                  })
+                  .then(() => {
+                    setSuccessSaving('success');
+                    setListTitle('');
+                    setSortBy('DateCreated');
+                    setSortOrder('Ascending');
+                    setGenreId('');
+                    setFilters('');
+                    setSearchQuery('');
+                    triggerRefreshHomeScreen();
+                  });
               }}
             />
           </View>

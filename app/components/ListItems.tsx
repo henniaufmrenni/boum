@@ -24,6 +24,7 @@ import {
 import {getHourMinutes} from '@boum/lib/helper/helper';
 import {useStore} from '@boum/hooks';
 import {
+  HttpMethod,
   IsDownloaded,
   LibraryItemList,
   MediaItem,
@@ -36,7 +37,6 @@ import {
 import {ArtistItems} from '@boum/components/ArtistComponents';
 import TrackPlayer from 'react-native-track-player';
 import {SlideInContextMenu} from '@boum/components/ContextMenu';
-import {downloadItem} from '@boum/lib/storage';
 
 import {CastService} from '@boum/lib/cast';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -44,7 +44,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 const width = Dimensions.get('window').width;
 
 type ListHeaderProps = {
-  albumItems: Array<MediaItem>;
+  albumItems: LibraryItemList;
   item: MediaItem;
   mediaType: MediaType;
   session: Session;
@@ -75,6 +75,8 @@ const ListHeader = ({
   selectedStorageLocation,
 }: ListHeaderProps): JSX.Element => {
   const jellyfin = useStore.getState().jellyfinClient;
+  const storageService = useStore.getState().storageService;
+  const [downloadTriggered, setDownloadTriggered] = useState<boolean>(false);
 
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   useEffect(() => {
@@ -159,16 +161,32 @@ const ListHeader = ({
                         />
                       </Text>
                     </View>
-                  ) : (
+                  ) : downloadTriggered === false ? (
                     <TouchableOpacity
-                      onPress={async () =>
-                        downloadItem(
+                      onPress={async () => {
+                        storageService.downloadList(
                           session,
                           albumItems,
                           item,
-                          selectedStorageLocation,
-                        )
-                      }
+                          mediaType,
+                        );
+                        setDownloadTriggered(true);
+                      }}
+                      style={[
+                        styles.actionButton,
+                        {marginLeft: sizes.marginListX / 2},
+                      ]}>
+                      <Text>
+                        <Icon
+                          name="ios-arrow-down-circle-outline"
+                          size={30}
+                          color={colours.accent}
+                        />
+                      </Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      disabled={true}
                       style={[
                         styles.actionButton,
                         {marginLeft: sizes.marginListX / 2},
@@ -200,7 +218,7 @@ const ListHeader = ({
                     <TouchableOpacity
                       onPress={async () => {
                         await jellyfin
-                          .postFavorite(session, item.Id, 'DELETE')
+                          .postFavorite(session, item.Id, HttpMethod.DELETE)
                           .then(status => {
                             if (status === 200) {
                               setIsFavorite(false);
@@ -220,7 +238,7 @@ const ListHeader = ({
                     <TouchableOpacity
                       onPress={async () => {
                         await jellyfin
-                          .postFavorite(session, item.Id, 'POST')
+                          .postFavorite(session, item.Id, HttpMethod.POST)
                           .then(status => {
                             if (status === 200) {
                               setIsFavorite(true);

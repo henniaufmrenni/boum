@@ -4,7 +4,6 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {colours} from '@boum/constants';
 
 import Icon from 'react-native-vector-icons/Ionicons';
-import {deleteCustomList} from '@boum/lib/db/customLists';
 import {CustomHomeListItem, SuccessMessage} from '@boum/types';
 import {useStore} from '@boum/hooks';
 
@@ -20,12 +19,14 @@ const CustomListItem = ({list}: CustomListItemProps) => {
     state => state.setRefreshHomeScreen,
   );
 
+  const dbService = useStore.getState().dbService;
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{list.title}</Text>
       <TouchableOpacity
         onPress={async () =>
-          await deleteCustomList(list.title).then(res => {
+          await dbService.deleteCustomList(list.title).then(res => {
             setSuccessMessage(res);
             triggerRefreshHomeScreen();
           })

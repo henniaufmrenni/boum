@@ -1,24 +1,21 @@
 import {useEffect, useState} from 'react';
 
-import {
-  getChildrenEntriesForParent,
-  getDBConnection,
-  readParentEntries,
-} from '@boum/lib/db/service';
+import {DbService} from '@boum/lib/db/Service';
+import {useStore} from '@boum/hooks';
 import {OfflineItem, TableName} from '@boum/types';
 
-const getOfflineItems = async () => {
+const getOfflineItems = async (dbService: DbService) => {
   return new Promise(async function (resolve, reject) {
-    const db = await getDBConnection();
+    const db = await dbService.getDBConnection();
 
-    const items = await readParentEntries(db, TableName.ParentItems).catch(
-      err => reject(`Couldn't get data from DB: ${err}`),
-    );
+    const items = await dbService
+      .readParentEntries(db, TableName.ParentItems)
+      .catch(err => reject(`Couldn't get data from DB: ${err}`));
 
     let downloadItems: Array<OfflineItem> = [];
 
     items.forEach(async (item, index) => {
-      const children = await getChildrenEntriesForParent(db, item.id);
+      const children = await dbService.getChildrenEntriesForParent(db, item.id);
 
       downloadItems.push({
         id: item.id,
@@ -35,10 +32,11 @@ const getOfflineItems = async () => {
 
 const useGetDownloadItems = () => {
   const [items, setItems] = useState(false);
+  const dbService = useStore.getState().dbService;
 
   useEffect(() => {
     async function getItems() {
-      getOfflineItems().then(res => setItems(res));
+      getOfflineItems(dbService).then(res => setItems(res));
     }
     getItems();
   }, []);

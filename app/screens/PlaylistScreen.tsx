@@ -59,6 +59,8 @@ const PlaylistScreen: React.FC<PlaylistScreenProps> = ({route, navigation}) => {
   const playerState = usePlaybackState();
   const isPlaying = playerState === State.Playing;
 
+  const castClient = useStore(state => state.castClient);
+
   return (
     <>
       <View style={styles.container}>
@@ -76,6 +78,7 @@ const PlaylistScreen: React.FC<PlaylistScreenProps> = ({route, navigation}) => {
                 mediaType={'Album'}
                 screenMode={'ListView'}
                 navigation={navigation}
+                castClient={castClient}
                 bitrateLimit={bitrateLimit}
                 isDownloaded={isDownloaded}
                 isPlaying={isPlaying}

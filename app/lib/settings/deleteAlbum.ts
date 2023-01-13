@@ -1,9 +1,9 @@
 import RNFS from 'react-native-fs';
 
-import {deleteParentWithChildren, getDBConnection} from '@boum/lib/db/service';
+import {DbService} from '@boum/lib/db/Service';
 
-const deleteAlbum = async (album: object) => {
-  const db = await getDBConnection();
+const deleteAlbum = async (album: object, dbService: DbService) => {
+  const db = await dbService.getDBConnection();
 
   album.children.forEach(child => {
     RNFS.unlink(child.fileLocation)
@@ -15,7 +15,7 @@ const deleteAlbum = async (album: object) => {
         console.log(err.message);
       });
   });
-  await deleteParentWithChildren(db, album.metadata.Id);
+  await dbService.deleteParentWithChildren(db, album.metadata.Id);
 };
 
 export {deleteAlbum};

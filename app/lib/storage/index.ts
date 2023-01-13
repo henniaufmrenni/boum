@@ -1,2 +1,1 @@
-export * from '@boum/lib/storage/helper';
-export * from '@boum/lib/storage/downloadItem';
+export * from '@boum/lib/storage/Service';
