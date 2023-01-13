@@ -23,6 +23,8 @@ type PlaylistScreenProps = {
 const PlaylistScreen: React.FC<PlaylistScreenProps> = ({route, navigation}) => {
   const jellyfin = useStore.getState().jellyfinClient;
   const session = useStore(state => state.session);
+  const castService = useStore(state => state.castService);
+  const castClient = useStore(state => state.castClient);
 
   const [averageColorRgb, setAverageColorRgb] =
     useState<string>('rgb(168, 44, 69)');
@@ -59,8 +61,6 @@ const PlaylistScreen: React.FC<PlaylistScreenProps> = ({route, navigation}) => {
   const playerState = usePlaybackState();
   const isPlaying = playerState === State.Playing;
 
-  const castClient = useStore(state => state.castClient);
-
   return (
     <>
       <View style={styles.container}>
@@ -75,7 +75,7 @@ const PlaylistScreen: React.FC<PlaylistScreenProps> = ({route, navigation}) => {
                 session={session}
                 averageColorRgb={averageColorRgb}
                 mutate={mutate}
-                mediaType={'Album'}
+                mediaType={'Playlist'}
                 screenMode={'ListView'}
                 navigation={navigation}
                 castClient={castClient}
@@ -101,6 +101,8 @@ const PlaylistScreen: React.FC<PlaylistScreenProps> = ({route, navigation}) => {
                   albumItems={albumItems}
                   session={session}
                   bitrateLimit={bitrateLimit}
+                  castService={castService}
+                  castClient={castClient}
                 />
               );
             }}
