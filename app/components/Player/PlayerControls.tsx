@@ -29,6 +29,7 @@ type PlayerControlsProps = {
   duration: number;
   castDevice: string | undefined;
   queuePosition: number | undefined;
+  queueLength: number | undefined;
   repeatMode?: RepeatMode;
   albumNavigation: () => void;
   artistNavigation: () => void;
@@ -50,6 +51,7 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({
   duration,
   castDevice,
   queuePosition,
+  queueLength,
   repeatMode,
   albumNavigation,
   artistNavigation,
@@ -129,8 +131,8 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({
             </Text>
           </TouchableOpacity>
         )}
-        {repeatMode === RepeatMode.Queue ||
-        queuelength !== queuePosition + 1 ? (
+        {queueLength !== queuePosition + 1 ||
+        repeatMode === RepeatMode.Queue ? (
           <TouchableOpacity onPress={skipToNextTrack} style={styles.button}>
             <Text>
               <Icon name="play-skip-forward" size={45} color={colours.accent} />

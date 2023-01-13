@@ -37,6 +37,7 @@ const PlayerScreen: React.FC<PlayerScreenProps> = ({navigation}) => {
   const mediaStatus = useStore(state => state.castMediaStatus);
   const castDevice = useStore(state => state.castDevice);
   const streamPosition = useStreamPosition();
+  const repeatMode = useStore(state => state.repeatMode);
 
   //  Navigate back when casting is ended
   useEffect(() => {
@@ -130,7 +131,7 @@ const PlayerScreen: React.FC<PlayerScreenProps> = ({navigation}) => {
                 }
                 position={position ? position : 0}
                 duration={duration}
-                repeatMode={RepeatMode.Queue}
+                repeatMode={repeatMode}
                 albumNavigation={() =>
                   navigation.navigate('Album', {
                     itemId: queue[track].albumId,
