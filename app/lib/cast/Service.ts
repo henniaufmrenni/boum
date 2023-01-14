@@ -120,11 +120,26 @@ class CastService {
       queue.forEach((item, index) => {
         const castItem: MediaQueueItem = {
           mediaInfo: {
-            contentUrl: session.chromecastAdressEnabled
-              ? item.url.replace(session.hostname, session.chromecastAdress)
-              : item.url,
+            contentUrl: item.url.toString().includes('file:///')
+              ? `${
+                  session.chromecastAdressEnabled
+                    ? session.chromecastAdress
+                    : session.hostname
+                }/audio/${item.id}/universal?UserId=${
+                  session.userId
+                }&MaxStreamingBitrate=140000000&Container=opus,webm|opus,mp3,aac,m4a|aac,m4b|aac,flac,webma,webm|webma,wav,ogg&TranscodingContainer=ts&TranscodingProtocol=hls&AudioCodec=mp3` +
+                '&static=true' +
+                '&deviceId=' +
+                session.deviceId +
+                '&api_key=' +
+                session.accessToken
+              : session.chromecastAdress
+              ? item.url
+                  .toString()
+                  .replace(session.hostname, session.chromecastAdress)
+              : item.url.toString(),
             contentId: item.id,
-            hlsSegmentFormat: item.url.includes('&static=false')
+            hlsSegmentFormat: item.url.toString().includes('&static=false')
               ? MediaHlsSegmentFormat.TS
               : undefined,
             streamType: MediaStreamType.BUFFERED,
