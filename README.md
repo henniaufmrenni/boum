@@ -58,4 +58,4 @@ Thank you to the sponsors who help to get towards [boum being in the Apple App S
 
 © Hendrik Stöldt & contributors
 
-This software is licensend under the GNU General Public License v3.0 only, of which a copy can be found in the [LICENSE](LICENSE) file in the root of this repository.
+The software found in this repository is licensend under the [Mozilla Public License 2.0](https://spdx.org/licenses/MPL-2.0.html), of which a copy can be found in the [LICENSE](LICENSE) file in the root of this repository.
