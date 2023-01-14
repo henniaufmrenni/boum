@@ -6,7 +6,6 @@ import {DbService} from '@boum/lib/db';
 
 import {versionBoum} from '@boum/constants';
 import {
-  DownloadListType,
   DownloadQueueItem,
   DownloadStatus,
   LibraryItemList,
@@ -16,9 +15,11 @@ import {
   Session,
 } from '@boum/types';
 import {SQLiteDatabase} from 'react-native-sqlite-storage';
+import {NotificationService} from '@boum/lib/notifications';
 
 class StorageService {
   dbService = new DbService();
+  notificationService = new NotificationService();
 
   getAuthenticationHeaders = (session: Session) => {
     return {
@@ -208,8 +209,9 @@ class StorageService {
     mediaType: MediaType,
   ) => {
     const db = await this.dbService.getDBConnection();
-
     const listDir = this.getPath(session.selectedStorageLocation, list.Name);
+    const notificationChannelId =
+      await this.notificationService.createDownloadNotification(list);
 
     if (mediaType === 'Playlist') {
       RNFS.mkdir(listDir).catch(err => {
@@ -249,7 +251,12 @@ class StorageService {
           item.Name,
         );
         await this.downloadItem(db, item.Id, tempPath, session).then(res => {
-          console.log(res);
+          this.notificationService.updateDownloadNotification(
+            notificationChannelId,
+            list,
+            items.Items.length,
+            i,
+          );
           i++;
         });
       }
@@ -286,8 +293,25 @@ class StorageService {
           item.Name,
         );
 
+        if (i === 0) {
+          this.notificationService.updateDownloadNotification(
+            notificationChannelId,
+            list,
+            items.Items.length,
+            i + 1,
+          );
+        }
+
         await this.downloadItem(db, item.Id, tempPath, session).then(res => {
-          console.log(res);
+          if (i >= 1) {
+            this.notificationService.updateDownloadNotification(
+              notificationChannelId,
+              list,
+              items.Items.length,
+              i + 1,
+            );
+          }
+
           i++;
         });
       }

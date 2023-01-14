@@ -1,6 +1,6 @@
 import TrackPlayer, {TrackType, RepeatMode} from 'react-native-track-player';
 
-import {DbService} from '@boum/lib/db/Service';
+import {DbService} from '@boum/lib/db';
 import {shuffleArray} from '@boum/lib/helper/helper';
 import {MediaItem, Session, TrackBoum} from '@boum/types';
 
