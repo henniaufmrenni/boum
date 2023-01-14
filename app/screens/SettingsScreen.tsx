@@ -86,7 +86,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
       </SwitchWithDescription>
       <SwitchWithDescription
         title="License"
-        description={`boum version ${versionBoum}\n © Hendrik Stöldt & contributors \nboum is open-source and licensed under GPL-3.0-only.`}>
+        description={`boum version ${versionBoum}\n © Hendrik Stöldt & contributors \nboum is open-source and licensed under MPL-2.0.`}>
         <>
           <OpenURLButton
             title={'View on Github'}
