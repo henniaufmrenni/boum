@@ -10,7 +10,7 @@ import {ButtonBoum} from '@boum/components/Settings';
 const width = Dimensions.get('window').width;
 
 const DownloadsScreen: React.FC = () => {
-  const {downloadItems, gotDownloadItems} = useGetDownloadItems();
+  const {downloadItems, gotDownloadItems} = useGetDownloadItems(true);
 
   const storageService = useStore.getState().storageService;
   const dbService = useStore.getState().dbService;

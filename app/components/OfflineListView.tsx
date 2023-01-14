@@ -15,8 +15,6 @@ type Props = {
 const OfflineListView = ({navigation, session}: Props) => {
   const items = useGetDownloadItems();
 
-  const documentPath = RNFS.DocumentDirectoryPath;
-
   return (
     <View style={styles.container}>
       {items !== undefined && items.downloadItems.length >= 1
@@ -26,13 +24,7 @@ const OfflineListView = ({navigation, session}: Props) => {
               navigation={navigation}
               session={session}
               navigationDestination={'Album'}
-              imageLocation={
-                documentPath +
-                '/' +
-                album.name.replace(/\//g, '-') +
-                '/' +
-                'cover.jpg'
-              }
+              imageLocation={`file://${album.children[0].imageLocation}`}
               key={album.id}
             />
           ))

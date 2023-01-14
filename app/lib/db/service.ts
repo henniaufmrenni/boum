@@ -229,7 +229,7 @@ class DbService {
     parentId: string,
   ) => {
     const query = `
-    SELECT id, name, status, file_location
+    SELECT id, name, status, file_location, image_location
     FROM ${TableName.SingleItems}
     WHERE parent_id = ('${parentId}');`;
 
@@ -245,6 +245,7 @@ class DbService {
               name: result.rows.item(index).name.replace(/\''/g, "'"),
               status: result.rows.item(index).status,
               fileLocation: result.rows.item(index).file_location,
+              imageLocation: result.rows.item(index).image_location,
             };
             entries.push(entryObject);
           }

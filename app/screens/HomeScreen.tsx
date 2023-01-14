@@ -13,7 +13,7 @@ import {HeaderHome, CustomHomeLists} from '@boum/components/Home';
 import {AlbumCard} from '@boum/components/Library/AlbumCard';
 import OfflineListView from '@boum/components/OfflineListView';
 import {colours, sizes} from '@boum/constants';
-import {useGetCustomLists, useStore} from '@boum/hooks';
+import {useGetCustomLists, useGetDownloadItems, useStore} from '@boum/hooks';
 import {useGetHome} from '@boum/hooks/useGetHome';
 import {NavigationProp} from '@react-navigation/native';
 
@@ -29,16 +29,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
   const {
     latestAlbums,
     latestAlbumsLoading,
-    frequentlyPlayedAlbums,
-    frequentlyPlayedAlbumsLoading,
-    recentlyPlayedAlbums,
     randomAlbumsLoading,
     favoriteAlbums,
     favoriteAlbumsLoading,
     randomAlbums,
-    recentlyPlayedAlbumsLoading,
     mutateGetHome,
   } = useGetHome(session);
+
+  const offlineItems = useGetDownloadItems();
 
   const customLists = useStore(state => state.customLists);
   useGetCustomLists(triggerRefresh);
@@ -101,7 +99,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
           ) : (
             <Text style={styles.text}>Error random</Text>
           )}
-          {latestAlbums ? (
+          {!latestAlbumsLoading && latestAlbums ? (
             <>
               <TouchableOpacity
                 onPress={() => {
@@ -168,6 +166,22 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
             ) : (
               <Text style={styles.text}>Error Favourites</Text>
             )}
+          </ScrollView>
+          <Text style={styles.text}>Offline </Text>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            {offlineItems !== undefined &&
+            offlineItems.downloadItems.length >= 1
+              ? offlineItems.downloadItems.map(album => (
+                  <AlbumCard
+                    item={album.metadata}
+                    navigation={navigation}
+                    session={session}
+                    navigationDestination={'Album'}
+                    imageLocation={`file://${album.children[0].imageLocation}`}
+                    key={album.id}
+                  />
+                ))
+              : null}
           </ScrollView>
         </View>
       )}
