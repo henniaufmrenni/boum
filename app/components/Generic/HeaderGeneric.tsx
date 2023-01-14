@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, TouchableHighlight, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import {colours} from '@boum/constants';
@@ -18,11 +18,11 @@ const HeaderGeneric: React.FC<HeaderGenericProps> = ({Text, Symbol}) => {
   return (
     <>
       <View style={styles.container}>
-        <TouchableHighlight title="Go Back" onPress={navigation.goBack}>
+        <TouchableOpacity onPress={navigation.goBack}>
           <Text>
             <Icon name={Symbol} size={25} color={colours.black} />
           </Text>
-        </TouchableHighlight>
+        </TouchableOpacity>
       </View>
     </>
   );

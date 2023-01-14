@@ -3,7 +3,7 @@ import {MediaItem, Session} from '@boum/types';
 import {styles} from '@boum/components/Search';
 import {playTrack} from '@boum/lib/audio';
 import FastImage from 'react-native-fast-image';
-import {TouchableHighlight, Text} from 'react-native';
+import {TouchableOpacity, Text} from 'react-native';
 import {RemoteMediaClient} from 'react-native-google-cast';
 import {CastService} from '@boum/lib/cast';
 
@@ -18,7 +18,7 @@ type SongListItemProps = {
 class SongListItem extends React.PureComponent<SongListItemProps> {
   render() {
     return (
-      <TouchableHighlight
+      <TouchableOpacity
         key={this.props.item.Id}
         onPress={async () => {
           if (this.props.castClient !== null) {
@@ -51,7 +51,7 @@ class SongListItem extends React.PureComponent<SongListItemProps> {
           ) : null}
           <Text style={styles.resultText}>{this.props.item.Name}</Text>
         </>
-      </TouchableHighlight>
+      </TouchableOpacity>
     );
   }
 }

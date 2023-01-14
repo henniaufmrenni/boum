@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, TouchableHighlight, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {NavigationProp} from '@react-navigation/native';
 
@@ -29,7 +29,7 @@ const RowNavigation: React.FC<RowNavigationProps> = ({
             </Text>
             {albums.Items.map(item => (
               <>
-                <TouchableHighlight
+                <TouchableOpacity
                   key={item.Id}
                   onPress={() =>
                     navigation.push(navigationDestination, {
@@ -58,7 +58,7 @@ const RowNavigation: React.FC<RowNavigationProps> = ({
                       {item.Name}
                     </Text>
                   </>
-                </TouchableHighlight>
+                </TouchableOpacity>
               </>
             ))}
           </>

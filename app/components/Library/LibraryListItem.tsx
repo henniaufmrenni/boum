@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableHighlight, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 
 import {colours} from '@boum/constants';
@@ -16,7 +16,7 @@ type LibraryListItemProps = {
 class LibraryListItem extends React.PureComponent<LibraryListItemProps> {
   render() {
     return (
-      <TouchableHighlight
+      <TouchableOpacity
         onPress={() => {
           // FIXME:  Extract this from the arrow function
           this.props.navigation.push(this.props.navigationDestination, {
@@ -39,7 +39,7 @@ class LibraryListItem extends React.PureComponent<LibraryListItemProps> {
             {this.props.item.Name}
           </Text>
         </View>
-      </TouchableHighlight>
+      </TouchableOpacity>
     );
   }
 }
