@@ -170,9 +170,6 @@ const SlideInContextMenu = ({
               </>
             )}
             {children}
-            {castDevice === null ? (
-              <CastButton style={contextMenuStyles.castButtonContainer} />
-            ) : null}
           </ScrollView>
         )}
       />
