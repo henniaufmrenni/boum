@@ -4,20 +4,7 @@ import {Session} from '@boum/types';
 const useGetHome = (session: Session) => {
   const jellyfin = useStore.getState().jellyfinClient;
 
-  const {latestAlbums, latestAlbumsLoading, latestAlbumsMutate} =
-    jellyfin.getLatestAlbums(session);
-
-  const {
-    frequentlyPlayedAlbums,
-    frequentlyPlayedAlbumsLoading,
-    frequentlyPlayedAlbumsMutate,
-  } = jellyfin.getFrequentlyPlayedAlbums(session);
-
-  const {
-    recentlyPlayedAlbums,
-    recentlyPlayedAlbumsLoading,
-    recentlyPlayedAlbumsMutate,
-  } = jellyfin.getRecentlyPlayedAlbums(session);
+  const latest = jellyfin.getLatestAlbums(session);
 
   const favorites = jellyfin.getAllAlbums(
     session,
@@ -38,20 +25,14 @@ const useGetHome = (session: Session) => {
   );
 
   const mutate = () => {
-    recentlyPlayedAlbumsMutate();
-    frequentlyPlayedAlbumsMutate();
-    latestAlbumsMutate();
+    latest.mutate();
     favorites.allAlbumsMutate();
     random.allAlbumsMutate();
   };
 
   const res = {
-    latestAlbums,
-    latestAlbumsLoading,
-    frequentlyPlayedAlbums,
-    frequentlyPlayedAlbumsLoading,
-    recentlyPlayedAlbums,
-    recentlyPlayedAlbumsLoading,
+    latestAlbums: latest.data,
+    latestAlbumsLoading: !latest.error && !latest.data,
     favoriteAlbums: favorites.allAlbumsData,
     favoriteAlbumsLoading: favorites.allAlbumsLoading,
     randomAlbums: random.allAlbumsData,

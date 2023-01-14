@@ -30,7 +30,7 @@ const getDownloadItems = async (dbService: DbService) => {
   });
 };
 
-const useGetDownloadItems = () => {
+const useGetDownloadItems = (refresh?: boolean) => {
   const [downloadItems, setDownloadItems] = useState<boolean | Array<object>>(
     false,
   );
@@ -39,10 +39,12 @@ const useGetDownloadItems = () => {
   const dbService = useStore.getState().dbService;
 
   useEffect(() => {
-    const interval = setInterval(() => setTime(Date.now()), 1000);
-    return () => {
-      clearInterval(interval);
-    };
+    if (refresh) {
+      const interval = setInterval(() => setTime(Date.now()), 1000);
+      return () => {
+        clearInterval(interval);
+      };
+    }
   }, []);
 
   useEffect(() => {

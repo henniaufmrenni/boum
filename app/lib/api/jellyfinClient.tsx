@@ -45,17 +45,12 @@ class jellyfinClient {
     const query = `${session.hostname}/Users/${session.userId}/Items/Latest?IncludeItemTypes=Audio&Limit=24&Fields=ItemCounts,PrimaryImageAspectRatio,Genres,MediaSourceCount&ImageTypeLimit=1&EnableImageTypes=Primary&EnableTotalRecordCount=true&enableImages=true`;
     const headers = this.authHeaders(session);
 
-    const {data, error, mutate} = useSWR(
+    const latestAlbums = useSWR(
       [query, headers],
       this.fetcher,
       this.optionsSWR,
     );
-    return {
-      latestAlbums: data,
-      latestAlbumsLoading: !error && !data,
-      latestAlbumsError: error,
-      latestAlbumsMutate: mutate,
-    };
+    return latestAlbums;
   };
 
   public getRecentlyPlayedAlbums = (session: Session) => {
