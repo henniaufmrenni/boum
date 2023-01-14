@@ -41,13 +41,13 @@ const DownloadItem = ({item, dbService}: DownloadItemProps) => {
             {`Downloaded ${~~(
               (completedLength / totalLength) *
               100
-            )}% | ${totalLength} tracks`}
+            )}% | ${completedLength} of ${totalLength} tracks`}
           </Text>
           <View>
             <ProgressBar duration={totalLength} progress={completedLength} />
             <TouchableOpacity
               onPress={async () => await deleteAlbum(item, dbService)}>
-              <Text style={styles.deleteButton}>Delete</Text>
+              <Text style={styles.deleteButton}>Cancel</Text>
             </TouchableOpacity>
           </View>
         </>

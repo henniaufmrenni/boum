@@ -171,9 +171,7 @@ const SlideInContextMenu = ({
             )}
             {children}
             {castDevice === null ? (
-              <View style={contextMenuStyles.castButtonContainer}>
-                <CastButton />
-              </View>
+              <CastButton style={contextMenuStyles.castButtonContainer} />
             ) : null}
           </ScrollView>
         )}
@@ -234,7 +232,7 @@ const contextMenuStyles = StyleSheet.create({
     height: 100,
   },
   castButtonContainer: {
-    paddingVertical: 20,
+    marginVertical: 20,
     alignContent: 'center',
     alignItems: 'center',
   },
