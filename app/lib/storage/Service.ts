@@ -40,12 +40,12 @@ class StorageService {
     } else {
       downloadDirPath = RNFS.DocumentDirectoryPath;
     }
-    console.log('DIR PATH', downloadDirPath);
+
     return downloadDirPath;
   };
 
   sanitizePath = (path: string) => {
-    return path.replace(/[/\\?%*':|"<>]/g, '-');
+    return path.replaceAll(/[/\\?%*':.,();|"<>]/g, '-').replaceAll(' ', '-');
   };
 
   getPath = (
@@ -185,7 +185,6 @@ class StorageService {
 
   public redownloadItems = async (session: Session) => {
     const db = await this.dbService.getDBConnection();
-    let queue: Array<DownloadQueueItem> = [];
 
     this.dbService.readUnfinishedDownloads(db).then(async items => {
       console.log(items);
@@ -214,52 +213,62 @@ class StorageService {
       await this.notificationService.createDownloadNotification(list);
 
     if (mediaType === 'Playlist') {
-      RNFS.mkdir(listDir).catch(err => {
-        console.warn('Storage: Error creating parent direcory ', err);
-      });
-
       this.dbService.createParentItemEntries(db, list);
-
-      items.Items.forEach(item => {
-        const itemPath = this.getPath(
-          session.selectedStorageLocation,
-          list.Name,
-          item.Name,
-        );
-        const imageLocation = listDir + this.sanitizePath(item.Name) + '.jpg';
-        this.dbService
-          .createSingleItemEntries(db, item, itemPath, list.Id, imageLocation)
-          .catch(e => console.warn(e));
-
-        RNFS.downloadFile({
-          fromUrl: `${session.hostname}/Items/${item.Id}/Images/Primary?fillHeight=400&fillWidth=400&quality=96`,
-          toFile: imageLocation,
-          headers: headers,
-          background: true,
-          discretionary: true,
-          cacheable: true,
-        }).promise.catch(e => console.warn(e));
-      });
-
       const headers = this.getAuthenticationHeaders(session);
 
-      for (let i = 0; i < items.Items.length; ) {
-        const item = items.Items[i];
-        const tempPath = this.getPath(
-          session.selectedStorageLocation,
-          list.Name,
-          item.Name,
-        );
-        await this.downloadItem(db, item.Id, tempPath, session).then(res => {
-          this.notificationService.updateDownloadNotification(
-            notificationChannelId,
-            list,
-            items.Items.length,
-            i,
-          );
-          i++;
+      RNFS.mkdir(listDir)
+        .catch(err => {
+          console.warn('Storage: Error creating parent direcory ', err);
+        })
+        .then(async () => {
+          items.Items.forEach(item => {
+            const itemPath = this.getPath(
+              session.selectedStorageLocation,
+              list.Name,
+              item.Name,
+            );
+            const imageLocation =
+              listDir + this.sanitizePath(item.Name) + '.jpg';
+            this.dbService
+              .createSingleItemEntries(
+                db,
+                item,
+                itemPath,
+                list.Id,
+                imageLocation,
+              )
+              .catch(e => console.warn(e));
+
+            RNFS.downloadFile({
+              fromUrl: `${session.hostname}/Items/${item.Id}/Images/Primary?fillHeight=400&fillWidth=400&quality=96`,
+              toFile: imageLocation,
+              headers: headers,
+              background: true,
+              discretionary: true,
+              cacheable: true,
+            }).promise.catch(e => console.warn(e));
+          });
+
+          for (let i = 0; i < items.Items.length; ) {
+            const item = items.Items[i];
+            const tempPath = this.getPath(
+              session.selectedStorageLocation,
+              list.Name,
+              item.Name,
+            );
+            await this.downloadItem(db, item.Id, tempPath, session).then(
+              res => {
+                this.notificationService.updateDownloadNotification(
+                  notificationChannelId,
+                  list,
+                  items.Items.length,
+                  i,
+                );
+                i++;
+              },
+            );
+          }
         });
-      }
     } else if (mediaType === 'Album') {
       const imageLocation = listDir + 'cover.jpg';
       const headers = this.getAuthenticationHeaders(session);
@@ -272,49 +281,53 @@ class StorageService {
         imageLocation,
       );
 
-      RNFS.mkdir(listDir).catch(err => {
-        console.warn('Storage: Error creating parent direcory ', err);
-      });
+      RNFS.mkdir(listDir)
+        .catch(err => {
+          console.warn('Storage: Error creating parent direcory ', err);
+        })
+        .then(async () => {
+          RNFS.downloadFile({
+            fromUrl: `${session.hostname}/Items/${list.Id}/Images/Primary?fillHeight=400&fillWidth=400&quality=96`,
+            toFile: imageLocation,
+            headers: headers,
+            background: true,
+            discretionary: true,
+            cacheable: true,
+          }).promise.catch(e => console.warn(e));
 
-      RNFS.downloadFile({
-        fromUrl: `${session.hostname}/Items/${list.Id}/Images/Primary?fillHeight=400&fillWidth=400&quality=96`,
-        toFile: imageLocation,
-        headers: headers,
-        background: true,
-        discretionary: true,
-        cacheable: true,
-      }).promise.catch(e => console.warn(e));
+          for (let i = 0; i < items.Items.length; ) {
+            const item = items.Items[i];
+            const tempPath = this.getPath(
+              session.selectedStorageLocation,
+              item.Album,
+              item.Name,
+            );
 
-      for (let i = 0; i < items.Items.length; ) {
-        const item = items.Items[i];
-        const tempPath = this.getPath(
-          session.selectedStorageLocation,
-          item.Album,
-          item.Name,
-        );
+            if (i === 0) {
+              this.notificationService.updateDownloadNotification(
+                notificationChannelId,
+                list,
+                items.Items.length,
+                i + 1,
+              );
+            }
 
-        if (i === 0) {
-          this.notificationService.updateDownloadNotification(
-            notificationChannelId,
-            list,
-            items.Items.length,
-            i + 1,
-          );
-        }
+            await this.downloadItem(db, item.Id, tempPath, session).then(
+              res => {
+                if (i >= 1) {
+                  this.notificationService.updateDownloadNotification(
+                    notificationChannelId,
+                    list,
+                    items.Items.length,
+                    i + 1,
+                  );
+                }
 
-        await this.downloadItem(db, item.Id, tempPath, session).then(res => {
-          if (i >= 1) {
-            this.notificationService.updateDownloadNotification(
-              notificationChannelId,
-              list,
-              items.Items.length,
-              i + 1,
+                i++;
+              },
             );
           }
-
-          i++;
         });
-      }
     }
   };
 }

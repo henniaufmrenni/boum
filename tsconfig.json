@@ -5,7 +5,13 @@
     "esModuleInterop": true,
     "isolatedModules": true,
     "jsx": "react",
-    "lib": ["es2015", "es2015.promise", "es2016.array.include", "dom"],
+    "lib": [
+      "es2015",
+      "es2015.promise",
+      "es2016.array.include",
+      "dom",
+      "ES2021.String"
+    ],
     "strict": true,
     "moduleResolution": "node",
     "baseUrl": "./",
