@@ -19,6 +19,7 @@ The name _la_ boum [bum], originates from the "cool" french word for party in th
 <p float="left">
   <a href="https://play.google.com/store/apps/details?id=de.eindm.boum"><img src=".github/.assets/badge-google-play.png" width="250"/></a>
   <a href="https://github.com/henniaufmrenni/boum/releases/latest"><img src=".github/.assets/badge-github.png" width="250"/></a>
+  <a href="https://apt.izzysoft.de/fdroid/index/apk/de.eindm.boum"><img src=".github/.assets/badge-izzy-on-droid.png" width="250"/></a>
 </p>
 
 ## Features
