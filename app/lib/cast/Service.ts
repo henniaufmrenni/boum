@@ -102,12 +102,45 @@ class CastService {
     });
   }
 
-  public mapTrackPlayerQueueToCast(
+  public getContentUrlTrackPlayerToCast = (
+    session: Session,
+    item: TrackBoum,
+  ): string => {
+    if (item.url.toString().includes('file:///')) {
+      const track =
+        `${
+          session.chromecastAdressEnabled
+            ? session.chromecastAdress
+            : session.hostname
+        }/audio/${item.id}/universal?UserId=${
+          session.userId
+        }&MaxStreamingBitrate=140000000&Container=opus,webm|opus,mp3,aac,m4a|aac,m4b|aac,flac,webma,webm|webma,wav,ogg&TranscodingContainer=ts&TranscodingProtocol=hls&AudioCodec=mp3` +
+        '&static=true' +
+        '&deviceId=' +
+        session.deviceId +
+        '&api_key=' +
+        session.accessToken;
+      return track;
+    } else if (
+      session.chromecastAdress !== null &&
+      session.chromecastAdressEnabled
+    ) {
+      const track = item.url
+        .toString()
+        .replace(session.hostname, session.chromecastAdress);
+      return track;
+    } else {
+      const track = item.url.toString();
+      return track;
+    }
+  };
+
+  public mapTrackPlayerQueueToCast = (
     queue: Array<TrackBoum>,
     session: Session,
     startIndex: number,
-  ) {
-    return new Promise<MediaQueueData>(function (resolve, _reject) {
+  ) => {
+    return new Promise<MediaQueueData>((resolve, _reject) => {
       let mediaQueue: MediaQueueData = {
         items: [],
         containerMetadata: {
@@ -118,26 +151,11 @@ class CastService {
       };
 
       queue.forEach((item, index) => {
+        const contentUrl = this.getContentUrlTrackPlayerToCast(session, item);
+        console.log(contentUrl);
         const castItem: MediaQueueItem = {
           mediaInfo: {
-            contentUrl: item.url.toString().includes('file:///')
-              ? `${
-                  session.chromecastAdressEnabled
-                    ? session.chromecastAdress
-                    : session.hostname
-                }/audio/${item.id}/universal?UserId=${
-                  session.userId
-                }&MaxStreamingBitrate=140000000&Container=opus,webm|opus,mp3,aac,m4a|aac,m4b|aac,flac,webma,webm|webma,wav,ogg&TranscodingContainer=ts&TranscodingProtocol=hls&AudioCodec=mp3` +
-                '&static=true' +
-                '&deviceId=' +
-                session.deviceId +
-                '&api_key=' +
-                session.accessToken
-              : session.chromecastAdress
-              ? item.url
-                  .toString()
-                  .replace(session.hostname, session.chromecastAdress)
-              : item.url.toString(),
+            contentUrl: contentUrl,
             contentId: item.id,
             hlsSegmentFormat: item.url.toString().includes('&static=false')
               ? MediaHlsSegmentFormat.TS
@@ -172,7 +190,7 @@ class CastService {
         }
       });
     });
-  }
+  };
 }
 
 export {CastService};
