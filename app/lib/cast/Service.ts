@@ -102,37 +102,21 @@ class CastService {
     });
   }
 
-  public getContentUrlTrackPlayerToCast = (
-    session: Session,
-    item: TrackBoum,
-  ): string => {
-    if (item.url.toString().includes('file:///')) {
-      const track =
-        `${
-          session.chromecastAdressEnabled
-            ? session.chromecastAdress
-            : session.hostname
-        }/audio/${item.id}/universal?UserId=${
-          session.userId
-        }&MaxStreamingBitrate=140000000&Container=opus,webm|opus,mp3,aac,m4a|aac,m4b|aac,flac,webma,webm|webma,wav,ogg&TranscodingContainer=ts&TranscodingProtocol=hls&AudioCodec=mp3` +
-        '&static=true' +
-        '&deviceId=' +
-        session.deviceId +
-        '&api_key=' +
-        session.accessToken;
-      return track;
-    } else if (
-      session.chromecastAdress !== null &&
-      session.chromecastAdressEnabled
-    ) {
-      const track = item.url
-        .toString()
-        .replace(session.hostname, session.chromecastAdress);
-      return track;
-    } else {
-      const track = item.url.toString();
-      return track;
-    }
+  public getContentUrl = (session: Session, item: TrackBoum): string => {
+    return (
+      `${
+        session.chromecastAdressEnabled
+          ? session.chromecastAdress
+          : session.hostname
+      }/audio/${item.id}/universal?UserId=${
+        session.userId
+      }&MaxStreamingBitrate=140000000&Container=opus,webm|opus,mp3,aac,m4a|aac,m4b|aac,flac,webma,webm|webma,wav,ogg&TranscodingContainer=ts&TranscodingProtocol=hls&AudioCodec=mp3` +
+      '&static=true' +
+      '&deviceId=' +
+      session.deviceId +
+      '&api_key=' +
+      session.accessToken
+    );
   };
 
   public mapTrackPlayerQueueToCast = (
@@ -151,11 +135,9 @@ class CastService {
       };
 
       queue.forEach((item, index) => {
-        const contentUrl = this.getContentUrlTrackPlayerToCast(session, item);
-        console.log(contentUrl);
         const castItem: MediaQueueItem = {
           mediaInfo: {
-            contentUrl: contentUrl,
+            contentUrl: this.getContentUrl(session, item),
             contentId: item.id,
             hlsSegmentFormat: item.url.toString().includes('&static=false')
               ? MediaHlsSegmentFormat.TS
@@ -172,7 +154,7 @@ class CastService {
                 {
                   height: 400,
                   width: 400,
-                  url: item.artwork,
+                  url: `${session.hostname}/Items/${item.id}/Images/Primary?fillHeight=400&fillWidth=400&quality=96`,
                 },
               ],
             },
