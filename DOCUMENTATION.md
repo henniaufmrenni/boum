@@ -1,5 +1,9 @@
 # Documentation
 
+## Download Speed
+
+Depending on your network direct downloads can be actually be signigicantly faster than download at a selected bitrate, since Jellyfin needs to transcode these using FFMPEG.
+
 ## Custom Lists
 
 Custom Lists allow have shortcuts to predefined queries of your music library.
