@@ -48,6 +48,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
     setRefreshing(false);
   };
 
+  console.log(favoriteAlbums.Items);
+
   return (
     <ScrollView
       style={styles.container}
@@ -134,20 +136,21 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
           ) : (
             <Text style={styles.text}>Error latest</Text>
           )}
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('List', {
-                sortBy: 'SortName',
-                sortOrder: 'Ascending',
-                filters: 'IsFavorite',
-                listTitle: 'Favourites',
-              });
-            }}>
-            <Text style={styles.text}>Favourites ▸</Text>
-          </TouchableOpacity>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {favoriteAlbums ? (
-              <>
+          {favoriteAlbums && favoriteAlbums.Items.length >= 1 ? (
+            <>
+              <Text style={styles.text}>Favourites ▸</Text>
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('List', {
+                      sortBy: 'SortName',
+                      sortOrder: 'Ascending',
+                      filters: 'IsFavorite',
+                      listTitle: 'Favourites',
+                    });
+                  }}></TouchableOpacity>
                 {favoriteAlbums.Items.map(album => (
                   <AlbumCard
                     key={album.Id}
@@ -157,21 +160,22 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
                     session={session}
                   />
                 ))}
-              </>
-            ) : favoriteAlbumsLoading ? (
-              <View style={styles.loadingContainer}>
-                <Text style={styles.text}>Favorites</Text>
-                <LoadingSpinner />
-              </View>
-            ) : (
-              <Text style={styles.text}>Error Favourites</Text>
-            )}
-          </ScrollView>
-          <Text style={styles.text}>Offline </Text>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {offlineItems !== undefined &&
-            offlineItems.downloadItems.length >= 1
-              ? offlineItems.downloadItems.map(album => (
+              </ScrollView>
+            </>
+          ) : favoriteAlbumsLoading ? (
+            <View style={styles.loadingContainer}>
+              <Text style={styles.text}>Favorites</Text>
+              <LoadingSpinner />
+            </View>
+          ) : null}
+          {offlineItems !== undefined &&
+          offlineItems.downloadItems.length >= 1 ? (
+            <>
+              <Text style={styles.text}>Downloads </Text>
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}>
+                {offlineItems.downloadItems.map(album => (
                   <AlbumCard
                     item={album.metadata}
                     navigation={navigation}
@@ -180,9 +184,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
                     imageLocation={`file://${album.children[0].imageLocation}`}
                     key={album.id}
                   />
-                ))
-              : null}
-          </ScrollView>
+                ))}
+              </ScrollView>
+            </>
+          ) : null}
         </View>
       )}
     </ScrollView>
