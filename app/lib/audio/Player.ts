@@ -137,7 +137,6 @@ const mapJellyfinTrackToPlayer = async (
     jellyfinInput.forEach(async (inputItem, index) => {
       const localFile = await dbService.readFileLocationItem(db, inputItem.Id);
       if (localFile[0] !== undefined && localFile[0].status === 'success') {
-        //console.log('Player: Playing local audio ', inputItem.Name);
         const track: TrackBoum = {
           title: inputItem.Name,
           id: inputItem.Id,
@@ -146,7 +145,7 @@ const mapJellyfinTrackToPlayer = async (
           album: inputItem.Album,
           albumId: jellyfinInput[0].AlbumId,
           date: inputItem.PremiereDate,
-          duration: (inputItem.RunTimeTicks / 1000).toFixed(0),
+          duration: ~~(inputItem.RunTimeTicks / 10000000),
           isFavorite: inputItem.UserData.IsFavorite,
           url: `file://${localFile[0].fileLocation}`,
           artwork: `file://${localFile[0].imageLocation}`,
@@ -161,7 +160,7 @@ const mapJellyfinTrackToPlayer = async (
           album: inputItem.Album,
           albumId: jellyfinInput[0].AlbumId,
           date: inputItem.PremiereDate,
-          duration: (inputItem.RunTimeTicks / 1000).toFixed(0),
+          duration: ~~(inputItem.RunTimeTicks / 10000000),
           type: bitrateLimit === 140000000 ? TrackType.Default : TrackType.HLS,
           isFavorite: inputItem.UserData.IsFavorite,
           url: getTrackUri(session, bitrateLimit, inputItem),

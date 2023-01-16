@@ -5,7 +5,6 @@ interface TrackBoum extends Track {
   artistId: string;
   albumId: string;
   isFavorite: boolean;
-  headers: Headers;
 }
 
 interface PlayerItem {
