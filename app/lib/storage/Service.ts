@@ -73,6 +73,22 @@ class StorageService {
     return path;
   };
 
+  // https://github.com/jellyfin/jellyfin/blob/master/MediaBrowser.Model/Net/MimeTypes.cs
+  parseMimeType = (headers: RNFS.Headers): string => {
+    const mimeType = headers['Content-Type'].slice(6);
+    if (mimeType === 'mpeg') {
+      return '.mp3';
+    } else if (mimeType === 'x-ape') {
+      return '.ape';
+    } else if (mimeType === 'webm') {
+      return '.webma';
+    } else if (mimeType === 'x-wavpack') {
+      return '.wv';
+    } else {
+      return '.' + mimeType;
+    }
+  };
+
   writeScheduledDownloadsToDb = (
     db: SQLiteDatabase,
 
@@ -119,8 +135,8 @@ class StorageService {
         progressInterval: 10000,
         begin: async (res: DownloadBeginCallbackResult) => {
           console.log('Download started with Status' + res.statusCode);
-          const contentType = res.headers['Content-Type'].slice(6);
-          permPath = tempPath + '.' + contentType;
+          const fileExtension = this.parseMimeType(res.headers);
+          permPath = tempPath + fileExtension;
         },
         progress: (res: DownloadProgressCallbackResult) => {
           console.log(
