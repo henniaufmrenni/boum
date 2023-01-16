@@ -95,6 +95,32 @@ const playTrack = async (
   await TrackPlayer.play();
 };
 
+const getTrackUri = (
+  session: Session,
+  bitrateLimit: number,
+  inputItem: MediaItem,
+) => {
+  if (bitrateLimit !== 140000000) {
+    return (
+      `${session.hostname}/audio/${inputItem.Id}/universal?UserId=${session.userId}&MaxStreamingBitrate=${bitrateLimit}&TranscodingContainer=ts&TranscodingProtocol=hls&AudioCodec=mp3` +
+      '&static=false' +
+      '&deviceId=' +
+      session.deviceId +
+      '&api_key=' +
+      session.accessToken
+    );
+  } else {
+    return (
+      `${session.hostname}/audio/${inputItem.Id}/universal?UserId=${session.userId}&MaxStreamingBitrate=${bitrateLimit}&Container=mp3,aac,flac,wav,ogg&TranscodingContainer=ts&TranscodingProtocol=hls&AudioCodec=mp3` +
+      '&static=true' +
+      '&deviceId=' +
+      session.deviceId +
+      '&api_key=' +
+      session.accessToken
+    );
+  }
+};
+
 const mapJellyfinTrackToPlayer = async (
   jellyfinInput: Array<MediaItem>,
   session: Session,
@@ -138,14 +164,7 @@ const mapJellyfinTrackToPlayer = async (
           duration: (inputItem.RunTimeTicks / 1000).toFixed(0),
           type: bitrateLimit === 140000000 ? TrackType.Default : TrackType.HLS,
           isFavorite: inputItem.UserData.IsFavorite,
-          url:
-            `${session.hostname}/audio/${inputItem.Id}/universal?UserId=${session.userId}&MaxStreamingBitrate=${bitrateLimit}&Container=opus,webm|opus,mp3,aac,m4a|aac,m4b|aac,flac,webma,webm|webma,wav,ogg&TranscodingContainer=ts&TranscodingProtocol=hls&AudioCodec=mp3` +
-            '&static=' +
-            (bitrateLimit === 140000000 ? true : false) +
-            '&deviceId=' +
-            session.deviceId +
-            '&api_key=' +
-            session.accessToken,
+          url: getTrackUri(session, bitrateLimit, inputItem),
           artwork: `${session.hostname}/Items/${inputItem.AlbumId}/Images/Primary?fillHeight=400&fillWidth=400&quality=96`,
         };
         tracks.push(track);

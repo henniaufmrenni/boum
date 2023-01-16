@@ -48,8 +48,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
     setRefreshing(false);
   };
 
-  console.log(favoriteAlbums.Items);
-
   return (
     <ScrollView
       style={styles.container}
