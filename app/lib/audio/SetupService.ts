@@ -27,7 +27,7 @@ const SetupService = async (): Promise<boolean> => {
         Capability.Pause,
         Capability.SkipToNext,
       ],
-      progressUpdateEventInterval: 2,
+      progressUpdateEventInterval: 1,
     });
 
     isSetup = true;
