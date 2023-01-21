@@ -111,7 +111,7 @@ const getTrackUri = (
     );
   } else {
     return (
-      `${session.hostname}/audio/${inputItem.Id}/universal?UserId=${session.userId}&MaxStreamingBitrate=${bitrateLimit}&Container=mp3,aac,flac,wav,ogg&TranscodingContainer=ts&TranscodingProtocol=hls&AudioCodec=mp3` +
+      `${session.hostname}/audio/${inputItem.Id}/universal?UserId=${session.userId}&MaxStreamingBitrate=${bitrateLimit}&Container=opus,webm|opus,mp3,aac,m4a|aac,m4b|aac,flac,alac,m4a|alac,m4b|alac,webma,webm|webma,wav,ogg` +
       '&static=true' +
       '&deviceId=' +
       session.deviceId +
