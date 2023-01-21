@@ -36,7 +36,7 @@ const App = () => {
 
   return (
     <GestureHandlerRootView style={styles.root}>
-      <StatusBar translucent backgroundColor="transparent" />
+      <StatusBar translucent backgroundColor={'rgba(0, 0, 0, 0.2)'} />
       <SafeAreaProvider style={{backgroundColor: colours.black}}>
         <MenuProvider backHandler={true}>
           {session?.userId && playerIsSetup ? (
