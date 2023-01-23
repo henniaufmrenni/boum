@@ -11,6 +11,7 @@ The name _la_ boum [bum], originates from the "cool" french word for party in th
 [![build-release](https://github.com/henniaufmrenni/boum/actions/workflows/android-build-release.yml/badge.svg)](https://github.com/henniaufmrenni/boum/actions/workflows/android-build-release.yml)
 [![latest release](https://badgen.net/github/release/henniaufmrenni/boum?icon=github)](https://github.com/henniaufmrenni/boum/releases/latest)
 [![Sourcehut Mirror](https://img.shields.io/static/v1?label=Mirror&message=Sourcehut&logo=Git&color=blue)](https://git.sr.ht/~henniaufmrenni/boum)
+[![GitHub milestone](https://img.shields.io/github/milestones/progress/henniaufmrenni/boum/5?label=Progress%20towards%20next%20release)](https://github.com/henniaufmrenni/boum/milestone/5)
 [![open issues](https://img.shields.io/github/issues/henniaufmrenni/boum/bug?color=C6474F&label=open%20bug-issues)](https://github.com/henniaufmrenni/boum/issues?q=is%3Aissue+is%3Aopen+label%3Abug)
 [![open feature requests](https://img.shields.io/github/issues/henniaufmrenni/boum/enhancement?color=B3ECEE&label=open%20feature-requests)](https://github.com/henniaufmrenni/boum/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement)
 [![Github Sponsors](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/henniaufmrenni)
