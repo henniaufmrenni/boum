@@ -3,7 +3,7 @@ import TrackPlayer from 'react-native-track-player';
 import {useStore} from '@boum/hooks';
 import {clearAllEncryptedValues} from '@boum/lib/encryptedStorage/encryptedStorage';
 import {Session} from '@boum/types';
-import {deleteAllRows, getDBConnection} from '@boum/lib/db';
+import {DbService} from '@boum/lib/db';
 
 const initialSession: Session = {
   hostname: '',
@@ -23,12 +23,13 @@ const initialSession: Session = {
 };
 
 const logout = async () => {
+  const dbService = new DbService();
   try {
     await clearAllEncryptedValues();
     useStore.setState({session: initialSession});
-    const db = await getDBConnection();
+    const db = await dbService.getDBConnection();
     await TrackPlayer.reset();
-    deleteAllRows(db);
+    dbService.deleteAllRows(db);
     return 'Succesfully logged out.';
   } catch (error) {
     return 'Error in saving User session.';
