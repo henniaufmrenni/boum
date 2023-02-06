@@ -19,12 +19,12 @@ class CastService {
    * @param startIndex
    * @param client
    */
-  public async playTrack(
+  public playTrack = async (
     session: Session,
     song: MediaItem,
     startIndex: number,
     client: RemoteMediaClient,
-  ) {
+  ) => {
     await this.mapJellyfinQueueToCast(
       session,
       {Items: [song], StartIndex: 0, TotalRecordCount: 1},
@@ -34,7 +34,7 @@ class CastService {
         client.loadMedia({queueData: queue, autoplay: true});
       }
     });
-  }
+  };
 
   /**
    *
@@ -57,6 +57,28 @@ class CastService {
       },
     );
   }
+
+  /**
+   *
+   * @param session
+   * @param mediaItems
+   * @param index
+   * @param client
+   */
+  public addTracksToQueue = async (
+    session: Session,
+    mediaItems: LibraryItemList,
+    index: number,
+    client: RemoteMediaClient,
+  ) => {
+    await this.mapJellyfinQueueToCast(session, mediaItems, index).then(
+      queue => {
+        if (queue !== null && queue.items !== undefined) {
+          client.queueInsertItems(queue.items, index);
+        }
+      },
+    );
+  };
 
   /**
    *

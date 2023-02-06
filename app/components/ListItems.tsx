@@ -40,6 +40,7 @@ import {SlideInContextMenu} from '@boum/components/ContextMenu';
 
 import {CastService} from '@boum/lib/cast';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {SwipeableRow} from '@boum/components/Lists';
 
 const width = Dimensions.get('window').width;
 
@@ -477,70 +478,83 @@ type ListRenderItemProps = {
   session: Session;
   bitrateLimit: number;
   castService: CastService;
-  castClient?: RemoteMediaClient;
+  castClient?: RemoteMediaClient | null;
+  currentTrack: number;
 };
 
 class ListRenderItem extends React.PureComponent<ListRenderItemProps> {
   render() {
     return (
-      <View style={listItemStyles.container}>
-        <TouchableOpacity
-          onPress={async () => {
-            if (this.props.castClient !== null) {
-              await this.props.castService.playAlbum(
-                this.props.session,
-                this.props.albumItems,
-                this.props.index,
-                this.props.castClient,
-              );
-            } else {
-              await playAudio(
-                this.props.albumItems.Items,
-                this.props.index,
-                this.props.session,
-                this.props.bitrateLimit,
-              );
-            }
-          }}>
-          <View style={listItemStyles.containerArtistTitle}>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={
-                this.props.isPlaying
-                  ? [listItemStyles.songTitle, {color: colours.accent}]
-                  : [listItemStyles.songTitle, {color: colours.white}]
-              }>
-              {this.props.index !== false ? (
-                <>{this.props.index + 1}. </>
-              ) : null}
-              {this.props.item.Name}
-            </Text>
-            <View style={listItemStyles.songArtistsContainer}>
+      <SwipeableRow
+        session={this.props.session}
+        item={
+          this.props.index
+            ? this.props.albumItems.Items[this.props.index]
+            : this.props.albumItems.Items[0]
+        }
+        currentTrack={this.props.currentTrack}
+        bitrateLimit={this.props.bitrateLimit}
+        castClient={this.props.castClient}
+        castService={this.props.castService}>
+        <View style={listItemStyles.container}>
+          <TouchableOpacity
+            onPress={async () => {
+              if (this.props.castClient !== null) {
+                await this.props.castService.playAlbum(
+                  this.props.session,
+                  this.props.albumItems,
+                  this.props.index,
+                  this.props.castClient,
+                );
+              } else {
+                await playAudio(
+                  this.props.albumItems.Items,
+                  this.props.index,
+                  this.props.session,
+                  this.props.bitrateLimit,
+                );
+              }
+            }}>
+            <View style={listItemStyles.containerArtistTitle}>
               <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
                 style={
                   this.props.isPlaying
-                    ? [listItemStyles.songArtists, {color: colours.accent}]
-                    : [listItemStyles.songArtists, {color: colours.white}]
-                }
-                numberOfLines={1}
-                ellipsizeMode="tail">
-                {this.props.item.AlbumArtists.map(artist => artist.Name).join(
-                  ', ',
-                )}
+                    ? [listItemStyles.songTitle, {color: colours.accent}]
+                    : [listItemStyles.songTitle, {color: colours.white}]
+                }>
+                {this.props.index !== false ? (
+                  <>{this.props.index + 1}. </>
+                ) : null}
+                {this.props.item.Name}
               </Text>
+              <View style={listItemStyles.songArtistsContainer}>
+                <Text
+                  style={
+                    this.props.isPlaying
+                      ? [listItemStyles.songArtists, {color: colours.accent}]
+                      : [listItemStyles.songArtists, {color: colours.white}]
+                  }
+                  numberOfLines={1}
+                  ellipsizeMode="tail">
+                  {this.props.item.AlbumArtists.map(artist => artist.Name).join(
+                    ', ',
+                  )}
+                </Text>
+              </View>
             </View>
+          </TouchableOpacity>
+          <View style={listItemStyles.menuContainer}>
+            <SlideInContextMenu
+              mediaItem={this.props.item}
+              mediaType={'Song'}
+              session={this.props.session}
+              screenMode={'ListView'}
+            />
           </View>
-        </TouchableOpacity>
-        <View style={listItemStyles.menuContainer}>
-          <SlideInContextMenu
-            mediaItem={this.props.item}
-            mediaType={'Song'}
-            session={this.props.session}
-            screenMode={'ListView'}
-          />
         </View>
-      </View>
+      </SwipeableRow>
     );
   }
 }
