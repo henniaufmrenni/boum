@@ -2,7 +2,15 @@ import {colours} from '@boum/constants';
 import {MediaItem} from '@boum/types';
 import notifee, {AndroidImportance} from '@notifee/react-native';
 
+/**
+ *
+ */
 class NotificationService {
+  /**
+   *
+   * @param list
+   * @returns
+   */
   public createDownloadNotification = async (
     list: MediaItem,
   ): Promise<string> => {
@@ -22,6 +30,13 @@ class NotificationService {
     return channelId;
   };
 
+  /**
+   *
+   * @param channelId
+   * @param list
+   * @param totalItems
+   * @param downloadedItems
+   */
   public updateDownloadNotification = async (
     channelId: string,
     list: MediaItem,

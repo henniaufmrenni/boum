@@ -8,7 +8,17 @@ import {
   RemoteMediaClient,
 } from 'react-native-google-cast';
 
+/**
+ * Chromecast service
+ */
 class CastService {
+  /**
+   *
+   * @param session
+   * @param song
+   * @param startIndex
+   * @param client
+   */
   public async playTrack(
     session: Session,
     song: MediaItem,
@@ -26,6 +36,13 @@ class CastService {
     });
   }
 
+  /**
+   *
+   * @param session
+   * @param mediaItems
+   * @param startIndex
+   * @param client
+   */
   public async playAlbum(
     session: Session,
     mediaItems: LibraryItemList,
@@ -41,6 +58,13 @@ class CastService {
     );
   }
 
+  /**
+   *
+   * @param session
+   * @param mediaItems
+   * @param startIndex
+   * @returns
+   */
   public mapJellyfinQueueToCast(
     session: Session,
     mediaItems: LibraryItemList,
@@ -102,6 +126,12 @@ class CastService {
     });
   }
 
+  /**
+   *
+   * @param session
+   * @param item
+   * @returns
+   */
   public getContentUrl = (session: Session, item: TrackBoum): string => {
     return (
       `${
@@ -119,6 +149,13 @@ class CastService {
     );
   };
 
+  /**
+   *
+   * @param queue
+   * @param session
+   * @param startIndex
+   * @returns
+   */
   public mapTrackPlayerQueueToCast = (
     queue: Array<TrackBoum>,
     session: Session,
