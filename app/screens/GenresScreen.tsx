@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 
 import LibraryHeader from '@boum/components/Library/LibraryHeader';
@@ -7,6 +7,7 @@ import {LoadingSpinner} from '@boum/components/Generic';
 import {colours} from '@boum/constants';
 import {useStore} from '@boum/hooks';
 import {NavigationProp} from '@react-navigation/native';
+import {LibraryItemList} from '@boum/types';
 
 type GenresScreenProps = {
   navigation: NavigationProp<any>;
@@ -16,12 +17,20 @@ const GenresScreen: React.FC<GenresScreenProps> = ({navigation}) => {
   const jellyfin = useStore.getState().jellyfinClient;
   const session = useStore(state => state.session);
 
-  const {allGenres, allGenresError, allGenresLoading} =
-    jellyfin.getAllGenres(session);
+  const [allGenres, setAllGenres] = useState<undefined | LibraryItemList>(
+    undefined,
+  );
+  useState(() => {
+    async function getGenres() {
+      const genres = await jellyfin.getAllGenres(session);
+      setAllGenres(genres);
+    }
+    getGenres();
+  });
 
   return (
     <View style={styles.container}>
-      {!allGenresError && !allGenresLoading && allGenres !== undefined ? (
+      {allGenres !== undefined ? (
         <FlatList
           data={allGenres.Items}
           keyExtractor={item => item.Name}

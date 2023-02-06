@@ -275,41 +275,41 @@ class jellyfinClient {
    * @param session
    * @returns
    */
-  public getAllGenres = (session: Session) => {
+  public getAllGenres = async (session: Session) => {
     let query: string;
     const headers = this.authHeaders(session);
 
     // We need to first get all libraries and filter the music libraries since we need to pass
     // the library Id as ParentId to the /Genres query, otherwise all genres will be retrieved,
     // including movie etc. genres.
-    const queryLibraries = `${session.hostname}/Library/VirtualFolders`;
-    const libraries = useSWR(
-      [queryLibraries, headers],
-      this.fetcher,
-      this.optionsSWR,
-    );
+    const queryLibraries = `${session.hostname}/Users/${session.userId}/Views`;
+    const libraries = await fetch(queryLibraries, {
+      headers: {
+        'X-Emby-Authorization': headers,
+      },
+    });
 
-    const musicLibrary = libraries.data?.filter(
+    const librariesJson = await libraries.json();
+
+    const musicLibrary = librariesJson.Items.filter(
       library => library.CollectionType === 'music',
     );
 
     if (musicLibrary !== undefined) {
-      query = `${session.hostname}/Genres?SortBy=SortName&SortOrder=Ascending&Recursive=true&Fields=PrimaryImageAspectRatio,ItemCounts&StartIndex=0&userId=${session.userId}&ParentId=${musicLibrary[0].ItemId}`;
+      query = `${session.hostname}/Genres?SortBy=SortName&SortOrder=Ascending&Recursive=true&Fields=PrimaryImageAspectRatio,ItemCounts&StartIndex=0&userId=${session.userId}&ParentId=${musicLibrary[0].Id}`;
     } else {
-      query = '';
+      return undefined;
     }
-    const {data, error, mutate} = useSWR(
-      [query, headers],
-      this.fetcher,
-      this.optionsSWR,
-    );
 
-    return {
-      allGenres: data,
-      allGenresLoading: !error && !data,
-      allGenresError: error,
-      allGenresMutate: mutate,
-    };
+    const genres = await fetch(query, {
+      headers: {
+        'X-Emby-Authorization': headers,
+      },
+    });
+
+    const genresJson = genres.json();
+
+    return genresJson;
   };
 
   /**
