@@ -12,13 +12,24 @@ import {
   UnfinishedDownload,
 } from '@boum/types';
 
+/**
+ *
+ */
 class DbService {
   _ = SQLite.enablePromise(true);
 
+  /**
+   *
+   * @returns
+   */
   public getDBConnection = async () => {
     return SQLite.openDatabase({name: 'boum.db', location: 'default'});
   };
 
+  /**
+   *
+   * @param db
+   */
   public createTables = async (db: SQLiteDatabase) => {
     // prettier-ignore
     const createParentItemsTable = `
@@ -88,6 +99,15 @@ class DbService {
       .catch(err => console.log('Error retrieving DB tables', err));
   };
 
+  /**
+   *
+   * @param db
+   * @param albumItem
+   * @param fileLocation
+   * @param parentId
+   * @param imageLocation
+   * @returns
+   */
   public createSingleItemEntries = async (
     db: SQLiteDatabase,
     albumItem: MediaItem,
@@ -108,6 +128,12 @@ class DbService {
     return;
   };
 
+  /**
+   *
+   * @param db
+   * @param parentItem
+   * @returns
+   */
   public createParentItemEntries = async (
     db: SQLiteDatabase,
     parentItem: MediaItem,
@@ -124,6 +150,14 @@ class DbService {
     return;
   };
 
+  /**
+   *
+   * @param db
+   * @param itemId
+   * @param status
+   * @param fileLocation
+   * @returns
+   */
   public updateSingleItemStatus = async (
     db: SQLiteDatabase,
     itemId: string,
@@ -143,6 +177,13 @@ class DbService {
     return;
   };
 
+  /**
+   *
+   * @param db
+   * @param table
+   * @param itemId
+   * @returns
+   */
   public readSingleEntry = async (
     db: SQLiteDatabase,
     table: TableName,
@@ -168,6 +209,13 @@ class DbService {
     return result;
   };
 
+  /**
+   *
+   * @param db
+   * @param table
+   * @param itemId
+   * @returns
+   */
   public readSingleEntryId = async (
     db: SQLiteDatabase,
     table: TableName,
@@ -193,6 +241,12 @@ class DbService {
     return result;
   };
 
+  /**
+   *
+   * @param db
+   * @param table
+   * @returns
+   */
   public readParentEntries = async (db: SQLiteDatabase, table: TableName) => {
     const query = `
     SELECT * 
@@ -224,6 +278,12 @@ class DbService {
     return entries;
   };
 
+  /**
+   *
+   * @param db
+   * @param parentId
+   * @returns
+   */
   public getChildrenEntriesForParent = async (
     db: SQLiteDatabase,
     parentId: string,
@@ -258,6 +318,11 @@ class DbService {
     return entries;
   };
 
+  /**
+   *
+   * @param db
+   * @param id
+   */
   public deleteParentWithChildren = async (db: SQLiteDatabase, id: number) => {
     const queryParents = `
     DELETE FROM ${TableName.ParentItems} WHERE id = '${id}';`;
@@ -284,6 +349,12 @@ class DbService {
       });
   };
 
+  /**
+   *
+   * @param db
+   * @param itemId
+   * @returns
+   */
   public readFileLocationItem = async (db: SQLiteDatabase, itemId: string) => {
     const query = `
     SELECT file_location, status, image_location 
@@ -313,6 +384,11 @@ class DbService {
     return files;
   };
 
+  /**
+   *
+   * @param db
+   * @returns
+   */
   public readUnfinishedDownloads = async (db: SQLiteDatabase) => {
     const query = `
     SELECT * 
@@ -344,6 +420,13 @@ class DbService {
     return files;
   };
 
+  /**
+   *
+   * @param db
+   * @param key
+   * @param value
+   * @returns
+   */
   public writeKeyValueData = async (
     db: SQLiteDatabase,
     key: string,
@@ -371,6 +454,10 @@ class DbService {
     return result;
   };
 
+  /**
+   *
+   * @param db
+   */
   public deleteAllRows = async (db: SQLiteDatabase) => {
     const queries: Array<string> = [
       `DELETE FROM ${TableName.CustomLists};`,
@@ -389,6 +476,11 @@ class DbService {
     });
   };
 
+  /**
+   *
+   * @param param0
+   * @returns
+   */
   public saveCustomList = async ({
     title,
     sortOrder,
@@ -415,6 +507,10 @@ class DbService {
     return result;
   };
 
+  /**
+   *
+   * @returns
+   */
   public getCustomLists = async () => {
     const db = await this.getDBConnection();
 
@@ -449,6 +545,11 @@ class DbService {
     return entries;
   };
 
+  /**
+   *
+   * @param title
+   * @returns
+   */
   public deleteCustomList = async (title: string): Promise<SuccessMessage> => {
     const db = await this.getDBConnection();
     let result: SuccessMessage = 'not triggered';

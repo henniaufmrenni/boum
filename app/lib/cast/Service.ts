@@ -8,13 +8,23 @@ import {
   RemoteMediaClient,
 } from 'react-native-google-cast';
 
+/**
+ * Chromecast service
+ */
 class CastService {
-  public async playTrack(
+  /**
+   *
+   * @param session
+   * @param song
+   * @param startIndex
+   * @param client
+   */
+  public playTrack = async (
     session: Session,
     song: MediaItem,
     startIndex: number,
     client: RemoteMediaClient,
-  ) {
+  ) => {
     await this.mapJellyfinQueueToCast(
       session,
       {Items: [song], StartIndex: 0, TotalRecordCount: 1},
@@ -24,8 +34,15 @@ class CastService {
         client.loadMedia({queueData: queue, autoplay: true});
       }
     });
-  }
+  };
 
+  /**
+   *
+   * @param session
+   * @param mediaItems
+   * @param startIndex
+   * @param client
+   */
   public async playAlbum(
     session: Session,
     mediaItems: LibraryItemList,
@@ -41,6 +58,35 @@ class CastService {
     );
   }
 
+  /**
+   *
+   * @param session
+   * @param mediaItems
+   * @param index
+   * @param client
+   */
+  public addTracksToQueue = async (
+    session: Session,
+    mediaItems: LibraryItemList,
+    index: number,
+    client: RemoteMediaClient,
+  ) => {
+    await this.mapJellyfinQueueToCast(session, mediaItems, index).then(
+      queue => {
+        if (queue !== null && queue.items !== undefined) {
+          client.queueInsertItems(queue.items, index);
+        }
+      },
+    );
+  };
+
+  /**
+   *
+   * @param session
+   * @param mediaItems
+   * @param startIndex
+   * @returns
+   */
   public mapJellyfinQueueToCast(
     session: Session,
     mediaItems: LibraryItemList,
@@ -102,6 +148,12 @@ class CastService {
     });
   }
 
+  /**
+   *
+   * @param session
+   * @param item
+   * @returns
+   */
   public getContentUrl = (session: Session, item: TrackBoum): string => {
     return (
       `${
@@ -119,6 +171,13 @@ class CastService {
     );
   };
 
+  /**
+   *
+   * @param queue
+   * @param session
+   * @param startIndex
+   * @returns
+   */
   public mapTrackPlayerQueueToCast = (
     queue: Array<TrackBoum>,
     session: Session,

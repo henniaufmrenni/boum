@@ -31,7 +31,6 @@ const AlbumScreen: React.FC<AlbumScreenProps> = ({navigation, route}) => {
   const selectedStorageLocation = useStore(
     state => state.selectedStorageLocation,
   );
-
   const currentTrack = queue[track];
 
   const playerState = usePlaybackState();
@@ -92,6 +91,7 @@ const AlbumScreen: React.FC<AlbumScreenProps> = ({navigation, route}) => {
                   bitrateLimit={bitrateLimit}
                   castService={castService}
                   castClient={castClient}
+                  currentTrack={track !== null ? track : 0}
                   isPlaying={
                     mediaStatus?.currentQueueItem?.mediaInfo.contentId ===
                       item.Id ||

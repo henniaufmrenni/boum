@@ -19,6 +19,9 @@ import {
 import {requestPlaybackInfoBody} from '@boum/lib/api';
 import {OnProgressData} from 'react-native-video';
 
+/**
+ * API client for the Jellyfin server
+ */
 class jellyfinClient {
   private fetcher = (url: string, headers: string) =>
     fetch(url, {
@@ -41,6 +44,11 @@ class jellyfinClient {
     dedupingInterval: 1000,
   };
 
+  /**
+   *
+   * @param session
+   * @returns
+   */
   public getLatestAlbums = (session: Session) => {
     const query = `${session.hostname}/Users/${session.userId}/Items/Latest?IncludeItemTypes=Audio&Limit=24&Fields=ItemCounts,PrimaryImageAspectRatio,Genres,MediaSourceCount&ImageTypeLimit=1&EnableImageTypes=Primary&EnableTotalRecordCount=true&enableImages=true`;
     const headers = this.authHeaders(session);
@@ -53,6 +61,11 @@ class jellyfinClient {
     return latestAlbums;
   };
 
+  /**
+   *
+   * @param session
+   * @returns
+   */
   public getRecentlyPlayedAlbums = (session: Session) => {
     const query = `${session.hostname}/Users/${session.userId}/Items?SortBy=DatePlayed&SortOrder=Ascending&IncludeItemTypes=MusicAlbum&Recursive=true&Fields=PrimaryImageAspectRatio,SortName,BasicSyncInfo&ImageTypeLimit=1&EnableImageTypes=Primary&StartIndex=0&Limit=10`;
     const headers = this.authHeaders(session);
@@ -71,6 +84,11 @@ class jellyfinClient {
     };
   };
 
+  /**
+   *
+   * @param session
+   * @returns
+   */
   public getFrequentlyPlayedAlbums = (session: Session) => {
     const query = `${session.hostname}/Users/${session.userId}/Items?SortBy=PlayCount&SortOrder=Ascending&IncludeItemTypes=MusicAlbum&Recursive=true&Fields=PrimaryImageAspectRatio,SortName,BasicSyncInfo&ImageTypeLimit=1&EnableImageTypes=Primary&StartIndex=0&Limit=10`;
     const headers = this.authHeaders(session);
@@ -87,6 +105,19 @@ class jellyfinClient {
       frequentlyPlayedAlbumsMutate: mutate,
     };
   };
+
+  /**
+   *
+   * @param session
+   * @param index
+   * @param sortBy
+   * @param sortOrder
+   * @param filter
+   * @param searchQuery
+   * @param genreId
+   * @param itemTypes
+   * @returns
+   */
   public getAllAlbums = (
     session: Session,
     index: number,
@@ -120,7 +151,12 @@ class jellyfinClient {
     };
   };
 
-  // Needs to be a simple fetch and not SWR since it's otherwise an invalid hooks call
+  /**
+   *
+   * @param session
+   * @param id
+   * @returns
+   */
   public getSingleItem = (session: Session, id: string) => {
     const query = `${session.hostname}/Users/${session.userId}/Items/${id}?Fields=PrimaryImageAspectRatio,Genres,SortName,BasicSyncInfo`;
     const headers = this.authHeaders(session);
@@ -140,7 +176,12 @@ class jellyfinClient {
     };
   };
 
-  // Needs to be a simple fetch and not SWR since it's otherwise an invalid hooks call
+  /**
+   *
+   * @param session
+   * @param id
+   * @returns
+   */
   public getSingleItemSwr = (session: Session, id: string) => {
     const query = `${session.hostname}/Users/${session.userId}/Items/${id}?Fields=PrimaryImageAspectRatio,Genres,SortName,BasicSyncInfo`;
     const headers = this.authHeaders(session);
@@ -158,6 +199,12 @@ class jellyfinClient {
     };
   };
 
+  /**
+   *
+   * @param session
+   * @param id
+   * @returns
+   */
   public getAlbumItems = (session: Session, id: string) => {
     const query = `${session.hostname}/Users/${session.userId}/Items?ParentId=${id}&Fields=ItemCounts,PrimaryImageAspectRatio,BasicSyncInfo,MediaSourceCount&SortBy=ParentIndexNumber,IndexNumber,SortName
   `;
@@ -177,6 +224,12 @@ class jellyfinClient {
     };
   };
 
+  /**
+   *
+   * @param session
+   * @param artistId
+   * @returns
+   */
   public getSimilarArtists = (session: Session, artistId: string) => {
     const query = `${session.hostname}/Artists/${artistId}/Similar?limit=6`;
     const headers = this.authHeaders(session);
@@ -195,6 +248,11 @@ class jellyfinClient {
     };
   };
 
+  /**
+   *
+   * @param session
+   * @returns
+   */
   public getMediaFolders = (session: Session) => {
     const query = `${session.hostname}/Library/MediaFolders`;
     const headers = this.authHeaders(session);
@@ -212,43 +270,57 @@ class jellyfinClient {
     };
   };
 
-  public getAllGenres = (session: Session) => {
+  /**
+   *
+   * @param session
+   * @returns
+   */
+  public getAllGenres = async (session: Session) => {
     let query: string;
     const headers = this.authHeaders(session);
 
     // We need to first get all libraries and filter the music libraries since we need to pass
     // the library Id as ParentId to the /Genres query, otherwise all genres will be retrieved,
     // including movie etc. genres.
-    const queryLibraries = `${session.hostname}/Library/VirtualFolders`;
-    const libraries = useSWR(
-      [queryLibraries, headers],
-      this.fetcher,
-      this.optionsSWR,
-    );
+    const queryLibraries = `${session.hostname}/Users/${session.userId}/Views`;
+    const libraries = await fetch(queryLibraries, {
+      headers: {
+        'X-Emby-Authorization': headers,
+      },
+    });
 
-    const musicLibrary = libraries.data?.filter(
+    const librariesJson = await libraries.json();
+
+    const musicLibrary = librariesJson.Items.filter(
       library => library.CollectionType === 'music',
     );
 
     if (musicLibrary !== undefined) {
-      query = `${session.hostname}/Genres?SortBy=SortName&SortOrder=Ascending&Recursive=true&Fields=PrimaryImageAspectRatio,ItemCounts&StartIndex=0&userId=${session.userId}&ParentId=${musicLibrary[0].ItemId}`;
+      query = `${session.hostname}/Genres?SortBy=SortName&SortOrder=Ascending&Recursive=true&Fields=PrimaryImageAspectRatio,ItemCounts&StartIndex=0&userId=${session.userId}&ParentId=${musicLibrary[0].Id}`;
     } else {
-      query = '';
+      return undefined;
     }
-    const {data, error, mutate} = useSWR(
-      [query, headers],
-      this.fetcher,
-      this.optionsSWR,
-    );
 
-    return {
-      allGenres: data,
-      allGenresLoading: !error && !data,
-      allGenresError: error,
-      allGenresMutate: mutate,
-    };
+    const genres = await fetch(query, {
+      headers: {
+        'X-Emby-Authorization': headers,
+      },
+    });
+
+    const genresJson = genres.json();
+
+    return genresJson;
   };
 
+  /**
+   *
+   * @param session
+   * @param startIndex
+   * @param sortBy
+   * @param sortOrder
+   * @param searchQuery
+   * @returns
+   */
   public getAllArtists = (
     session: Session,
     startIndex: number,
@@ -273,6 +345,12 @@ class jellyfinClient {
     };
   };
 
+  /**
+   *
+   * @param session
+   * @param artistId
+   * @returns
+   */
   public getArtistItems = (session: Session, artistId: string) => {
     const query = `${session.hostname}/Users/${session.userId}/Items?SortOrder=Descending&IncludeItemTypes=MusicAlbum&Recursive=true&Fields=AudioInfo,PrimaryImageAspectRatio,Genres,BasicSyncInfo&Limit=300&StartIndex=0&CollapseBoxSetItems=false&AlbumArtistIds=${artistId}&SortBy=PremiereDate,ProductionYear,Sortname`;
     const headers = this.authHeaders(session);
@@ -291,6 +369,12 @@ class jellyfinClient {
     };
   };
 
+  /**
+   *
+   * @param session
+   * @param artistId
+   * @returns
+   */
   public getAppearsOn = (session: Session, artistId: string) => {
     const query = `${session.hostname}/Users/${session.userId}/Items?IncludeItemTypes=MusicAlbum&Recursive=true&SortBy=PremiereDate,ProductionYear,Genres,SortName&SortOrder=Descending&ContributingArtistIds=${artistId}`;
     const headers = this.authHeaders(session);
@@ -309,6 +393,12 @@ class jellyfinClient {
     };
   };
 
+  /**
+   *
+   * @param session
+   * @param artistId
+   * @returns
+   */
   public getSimilarItems = (session: Session, artistId: string) => {
     const query = `${session.hostname}/Albums/${artistId}/Similar?limit=6&Fields=Genres,`;
     const headers = this.authHeaders(session);
@@ -327,6 +417,13 @@ class jellyfinClient {
     };
   };
 
+  /**
+   *
+   * @param session
+   * @param id
+   * @param action
+   * @returns
+   */
   public postFavorite = async (
     session: Session,
     id: string,
@@ -345,6 +442,12 @@ class jellyfinClient {
     return res.status;
   };
 
+  /**
+   *
+   * @param session
+   * @param id
+   * @returns
+   */
   public getLyrics = async (session: Session, id: string) => {
     const query = `${session.hostname}/Items/${id}/Lyrics`;
     const headers = this.authHeaders(session);
@@ -358,6 +461,16 @@ class jellyfinClient {
     return res;
   };
 
+  /**
+   *
+   * @param session
+   * @param index
+   * @param sortBy
+   * @param sortOrder
+   * @param filter
+   * @param searchQuery
+   * @returns
+   */
   public getAllPlaylists = (
     session: Session,
     index: number,
@@ -383,6 +496,14 @@ class jellyfinClient {
     };
   };
 
+  /**
+   *
+   * @param session
+   * @param songId
+   * @param playlistId
+   * @param action
+   * @returns
+   */
   public addOrRemoveSongPlaylist = async (
     session: Session,
     songId: string,
@@ -403,6 +524,14 @@ class jellyfinClient {
     return res.status;
   };
 
+  /**
+   *
+   * @param session
+   * @param index
+   * @param sortBy
+   * @param sortOrder
+   * @returns
+   */
   public getAllBooks = async (
     session: Session,
     index: number,
@@ -449,6 +578,15 @@ class jellyfinClient {
     };
   };
 
+  /**
+   *
+   * @param session
+   * @param item
+   * @param hevcSupported
+   * @param maxStreamingBitrate
+   * @param startTimeTicks
+   * @returns
+   */
   public getPlaybackInfo = async (
     session: Session,
     item: VideoMediaItem,
@@ -481,6 +619,17 @@ class jellyfinClient {
     }
   };
 
+  /**
+   *
+   * @param session
+   * @param onProgressData
+   * @param paused
+   * @param playSessionId
+   * @param playMethod
+   * @param maxStreamingBitrate
+   * @param mediaSourceId
+   * @param progressUpdateType
+   */
   public postProgressUpdate = async (
     session: Session,
     onProgressData: OnProgressData,

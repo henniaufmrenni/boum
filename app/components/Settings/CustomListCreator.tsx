@@ -3,7 +3,14 @@ import {StyleSheet, Text, View, TextInput} from 'react-native';
 
 import {colours} from '@boum/constants';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Filters, Session, SortBy, SortOrder, SuccessMessage} from '@boum/types';
+import {
+  Filters,
+  LibraryItemList,
+  Session,
+  SortBy,
+  SortOrder,
+  SuccessMessage,
+} from '@boum/types';
 import {Picker} from '@react-native-picker/picker';
 import ButtonBoum from '@boum/components/Settings/ButtonBoum';
 import {LoadingSpinner} from '@boum/components/Generic';
@@ -22,7 +29,16 @@ const CustomListCreator: React.FC<CustomListCreatorProps> = ({session}) => {
     state => state.setRefreshHomeScreen,
   );
 
-  const {allGenres, allGenresLoading} = jellyfin.getAllGenres(session);
+  const [allGenres, setAllGenres] = useState<undefined | LibraryItemList>(
+    undefined,
+  );
+  useState(() => {
+    async function getGenres() {
+      const genres = await jellyfin.getAllGenres(session);
+      setAllGenres(genres);
+    }
+    getGenres();
+  });
 
   const [listTitle, setListTitle] = useState<string>('');
   const [sortBy, setSortBy] = useState<SortBy>('SortName');
@@ -35,7 +51,7 @@ const CustomListCreator: React.FC<CustomListCreatorProps> = ({session}) => {
 
   return (
     <>
-      {!allGenresLoading && allGenres !== undefined ? (
+      {allGenres !== undefined ? (
         <View style={styles.container}>
           <Text style={styles.text}>
             You can create custom lists by selecting different paramaters by

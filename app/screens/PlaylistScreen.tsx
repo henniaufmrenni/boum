@@ -58,6 +58,7 @@ const PlaylistScreen: React.FC<PlaylistScreenProps> = ({route, navigation}) => {
     albumItemsMutate();
   };
 
+  const track = useStore(state => state.currentTrack);
   const playerState = usePlaybackState();
   const isPlaying = playerState === State.Playing;
 
@@ -102,6 +103,7 @@ const PlaylistScreen: React.FC<PlaylistScreenProps> = ({route, navigation}) => {
                   session={session}
                   bitrateLimit={bitrateLimit}
                   castService={castService}
+                  currentTrack={track ? track : 0}
                   castClient={castClient}
                 />
               );

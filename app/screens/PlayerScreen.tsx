@@ -16,6 +16,7 @@ import {PlayerControls} from '@boum/components/Player/PlayerControls';
 import {PlayerMetaControls} from '@boum/components/Player/PlayerMetaControls';
 import {useStore} from '@boum/hooks';
 import {colours} from '@boum/constants';
+import {PlayerImageCarousel} from '@boum/components/Player';
 
 const width = Dimensions.get('window').width;
 
@@ -117,7 +118,7 @@ const PlayerScreen: React.FC<PlayerScreenProps> = ({navigation}) => {
                 contextAction={() => setOverlayHidden(!overlayHidden)}
                 session={session}
               />
-              <PlayerAlbumImage artwork={queue[track].artwork} />
+              <PlayerImageCarousel currentTrack={track} queue={queue} />
               <PlayerControls
                 trackTitle={queue[track].title}
                 albumTitle={queue[track].album}
